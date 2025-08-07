@@ -97,7 +97,7 @@
     /* Sidebar */
     .sidebar {
       width: 160px;
-      border-right: 1px solid #e6e6e6;
+      border-right: 1px solid #111;
       padding-right: 1.5rem;
       padding-top: 0.35rem;
     }
@@ -431,6 +431,10 @@
       elements.forEach(el => {
         el.style.color = color;
       });
+      
+      // Update the sidebar border color to match the font color
+      const sidebar = document.querySelector('.sidebar');
+      sidebar.style.borderRightColor = color;
       
       // Update the toggle button color to match the font color
       const toggleButton = document.querySelector('.game-toggle');
