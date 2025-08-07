@@ -5,13 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ site.title | default: "My Blog" }}</title>
   <style>
+    /* GT Pressura Font Face Declarations */
+    @font-face {
+      font-family: 'GT Pressura';
+      src: url('Grilli-Type-Trial-Fonts-2025-05-03/OTvar/GT-Pressura-Trial-VF.woff2') format('woff2-variations'),
+           url('Grilli-Type-Trial-Fonts-2025-05-03/OTvar/GT-Pressura-Trial-VF.ttf') format('truetype-variations');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'GT Pressura';
+      src: url('Grilli-Type-Trial-Fonts-2025-05-03/Web/GT-Pressura/GT-Pressura-Light-Trial.woff2') format('woff2');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'GT Pressura';
+      src: url('Grilli-Type-Trial-Fonts-2025-05-03/Web/GT-Pressura/GT-Pressura-Regular-Trial.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'GT Pressura';
+      src: url('Grilli-Type-Trial-Fonts-2025-05-03/Web/GT-Pressura/GT-Pressura-Medium-Trial.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'GT Pressura';
+      src: url('Grilli-Type-Trial-Fonts-2025-05-03/Web/GT-Pressura/GT-Pressura-Bold-Trial.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      font-family: "GT Pressura", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
         Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       line-height: 1.6;
       color: #111;
@@ -53,10 +95,11 @@
       margin-bottom: 0.75rem;
       font-size: 0.95rem;
       line-height: 1.6;
-      transition: font-weight 0.3s ease; /* Add transition for smooth font-weight change */
+      text-transform: uppercase;
+      transition: opacity 0.3s ease; /* Changed from font-weight to opacity */
     }
     .sidebar li:hover {
-      font-weight: 600; /* Make text slightly more bold on hover */
+      opacity: 0.8; /* Changed from font-weight to opacity */
     }
     .sidebar li.active { font-weight: 700; }
 
@@ -78,12 +121,13 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      transition: font-weight 0.3s ease; /* Add transition for smooth font-weight change */
+      font-weight: 300;
+      transition: opacity 0.3s ease; /* Changed from font-weight to opacity */
     }
     
-    /* Make title slightly more bold on hover */
+    /* Make title slightly more visible on hover */
     .post-item:hover .post-link {
-      font-weight: 600;
+      opacity: 0.8;
     }
     .post-link::after {
       content: "";
