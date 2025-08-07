@@ -14,6 +14,31 @@
       font-style: normal;
       font-display: swap;
     }
+
+    /* JetBrains Mono Font Face Declarations */
+    @font-face {
+      font-family: 'JetBrains Mono';
+      src: url('JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'JetBrains Mono';
+      src: url('JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Medium.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    @font-face {
+      font-family: 'JetBrains Mono';
+      src: url('JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
     
     @font-face {
       font-family: 'GT Pressura';
@@ -76,26 +101,13 @@
       padding-right: 1.5rem;
       padding-top: 0.35rem;
     }
-    .logo {
-      width: 120px;
-      height: auto;
-      margin-bottom: 2rem;
-      display: block;
-      filter: invert(1) brightness(0) contrast(100%);
-      padding: 0.5rem;
-      background-color: #000;
-      border-radius: 4px;
-      transition: filter 0.3s ease;
-    }
-    .logo:hover {
-      filter: invert(0) brightness(1) contrast(100%);
-    }
     .sidebar ul { list-style: none; }
     .sidebar li {
       margin-bottom: 0.75rem;
       font-size: 0.95rem;
       line-height: 1.6;
-      text-transform: uppercase;
+      text-transform: none;
+      font-family: 'JetBrains Mono';
       transition: opacity 0.3s ease; /* Changed from font-weight to opacity */
     }
     .sidebar li:hover {
@@ -121,7 +133,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-weight: 300;
+      font-family: 'JetBrains Mono';
+      font-weight: 400;
+      text-transform: uppercase;
       transition: opacity 0.3s ease; /* Changed from font-weight to opacity */
     }
     
@@ -147,9 +161,11 @@
 
     .post-date {
       white-space: nowrap;
-      font-size: 0.85rem;
+      font-size: 0.75rem;
       color: #000;
-      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+      font-weight: 400;
+      text-transform: uppercase;
       font-variant-numeric: tabular-nums;
     }
   </style>
@@ -157,7 +173,6 @@
 <body>
   <div class="wrapper">
     <nav class="sidebar">
-      <img src="logo.svg" alt="Logo" class="logo">
       <ul>
         <li class="{% if page.url == '/' %}active{% endif %}"><a href="{{ '/' | relative_url }}">index</a></li>
         <li class="{% if page.url contains '/about' %}active{% endif %}"><a href="{{ '/about/' | relative_url }}">about</a></li>
