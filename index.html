@@ -168,9 +168,167 @@
       text-transform: uppercase;
       font-variant-numeric: tabular-nums;
     }
+
+    /* Color Game Styles */
+    .color-game {
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #e6e6e6;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      min-width: 200px;
+      backdrop-filter: blur(10px);
+    }
+
+    .color-game h3 {
+      margin: 0 0 0.75rem 0;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .color-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .color-row {
+      display: flex;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .color-control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .color-control label {
+      flex: 1;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .color-picker {
+      width: 40px;
+      height: 30px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 0;
+      background: none;
+    }
+
+    .color-picker::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    .color-picker::-webkit-color-swatch {
+      border: none;
+      border-radius: 3px;
+    }
+
+    .preset-colors {
+      display: flex;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    .preset-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      transition: transform 0.2s ease;
+    }
+
+    .preset-color:hover {
+      transform: scale(1.1);
+    }
+
+    .reset-btn {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      margin-top: 0.75rem;
+      transition: background 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      background: #555;
+    }
+
+    .game-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #333;
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 1001;
+      transition: background 0.2s ease;
+    }
+
+    .game-toggle:hover {
+      opacity: 0.8;
+    }
+
+    .color-game.hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
+  <!-- Color Game Toggle Button -->
+  <button class="game-toggle" onclick="toggleColorGame()"></button>
+  
+  <!-- Color Game Panel -->
+  <div class="color-game hidden" id="colorGame">
+    <div class="color-controls">
+      <div class="color-row">
+        <div class="preset-color" style="background: #ffffff" onclick="updateBackgroundColor('#ffffff')" title="White"></div>
+        <div class="preset-color" style="background: #000000" onclick="updateBackgroundColor('#000000')" title="Black"></div>
+        <div class="preset-color bg-random-1" onclick="updateBackgroundColorFromBox(this)"></div>
+        <div class="preset-color bg-random-2" onclick="updateBackgroundColorFromBox(this)"></div>
+        <div class="preset-color bg-random-3" onclick="updateBackgroundColorFromBox(this)"></div>
+        <div class="preset-color bg-random-4" onclick="updateBackgroundColorFromBox(this)"></div>
+      </div>
+      
+      <div class="color-row">
+        <div class="preset-color" style="background: #000000" onclick="updateFontColor('#000000')" title="Black"></div>
+        <div class="preset-color" style="background: #ffffff" onclick="updateFontColor('#ffffff')" title="White"></div>
+        <div class="preset-color font-random-1" onclick="updateFontColorFromBox(this)"></div>
+        <div class="preset-color font-random-2" onclick="updateFontColorFromBox(this)"></div>
+        <div class="preset-color font-random-3" onclick="updateFontColorFromBox(this)"></div>
+        <div class="preset-color font-random-4" onclick="updateFontColorFromBox(this)"></div>
+      </div>
+    </div>
+    
+    <button class="reset-btn" onclick="resetColors()">Reset</button>
+    <button class="reset-btn" onclick="refreshRandomColors()" style="margin-left: 0.5rem;">Refresh</button>
+  </div>
+
   <div class="wrapper">
     <nav class="sidebar">
       <ul>
@@ -217,5 +375,150 @@
       </ul>
     </main>
   </div>
+
+  <script>
+    // Color Game JavaScript
+    let gameVisible = false; // Changed to false so it starts hidden
+    const defaultBgColor = '#ffffff';
+    const defaultFontColor = '#111111';
+
+    function toggleColorGame() {
+      const game = document.getElementById('colorGame');
+      gameVisible = !gameVisible;
+      
+      if (gameVisible) {
+        game.classList.remove('hidden');
+      } else {
+        game.classList.add('hidden');
+      }
+    }
+
+    function updateBackgroundColor(color) {
+      document.body.style.backgroundColor = color;
+      
+      // Save to localStorage
+      localStorage.setItem('customBgColor', color);
+    }
+
+    function updateBackgroundColorFromBox(box) {
+      const color = window.getComputedStyle(box).backgroundColor;
+      const hexColor = rgbToHex(color);
+      updateBackgroundColor(hexColor);
+    }
+
+    function updateFontColorFromBox(box) {
+      const color = window.getComputedStyle(box).backgroundColor;
+      const hexColor = rgbToHex(color);
+      updateFontColor(hexColor);
+    }
+
+    function rgbToHex(rgb) {
+      const result = rgb.match(/\d+/g);
+      if (result) {
+        const r = parseInt(result[0]);
+        const g = parseInt(result[1]);
+        const b = parseInt(result[2]);
+        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+      }
+      return rgb; // fallback if already hex or other format
+    }
+
+    function updateFontColor(color) {
+      document.body.style.color = color;
+      
+      // Also update specific elements that might have their own color
+      const elements = document.querySelectorAll('.post-date, .sidebar li, .post-link');
+      elements.forEach(el => {
+        el.style.color = color;
+      });
+      
+      // Update the toggle button color to match the font color
+      const toggleButton = document.querySelector('.game-toggle');
+      toggleButton.style.backgroundColor = color;
+      
+      // Save to localStorage
+      localStorage.setItem('customFontColor', color);
+    }
+
+    function refreshRandomColors() {
+      // Generate truly random colors
+      function getRandomHexColor() {
+        return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+      }
+      
+      // Update background random colors (last 4 boxes)
+      for (let i = 1; i <= 4; i++) {
+        const box = document.querySelector(`.bg-random-${i}`);
+        box.style.backgroundColor = getRandomHexColor();
+      }
+      
+      // Update font random colors (last 4 boxes)
+      for (let i = 1; i <= 4; i++) {
+        const box = document.querySelector(`.font-random-${i}`);
+        box.style.backgroundColor = getRandomHexColor();
+      }
+    }
+
+    function initializeRandomColors() {
+      refreshRandomColors();
+    }
+
+    function resetColors() {
+      updateBackgroundColor(defaultBgColor);
+      updateFontColor(defaultFontColor);
+      
+      // Clear localStorage
+      localStorage.removeItem('customBgColor');
+      localStorage.removeItem('customFontColor');
+    }
+
+    function loadSavedColors() {
+      const savedBgColor = localStorage.getItem('customBgColor');
+      const savedFontColor = localStorage.getItem('customFontColor');
+      
+      if (savedBgColor) {
+        updateBackgroundColor(savedBgColor);
+      }
+      
+      if (savedFontColor) {
+        updateFontColor(savedFontColor);
+      }
+    }
+
+    // Load saved colors when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeRandomColors();
+      loadSavedColors();
+    });
+
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      // Press 'C' to toggle color game
+      if (e.key.toLowerCase() === 'c' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        toggleColorGame();
+      }
+      
+      // Press 'R' to reset colors
+      if (e.key.toLowerCase() === 'r' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        resetColors();
+      }
+    });
+
+    // Add some fun random color combinations
+    function getRandomColor() {
+      const colors = [
+        '#ffffff', '#f8f8f8', '#1a1a1a', '#2d3748', '#f7fafc', '#fef5e7',
+        '#111111', '#4a5568', '#2b6cb0', '#38a169', '#d53f8c', '#ed8936'
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    // Easter egg: Press 'X' for random colors
+    document.addEventListener('keydown', function(e) {
+      if (e.key.toLowerCase() === 'x' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        refreshRandomColors();
+      }
+    });
+  </script>
 </body>
 </html>
