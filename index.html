@@ -34,6 +34,13 @@
       padding-right: 1.5rem;
       padding-top: 0.35rem;
     }
+    .logo {
+      width: 120px;
+      height: auto;
+      margin-bottom: 2rem;
+      display: block;
+      filter: invert(1) brightness(0) contrast(100%);
+    }
     .sidebar ul { list-style: none; }
     .sidebar li {
       margin-bottom: 0.75rem;
@@ -97,6 +104,7 @@
 <body>
   <div class="wrapper">
     <nav class="sidebar">
+      <img src="logo.svg" alt="Logo" class="logo">
       <ul>
         <li class="{% if page.url == '/' %}active{% endif %}"><a href="{{ '/' | relative_url }}">index</a></li>
         <li class="{% if page.url contains '/about' %}active{% endif %}"><a href="{{ '/about/' | relative_url }}">about</a></li>
