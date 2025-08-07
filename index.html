@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ site.title | default: "My Blog" }}</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      line-height: 1.6;
+      color: #111;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ---------- Layout ---------- */
+    .wrapper {
+      display: flex;
+      max-width: 960px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+      align-items: flex-start;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 160px;
+      border-right: 1px solid #e6e6e6;
+      padding-right: 1.5rem;
+      padding-top: 0.35rem;
+    }
+    .sidebar ul { list-style: none; }
+    .sidebar li {
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      transition: font-weight 0.3s ease; /* Add transition for smooth font-weight change */
+    }
+    .sidebar li:hover {
+      font-weight: 600; /* Make text slightly more bold on hover */
+    }
+    .sidebar li.active { font-weight: 700; }
+
+    /* Content */
+    .content { flex: 1; padding-left: 1.5rem; }
+    .posts  { list-style: none; }
+    .post-item {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.35rem 0;
+    }
+
+    /* Title with lighter dotted leader */
+    .post-link {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: font-weight 0.3s ease; /* Add transition for smooth font-weight change */
+    }
+    
+    /* Make title slightly more bold on hover */
+    .post-item:hover .post-link {
+      font-weight: 600;
+    }
+    .post-link::after {
+      content: "";
+      flex-grow: 1;
+      margin-left: 0.5rem;
+      height: 1px;
+      background-image: repeating-linear-gradient(to right, currentColor 0 2px, transparent 2px 12px);
+      background-repeat: repeat-x;
+      transform: translateY(0.35em); /* nudge down so dots sit on text baseline */
+      transition: background-image 0.3s ease; /* Add transition for smooth animation */
+    }
+    
+    /* Change dotted line to solid line on hover */
+    .post-item:hover .post-link::after {
+      background-image: linear-gradient(to right, currentColor, currentColor);
+    }
+
+    .post-date {
+      white-space: nowrap;
+      font-size: 0.85rem;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="sidebar">
+      <ul>
+        <li class="{% if page.url == '/' %}active{% endif %}"><a href="{{ '/' | relative_url }}">index</a></li>
+        <li class="{% if page.url contains '/about' %}active{% endif %}"><a href="{{ '/about/' | relative_url }}">about</a></li>
+        <li class="{% if page.url contains '/subscribe' or page.url contains 'feed' %}active{% endif %}"><a href="{{ '/subscribe/' | relative_url }}">subscribe</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <ul class="posts">
+        <li class="post-item">
+          <a class="post-link" href="#">Understanding Lattice-Based Cryptography: A Beginner's Guide</a>
+          <span class="post-date">2023-01-15</span>
+        </li>
+        <li class="post-item">
+          <a class="post-link" href="#">Zero-Knowledge Proofs in Modern Cryptography</a>
+          <span class="post-date">2023-01-08</span>
+        </li>
+        <li class="post-item">
+          <a class="post-link" href="#">Post-Quantum Cryptography: Preparing for the Future</a>
+          <span class="post-date">2023-12-22</span>
+        </li>
+        <li class="post-item">
+          <a class="post-link" href="#">Indistinguishability Obfuscation: Theory and Applications</a>
+          <span class="post-date">2023-12-15</span>
+        </li>
+        <li class="post-item">
+          <a class="post-link" href="#">Homomorphic Encryption: Computing on Encrypted Data</a>
+          <span class="post-date">2023-12-01</span>
+        </li>
+        <li class="post-item">
+          <a class="post-link" href="#">Ring Learning with Errors: Mathematical Foundations</a>
+          <span class="post-date">2023-11-18</span>
+        </li>
+        <li class="post-item">
+          <a class="post-link" href="#">Cryptographic Hash Functions and Their Security Properties</a>
+          <span class="post-date">2023-11-05</span>
+        </li>
+        <li class="post-item">
+          <a class="post-link" href="#">Digital Signatures in the Quantum Era</a>
+          <span class="post-date">2023-10-28</span>
+        </li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>
