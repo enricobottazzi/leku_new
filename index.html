@@ -495,19 +495,6 @@
       loadSavedColors();
     });
 
-    // Add keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-      // Press 'C' to toggle color game
-      if (e.key.toLowerCase() === 'c' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        toggleColorGame();
-      }
-      
-      // Press 'R' to reset colors
-      if (e.key.toLowerCase() === 'r' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        resetColors();
-      }
-    });
-
     // Add some fun random color combinations
     function getRandomColor() {
       const colors = [
@@ -517,12 +504,6 @@
       return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    // Easter egg: Press 'X' for random colors
-    document.addEventListener('keydown', function(e) {
-      if (e.key.toLowerCase() === 'x' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        refreshRandomColors();
-      }
-    });
   </script>
 </body>
 </html>
