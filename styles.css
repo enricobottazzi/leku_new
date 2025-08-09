@@ -235,3 +235,13 @@ h3 {
 .post .post-content a:hover {
   border-bottom: 1px solid currentColor;
 }
+
+/* Blog post images */
+.post .post-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  display: block;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+}
