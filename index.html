@@ -132,6 +132,31 @@
     const defaultBgColor = '#ffffff';
     const defaultFontColor = '#111111';
 
+    // Keep the early theme <style id="early-theme"> in sync so !important rules don't block changes
+    function applyEarlyTheme(bg, fg) {
+      try {
+        let css = '';
+        if (bg) css += 'body{background-color:' + bg + ' !important;}';
+        if (fg) {
+          css += 'body{color:' + fg + ' !important;}';
+          css += '.sidebar{border-right-color:' + fg + ' !important;}';
+          css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
+          css += '.game-toggle{background:' + fg + ' !important;}';
+        }
+        let s = document.getElementById('early-theme');
+        if (!css) {
+          if (s) s.remove();
+          return;
+        }
+        if (!s) {
+          s = document.createElement('style');
+          s.id = 'early-theme';
+          document.head.appendChild(s);
+        }
+        s.textContent = css;
+      } catch (_) {}
+    }
+
     function toggleColorGame() {
       const game = document.getElementById('colorGame');
       gameVisible = !gameVisible;
@@ -140,8 +165,12 @@
     }
 
     function updateBackgroundColor(color) {
-      document.body.style.backgroundColor = color;
+      // Apply immediately (win over existing !important with inline !important)
+      document.body.style.setProperty('background-color', color, 'important');
       localStorage.setItem('customBgColor', color);
+      // Sync early theme so future paints and other pages match
+      const fg = localStorage.getItem('customFontColor');
+      applyEarlyTheme(color, fg);
     }
 
     function updateBackgroundColorFromBox(box) {
@@ -168,18 +197,22 @@
     }
 
     function updateFontColor(color) {
-      document.body.style.color = color;
+  // Apply immediately
+  document.body.style.setProperty('color', color, 'important');
 
       const elements = document.querySelectorAll('.post-date, .sidebar li, .post-link');
-      elements.forEach(el => { el.style.color = color; });
+  elements.forEach(el => { el.style.setProperty('color', color, 'important'); });
 
       const sidebar = document.querySelector('.sidebar');
-      sidebar.style.borderRightColor = color;
+  sidebar.style.setProperty('border-right-color', color, 'important');
 
       const toggleButton = document.querySelector('.game-toggle');
-      toggleButton.style.backgroundColor = color;
+  toggleButton.style.setProperty('background-color', color, 'important');
 
       localStorage.setItem('customFontColor', color);
+  // Sync early theme so future paints and other pages match
+  const bg = localStorage.getItem('customBgColor');
+  applyEarlyTheme(bg, color);
     }
 
     function refreshRandomColors() {
@@ -199,6 +232,19 @@
       updateFontColor(defaultFontColor);
       localStorage.removeItem('customBgColor');
       localStorage.removeItem('customFontColor');
+      // Remove inline overrides and early theme completely
+      try {
+        document.body.style.removeProperty('background-color');
+        document.body.style.removeProperty('color');
+        document.querySelectorAll('.post-date, .sidebar li, .post-link').forEach(el => {
+          el.style.removeProperty('color');
+        });
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) sidebar.style.removeProperty('border-right-color');
+        const toggleButton = document.querySelector('.game-toggle');
+        if (toggleButton) toggleButton.style.removeProperty('background-color');
+      } catch (_) {}
+      applyEarlyTheme(null, null);
     }
 
     function loadSavedColors() {
