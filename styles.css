@@ -102,6 +102,20 @@ a { text-decoration: none; color: inherit; }
   font-variant-numeric: tabular-nums;
 }
 
+/* --- Blog post layout (placeholder and future posts) --- */
+.post header { margin-bottom: 1rem; }
+.post-title {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-synthesis: none;
+  font-weight: 400; /* match index title weight */
+  text-transform: uppercase; /* requested uppercase */
+  line-height: 1.2;
+  margin: 0; /* align flush-left like About/Subscribe paragraphs */
+  padding: 0.35rem 0;
+  border-bottom: 1px solid currentColor; /* separator between title and subtitle */
+}
+.post header .post-date { margin-top: 0.35rem; }
+
 /* Color Game Styles */
 .color-game {
   position: fixed;
