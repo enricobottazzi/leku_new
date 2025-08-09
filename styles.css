@@ -186,3 +186,39 @@ a { text-decoration: none; color: inherit; }
   text-justify: inter-word;
   hyphens: auto;
 }
+
+/* Style all headings to use JetBrains Mono */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-synthesis: none;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 1.5rem 0 0.75rem 0;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+/* Fix list alignment to not extend beyond justified margin */
+.post .post-content ol,
+.post .post-content ul {
+  margin-left: 0;
+  padding-left: 1.2rem;
+}
+
+.post .post-content li {
+  margin-bottom: 0.5rem;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
