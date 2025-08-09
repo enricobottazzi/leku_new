@@ -4,6 +4,33 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{ site.title | default: "My Blog" }}</title>
+  <script>
+    // Apply saved colors before first paint to avoid flash
+    (function() {
+      try {
+        var bg = localStorage.getItem('customBgColor');
+        var fg = localStorage.getItem('customFontColor');
+        var css = '';
+        if (bg) css += 'body{background-color:' + bg + ' !important;}';
+        if (fg) {
+          css += 'body{color:' + fg + ' !important;}';
+          css += '.sidebar{border-right-color:' + fg + ' !important;}';
+          css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
+          css += '.game-toggle{background:' + fg + ' !important;}';
+        }
+        if (css) {
+          var s = document.createElement('style');
+          s.id = 'early-theme';
+          s.textContent = css;
+          document.head.appendChild(s);
+        }
+      } catch (_) {}
+    })();
+  </script>
+  <style>
+    /* Hide sections until JS decides which to show (prevents wrong-section flash) */
+    #posts-list, #placeholder-text, #subscribe-placeholder { display: none; }
+  </style>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -48,35 +75,35 @@
     <main class="content">
       <ul class="posts" id="posts-list">
         <li class="post-item">
-          <a class="post-link" href="#">Understanding Lattice-Based Cryptography: A Beginner's Guide</a>
+          <a class="post-link" href="posts/blog_placeholder.html">Understanding Lattice-Based Cryptography: A Beginner's Guide</a>
           <span class="post-date">2023-01-15</span>
         </li>
         <li class="post-item">
-          <a class="post-link" href="#">Zero-Knowledge Proofs in Modern Cryptography</a>
+          <a class="post-link" href="posts/blog_placeholder.html">Zero-Knowledge Proofs in Modern Cryptography</a>
           <span class="post-date">2023-01-08</span>
         </li>
         <li class="post-item">
-          <a class="post-link" href="#">Post-Quantum Cryptography: Preparing for the Future</a>
+          <a class="post-link" href="posts/blog_placeholder.html">Post-Quantum Cryptography: Preparing for the Future</a>
           <span class="post-date">2023-12-22</span>
         </li>
         <li class="post-item">
-          <a class="post-link" href="#">Indistinguishability Obfuscation: Theory and Applications</a>
+          <a class="post-link" href="posts/blog_placeholder.html">Indistinguishability Obfuscation: Theory and Applications</a>
           <span class="post-date">2023-12-15</span>
         </li>
         <li class="post-item">
-          <a class="post-link" href="#">Homomorphic Encryption: Computing on Encrypted Data</a>
+          <a class="post-link" href="posts/blog_placeholder.html">Homomorphic Encryption: Computing on Encrypted Data</a>
           <span class="post-date">2023-12-01</span>
         </li>
         <li class="post-item">
-          <a class="post-link" href="#">Ring Learning with Errors: Mathematical Foundations</a>
+          <a class="post-link" href="posts/blog_placeholder.html">Ring Learning with Errors: Mathematical Foundations</a>
           <span class="post-date">2023-11-18</span>
         </li>
         <li class="post-item">
-          <a class="post-link" href="#">Cryptographic Hash Functions and Their Security Properties</a>
+          <a class="post-link" href="posts/blog_placeholder.html">Cryptographic Hash Functions and Their Security Properties</a>
           <span class="post-date">2023-11-05</span>
         </li>
         <li class="post-item">
-          <a class="post-link" href="#">Digital Signatures in the Quantum Era</a>
+          <a class="post-link" href="posts/blog_placeholder.html">Digital Signatures in the Quantum Era</a>
           <span class="post-date">2023-10-28</span>
         </li>
       </ul>
@@ -180,9 +207,22 @@
     document.addEventListener('DOMContentLoaded', function() {
       initializeRandomColors();
       loadSavedColors();
-      // Initialize the page with posts shown by default
-      showPosts();
+      // Initialize the page based on URL hash (supports links from placeholder page)
+      handleHashRouting();
     });
+
+    window.addEventListener('hashchange', handleHashRouting);
+
+    function handleHashRouting() {
+      const hash = window.location.hash.toLowerCase();
+      if (hash === '#about') {
+        showAbout();
+      } else if (hash === '#subscribe') {
+        showSubscribe();
+      } else {
+        showPosts();
+      }
+    }
 
     // Navigation functions
     function showPosts() {

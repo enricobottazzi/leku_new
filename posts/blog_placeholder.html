@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Post – Coming Soon</title>
+  <script>
+    // Apply saved colors before first paint to avoid flash
+    (function() {
+      try {
+        var bg = localStorage.getItem('customBgColor');
+        var fg = localStorage.getItem('customFontColor');
+        var css = '';
+        if (bg) css += 'body{background-color:' + bg + ' !important;}';
+        if (fg) {
+          css += 'body{color:' + fg + ' !important;}';
+          css += '.sidebar{border-right-color:' + fg + ' !important;}';
+          css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
+        }
+        if (css) {
+          var s = document.createElement('style');
+          s.id = 'early-theme';
+          s.textContent = css;
+          document.head.appendChild(s);
+        }
+      } catch (_) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="sidebar">
+      <ul>
+  <li class="active"><a href="../index.html">index</a></li>
+  <li><a href="../index.html#about">about</a></li>
+  <li><a href="../index.html#subscribe">subscribe</a></li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <article class="post">
+        <header>
+          <h1 class="post-title">This post is coming soon</h1>
+          <div class="post-date">Work in progress</div>
+        </header>
+
+        <section class="content">
+          <p>
+            The full article isn't published yet. Check back later, or return to the
+            <a href="../index.html">index</a> to read other posts.
+          </p>
+        </section>
+      </article>
+    </main>
+  </div>
+
+  
+</body>
+</html>
