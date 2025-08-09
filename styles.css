@@ -163,3 +163,12 @@ a { text-decoration: none; color: inherit; }
 .game-toggle:hover { opacity: 0.8; }
 
 .color-game.hidden { display: none; }
+
+/* Justify paragraphs for About, Subscribe, and blog placeholder */
+.placeholder-text p,
+.subscribe-placeholder p,
+.post .post-content p {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
