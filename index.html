@@ -202,14 +202,14 @@
   <div class="wrapper">
     <nav class="sidebar">
       <ul>
-        <li class="{% if page.url == '/' %}active{% endif %}"><a href="{{ '/' | relative_url }}">index</a></li>
-        <li class="{% if page.url contains '/about' %}active{% endif %}"><a href="{{ '/about/' | relative_url }}">about</a></li>
-        <li class="{% if page.url contains '/subscribe' or page.url contains 'feed' %}active{% endif %}"><a href="{{ '/subscribe/' | relative_url }}">subscribe</a></li>
+        <li class="active"><a href="#" onclick="showPosts(); return false;">index</a></li>
+        <li><a href="#" onclick="showAbout(); return false;">about</a></li>
+        <li><a href="#" onclick="showSubscribe(); return false;">subscribe</a></li>
       </ul>
     </nav>
 
     <main class="content">
-      <ul class="posts">
+      <ul class="posts" id="posts-list">
         <li class="post-item">
           <a class="post-link" href="#">Understanding Lattice-Based Cryptography: A Beginner's Guide</a>
           <span class="post-date">2023-01-15</span>
@@ -243,6 +243,18 @@
           <span class="post-date">2023-10-28</span>
         </li>
       </ul>
+      <div class="placeholder-text" id="placeholder-text" style="display: none;">
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: inherit; color: inherit; line-height: 1.6; text-transform: uppercase;">
+          This is placeholder text that appears when you click on "About".<br><br>
+          Here you could add information about yourself, your background, or any other content you'd like to share.
+        </p>
+      </div>
+      <div class="subscribe-placeholder" id="subscribe-placeholder" style="display: none;">
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: inherit; color: inherit; line-height: 1.6; text-transform: uppercase;">
+          Subscribe to get notified about new posts.<br><br>
+          You can add subscription options, newsletter signup, or RSS feed information here.
+        </p>
+      </div>
     </main>
   </div>
 
@@ -331,7 +343,40 @@
     document.addEventListener('DOMContentLoaded', function() {
       initializeRandomColors();
       loadSavedColors();
+      // Initialize the page with posts shown by default
+      showPosts();
     });
+
+    // Navigation functions
+    function showPosts() {
+      document.getElementById('posts-list').style.display = 'block';
+      document.getElementById('placeholder-text').style.display = 'none';
+      document.getElementById('subscribe-placeholder').style.display = 'none';
+      
+      // Update active state
+      document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+      document.querySelector('.sidebar li:first-child').classList.add('active');
+    }
+
+    function showAbout() {
+      document.getElementById('posts-list').style.display = 'none';
+      document.getElementById('placeholder-text').style.display = 'block';
+      document.getElementById('subscribe-placeholder').style.display = 'none';
+      
+      // Update active state
+      document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+      document.querySelector('.sidebar li:nth-child(2)').classList.add('active');
+    }
+
+    function showSubscribe() {
+      document.getElementById('posts-list').style.display = 'none';
+      document.getElementById('placeholder-text').style.display = 'none';
+      document.getElementById('subscribe-placeholder').style.display = 'block';
+      
+      // Update active state
+      document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+      document.querySelector('.sidebar li:nth-child(3)').classList.add('active');
+    }
   </script>
 </body>
 </html>
