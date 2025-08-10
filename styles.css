@@ -247,6 +247,27 @@ h3 {
   border-radius: 4px;
 }
 
+/* Figure and figcaption styling */
+.post .post-content figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.post .post-content figure img {
+  margin: 0 auto 0.5rem auto;
+  display: block;
+}
+
+.post .post-content figcaption {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: #888;
+  text-align: center;
+  margin: 0 auto;
+  max-width: 80%;
+}
+
 /* Code blocks */
 .post .post-content pre {
   background-color: #f8f8f8;
@@ -259,17 +280,6 @@ h3 {
   font-size: 0.85rem;
   line-height: 1.3;
   position: relative;
-}
-
-.post .post-content pre:before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(180deg, #007acc 0%, #005a9e 100%);
-  border-radius: 3px 0 0 3px;
 }
 
 .post .post-content code {
@@ -312,5 +322,9 @@ h3 {
     background-color: #2d2d2d;
     border-color: #404040;
     color: #d4d4d4;
+  }
+  
+  .post .post-content figcaption {
+    color: #999;
   }
 }
