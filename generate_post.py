@@ -36,6 +36,10 @@ def parse_markdown(path):
 
 def convert_markdown_to_html(markdown_content):
     """Convert markdown content to HTML, preserving LaTeX blocks."""
+    # Remove Hugo shortcodes first
+    content = re.sub(r'\{\{<rawhtml>\}\}', '', markdown_content)
+    content = re.sub(r'\{\{</rawhtml>\}\}', '', content)
+    
     # Preserve LaTeX blocks before markdown conversion
     # Save display math blocks ($$...$$)
     display_math_blocks = []
@@ -50,7 +54,7 @@ def convert_markdown_to_html(markdown_content):
         return f"INLINEMATH{len(inline_math_blocks)-1}PLACEHOLDER"
     
     # Replace LaTeX blocks with placeholders
-    content_with_placeholders = re.sub(r'\$\$(.*?)\$\$', save_display_math, markdown_content, flags=re.DOTALL)
+    content_with_placeholders = re.sub(r'\$\$(.*?)\$\$', save_display_math, content, flags=re.DOTALL)
     content_with_placeholders = re.sub(r'\$([^\$]+?)\$', save_inline_math, content_with_placeholders)
     
     # Initialize markdown converter with extensions
