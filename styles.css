@@ -35,7 +35,7 @@ a { text-decoration: none; color: inherit; }
 
 /* Sidebar */
 .sidebar {
-  width: 160px;
+  flex: 0 0 160px;
   border-right: 1px solid #111;
   padding-right: 1.5rem;
   padding-top: 0.35rem;
@@ -55,7 +55,7 @@ a { text-decoration: none; color: inherit; }
 .sidebar li.active { font-weight: 700; }
 
 /* Content */
-.content { flex: 1; padding-left: 1.5rem; }
+.content { flex: 1 1 0; padding-left: 1.5rem; min-width: 0; }
 .posts  { list-style: none; }
 .post-item {
   display: flex;
