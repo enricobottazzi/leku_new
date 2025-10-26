@@ -224,8 +224,10 @@ h3 {
   hyphens: auto;
 }
 
-/* Blog post hyperlinks with dotted animation */
-.post .post-content a {
+/* Unified hyperlink styles with dotted animation */
+.post .post-content a,
+.placeholder-text a,
+.subscribe-placeholder a {
   position: relative;
   color: inherit;
   text-decoration: none;
@@ -233,7 +235,9 @@ h3 {
   transition: border-bottom 0.3s ease;
 }
 
-.post .post-content a:hover {
+.post .post-content a:hover,
+.placeholder-text a:hover,
+.subscribe-placeholder a:hover {
   border-bottom: 1px solid currentColor;
 }
 
