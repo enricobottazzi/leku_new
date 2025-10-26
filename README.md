@@ -8,6 +8,7 @@
 4. Copy the content of `output.html` into the `<section class="post-content">` class of `your_title.html`. Update `title`, `post-title` and `post-date`.
 5. Add your post inside the `<ul class="posts" id="posts-list">` in `index.html` pointing to the correctly file, with the correct date and title
 6. Double check the correctness of the newly added blogpost:
+    - Is the title correct? Appearing twice?
     - Check the links
     - Check the images (these are not automatically imported from HackMD)
     - Check the Latex formatting
