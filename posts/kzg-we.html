@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post – Coming Soon</title>
-  <link rel="preload" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" as="font" type="font/woff2" crossorigin>
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post – Coming Soon</title>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
     // Apply saved colors before first paint to avoid flash
     (function() {
       try {
@@ -28,11 +29,10 @@
       } catch (_) {}
     })();
   </script>
-  <link rel="stylesheet" href="../styles.css" />
-
-  <!-- MathJax for LaTeX support -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script>
+<link href="../styles.css" rel="stylesheet"/>
+<!-- MathJax for LaTeX support -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script>
     // Configure MathJax (v3) before loading the script
     window.MathJax = {
       tex: {
@@ -45,66 +45,64 @@
       }
     };
   </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-  <div class="wrapper">
-    <nav class="sidebar">
-      <ul>
-  <li class="active"><a href="../index.html">index</a></li>
-  <li><a href="../index.html#about">about</a></li>
-  <li><a href="../index.html#subscribe">subscribe</a></li>
-      </ul>
-    </nav>
-
-    <main class="content">
-      <article class="post">
-        <header>
-          <h1 class="post-title">Notes on extractable witness encryption for KZG commitments</h1>
-          <div class="post-date">2024-09-03</div>
-        </header>
-
-  <section class="post-content">
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li class="active"><a href="../index.html">index</a></li>
+<li><a href="../index.html#about">about</a></li>
+<li><a href="../index.html#subscribe">subscribe</a></li>
+</ul>
+</nav>
+<main class="content">
+<article class="post">
+<header>
+<h1 class="post-title">Notes on extractable witness encryption for KZG commitments</h1>
+<div class="post-date">2024-09-03</div>
+</header>
+<section class="post-content">
 <h3>Core Resources</h3>
 <ul>
-<li><a href="https://eprint.iacr.org/2024/264">Paper</a></li>
-<li><a href="https://youtu.be/81Hq7Ij94vE?si=G1CO9m3Sl1nw6ukB">Youtube presentation of the paper</a></li>
+<li><a href="https://eprint.iacr.org/2024/264" rel="noopener noreferrer" target="_blank">Paper</a></li>
+<li><a href="https://youtu.be/81Hq7Ij94vE?si=G1CO9m3Sl1nw6ukB" rel="noopener noreferrer" target="_blank">Youtube presentation of the paper</a></li>
 </ul>
 <h3>Witness Encryption (WE)</h3>
 <p>First of all, what is Witness Encryption?</p>
 <p>You can compare it with a normal public encryption scheme. What you would normally do is to encrypt under a public key. You encrypt a message towards a public key. The encryption returns a ciphertext that can only be decrypted using the secret key that corresponds to the public key.</p>
 <p>Instead, with WE, a message is encrypted towards a statement. $x$ is a statement, and $w$ is a valid witness for that statement. In witness encryption, we replace the public key with the statement and the secret key (or decryption key) with the witness. The formal condition is that the $(x, w)$ is a valid NP relation in R. In other words, $w$ must be a valid witness for the statement $x$ is order to allow decryption.</p>
-<p><img alt="Screenshot 2024-08-04 at 11.59.04" src="https://hackmd.io/_uploads/ryjFCP2YC.png" /></p>
+<p><img alt="Screenshot 2024-08-04 at 11.59.04" src="https://hackmd.io/_uploads/ryjFCP2YC.png"/></p>
 <p>This kind of witness encryption for any NP relation is only theoretical at this point. It can be constructed from indistinguishability obfuscation or non-standard lattices assumption, but it is not practical or efficient. The paper suggests building WE for a specific set of NP relations, namely KZG commitments.</p>
 <h3>WE for KZG commimtents</h3>
-<p>Check this <a href="https://scroll.io/blog/kzg">blog post</a> from Scroll for a better understanding of KZG commitments.</p>
+<p>Check this <a href="https://scroll.io/blog/kzg" rel="noopener noreferrer" target="_blank">blog post</a> from Scroll for a better understanding of KZG commitments.</p>
 <p>KZG is a polynomial commitment scheme. Here, the polynomial is $f$. Remember that you can pack a lot of information into a polynomial! </p>
-<p><img alt="Screenshot 2024-08-06 at 14.09.22" src="https://hackmd.io/_uploads/Syabe4150.png" /></p>
+<p><img alt="Screenshot 2024-08-06 at 14.09.22" src="https://hackmd.io/_uploads/Syabe4150.png"/></p>
 <p>The high-level idea of WE for KZG commitments is to encrypt a message towards a triple $com, \alpha, \beta$ where $\alpha$ is a point and $\beta$ is the required evaluation at that point. Someone that <em>knows</em> a correct opening proof $\pi$ for that triple should be able to decrypt that message. </p>
 <p>Performing WE based on KZG like that is not secure (min 9:40 of the YT video). More on that in Witness Encryption vs Extractable Witness Encryption section of this article. The authors, therefore, focus on the notion of Extractable Witness Encryption.</p>
 <p>To construct such a scheme, the authors start by describing a simpler algorithm: Extractable Witness KEM for KZG, which is simpler but very similar to WE. But first of all, what is even a KEM?</p>
 <p>KEM stands for Key Encapsulation Mechanism, this is commonly used to securely exchange a symmetric key between two parties over a public insecure channel. There are two algorithms:</p>
 <p>$$
 \begin{align*}
-\text{Encap}(pk) &\rightarrow \text{k, ct} \\
-\text{Decap}(ct, sk) &\rightarrow k
+\text{Encap}(pk) &amp;\rightarrow \text{k, ct} \\
+\text{Decap}(ct, sk) &amp;\rightarrow k
 \end{align*}
 $$</p>
 <p>For example, the sender will generate the ciphertext $ct$ that encapsulates the key $k$ using the receiver's public key $pk$. The sender can now send the ciphertext over any public channel. The receiver can then decapsulate the key from the ciphertext with their secret key $sk$. After the decapsulation, $k$ can be used as a symmetric key to guarantee secure communication between the two parties.</p>
 <p>KEM is very similar to regular asymmetric encryption. The main difference is that in asymmetric encryption, you specify the message you want to encrypt, while in KEM, the thing that you want to encrypt (the key $k$, in practice) is randomly generated as part of the algorithm.</p>
 <p>Similarly, the difference between Witness KEM and regular WE is that in the first case, we witness encrypting a random key $k$, while in WE, we encrypt a specific message $m$.</p>
-<p><img alt="Screenshot 2024-08-04 at 12.35.28" src="https://hackmd.io/_uploads/HyEzvdhYA.png" /></p>
+<p><img alt="Screenshot 2024-08-04 at 12.35.28" src="https://hackmd.io/_uploads/HyEzvdhYA.png"/></p>
 <p>Using this scheme, only the person able to generate the valid opening proof can decapsulate the key $k$.</p>
 <p>Once we have this basic construction, obtaining witness encryption is pretty easy since we can use the encapsulated/decapsulated key $k$ into a symmetric encryption scheme to encrypt arbitrary messages $m$.</p>
-<p><img alt="Screenshot 2024-08-06 at 11.48.21" src="https://hackmd.io/_uploads/ByQZyfy5A.png" /></p>
+<p><img alt="Screenshot 2024-08-06 at 11.48.21" src="https://hackmd.io/_uploads/ByQZyfy5A.png"/></p>
 <h3>Oblivious Transfer</h3>
 <p>This is a traditional OT between Alice and Bob. Informally, OT should guarantee Bob to receive from Alice the message corresponding to his bit $m_b$ without leaking to Alice the information about which message was requested.</p>
-<p><img alt="Screenshot 2024-08-04 at 12.55.53" src="https://hackmd.io/_uploads/HytRo_3Y0.png" /></p>
+<p><img alt="Screenshot 2024-08-04 at 12.55.53" src="https://hackmd.io/_uploads/HytRo_3Y0.png"/></p>
 <p>In the traditional version, each message requires two rounds of communication between Alice and Bob</p>
 <p>The Laconic version of OT makes the scheme more efficient. In particular, Bob compresses all his $n$ bits into a dictionary and sends the digest of the dictionary $D$ to Alice. In this way, a transfer of $n$ messages between Alice and Bob requires constant communication rounds (namely 2). We kind of batch all the Oblivious Transfers together.</p>
-<p><img alt="Screenshot 2024-08-04 at 13.02.42" src="https://hackmd.io/_uploads/B1mOp_2KR.png" /></p>
+<p><img alt="Screenshot 2024-08-04 at 13.02.42" src="https://hackmd.io/_uploads/B1mOp_2KR.png"/></p>
 <p>WE for KZG is used to compress the dictionary Bob sent in the first place. After receiving the commitment $com$ from Bob, Alice will encrypt their contradictory messages under the KZG triples. For example, she will encrypt ${m_0}^1$ under the opening of the commitment to $0$ at the point $1$ and the message ${m_1}^1$ under the opening of the commitment to $1$ at the point $1$. Bob will only be able to decrypt the message that corresponds to the bit he commited to at position $1$ of the dictionary by providing a valid opening proof.</p>
-<p><img alt="Screenshot 2024-08-04 at 13.04.47" src="https://hackmd.io/_uploads/SJWg0_3YR.png" /></p>
+<p><img alt="Screenshot 2024-08-04 at 13.04.47" src="https://hackmd.io/_uploads/SJWg0_3YR.png"/></p>
 <p>Note, once again, Alice doesn't get to know which opening verifies as she is not involved in the $Receive$ funtion that can be run independently by Bob. </p>
 <h3>Witness Encryption vs Extractable Witness Encryption</h3>
 <p>This is more of a nerd snipe of mine, which is probably not required for engineers trying to understand Witness Encryption. </p>
@@ -116,30 +114,30 @@ $$</p>
 <p>We can build a Witness Encryption protocol from this standard definition of an NP language $L$ (with corresponding witness
 relation $R$). The encryption algorithm will take the statement $x$ as input (together with a message $m$) and return a ciphertext, while the decryption algorithm will take the witness $w$ as input (together with the ciphertext) and return the message $m$. </p>
 <p>We now need to define the notions of <strong>correctness</strong> and <strong>semantic security</strong> for the scheme</p>
-<p><img alt="Screenshot 2024-08-06 at 15.45.48" src="https://hackmd.io/_uploads/HJKoUB1qC.png" /></p>
+<p><img alt="Screenshot 2024-08-06 at 15.45.48" src="https://hackmd.io/_uploads/HJKoUB1qC.png"/></p>
 <p>The correctness property guarantees that if the tuple $(x, w)$ is a valid relation, the decryption algorithm will return the correct message $m$. </p>
-<p><img alt="Screenshot 2024-08-06 at 15.47.49" src="https://hackmd.io/_uploads/BkemDHycR.png" /></p>
+<p><img alt="Screenshot 2024-08-06 at 15.47.49" src="https://hackmd.io/_uploads/BkemDHycR.png"/></p>
 <p>The semantic security property guarantees that if $x$ is not in the language $L$ and if I have two different messages $m_0$ and $m_1$ encrypted under a statement $x$ that is not in the language, the generated ciphertexts are computationally undistinguishable. Under this property, nobody should be able to tell whether these ciphertexts correspond to an encryption of $m_0$ or $m_1$.</p>
 <p>This second security property holds only if $x \notin L$. If $x$ is in the language $L$, this property doesn't hold anymore, i.e., ppl can break the semantic security and learn the message behind the ciphertext. </p>
 <p>So now, let's go back to our attempt at building witness encryption, which started with the KZG commitment scheme. </p>
 <p>In that case, the statement $x$ equals the triple $(com, \alpha, \beta)$, and the witness is the opening proof $\pi$. A statement is in the language if an opening proof exists such that the verification algorithm returns true.</p>
-<p><img alt="Screenshot 2024-08-06 at 16.02.29" src="https://hackmd.io/_uploads/SJW99Skq0.png" /></p>
+<p><img alt="Screenshot 2024-08-06 at 16.02.29" src="https://hackmd.io/_uploads/SJW99Skq0.png"/></p>
 <p>The problem is that for any instantly valid triple, there <strong>exists</strong> an opening; therefore, $x$ is always in the language. This is a problem because, according to the notion of WE defined by [GGSW13], this wouldn't guarantee semantic security (i.e., that the message is hidden). In other words, under this KZG-based WE scheme, everyone would be able to decrypt the message as long as the triple used as statement $x$ for encryption is in the language $L$. Instead, we want the message to be decryptable only for those who know a valid opening proof $\pi$ for that statement.</p>
 <p>To do so, we add the notion of extractability to our WE scheme, as introduced by [GKP+13]. This says that if an adversary can break semantic security for a statement $x$, an extractor can extract the witness $w$ for $x$. This is cool because we kind of extend the semantic security notion of normal WE also to $x$ that are in the language, which is the case for our KZG-based scheme. </p>
 <p>That's why the authors focus their efforts on building an EWE scheme. Also, most of the paper's content is dedicated to proof that this scheme is actually extractable, which is beyond the scope of our research. </p>
-<p>Note that at 1:02:00 of <a href="https://youtu.be/81Hq7Ij94vE?si=G1CO9m3Sl1nw6ukB">presentation</a>, Nils mentions a possible 2-round Witness Encryption scheme for Arbitrary Statements based on zkSNARKs. In particular, he specifies that this is not an Extractable Witness Encryption but a <em>normal Witness Encryption</em>. Why is that the case? At 0:05:30 in the presentation, he claims that the semantic security of WE holds when you are working with a language in which it is hard to decide whether $x$ is in the language or not and I think this applies to zkSNARKs.</p>
+<p>Note that at 1:02:00 of <a href="https://youtu.be/81Hq7Ij94vE?si=G1CO9m3Sl1nw6ukB" rel="noopener noreferrer" target="_blank">presentation</a>, Nils mentions a possible 2-round Witness Encryption scheme for Arbitrary Statements based on zkSNARKs. In particular, he specifies that this is not an Extractable Witness Encryption but a <em>normal Witness Encryption</em>. Why is that the case? At 0:05:30 in the presentation, he claims that the semantic security of WE holds when you are working with a language in which it is hard to decide whether $x$ is in the language or not and I think this applies to zkSNARKs.</p>
 <h3>Conclusions</h3>
 <p>After reading the paper, the main questions that I’ve been asking myself is if there are other applications that we can built other than Laconic Oblivious Transfer out of the Extractable WE for KZG commitments. </p>
-<p>One of the most interesting application is to reduce round of interactions in multi-party applications and, more specifically, private set intersections (PSI) protocols. Ideas in this direction have been proposed by Cursive team, for <a href="https://x.com/viv_boop/status/1823078309758120090?s=61">job matching</a>, by Ingonyama, for <a href="https://medium.com/@ingonyama/cryptographic-fog-of-war-9b8785ba744a">fog of war games</a> and by Yiğit Kılıçoğlu, for <a href="https://docs.google.com/document/d/1NKlXGp6SA32hZcv-NY0PsTs4kYVaMOUi36wuCUvgoPs/edit">dark chess</a>.</p>
-<p>Another compelling use case is to built 2-round Witness Encryption scheme for Arbitrary Statements based on zkSNARKs as mentioned by the author of the paper at 1:02:00 of his <a href="https://youtu.be/81Hq7Ij94vE?si=G1CO9m3Sl1nw6ukB">presentation</a> but I'm not sure whether a) this is anywhere useful b) WE is overkill.</p>
+<p>One of the most interesting application is to reduce round of interactions in multi-party applications and, more specifically, private set intersections (PSI) protocols. Ideas in this direction have been proposed by Cursive team, for <a href="https://x.com/viv_boop/status/1823078309758120090?s=61" rel="noopener noreferrer" target="_blank">job matching</a>, by Ingonyama, for <a href="https://medium.com/@ingonyama/cryptographic-fog-of-war-9b8785ba744a" rel="noopener noreferrer" target="_blank">fog of war games</a> and by Yiğit Kılıçoğlu, for <a href="https://docs.google.com/document/d/1NKlXGp6SA32hZcv-NY0PsTs4kYVaMOUi36wuCUvgoPs/edit" rel="noopener noreferrer" target="_blank">dark chess</a>.</p>
+<p>Another compelling use case is to built 2-round Witness Encryption scheme for Arbitrary Statements based on zkSNARKs as mentioned by the author of the paper at 1:02:00 of his <a href="https://youtu.be/81Hq7Ij94vE?si=G1CO9m3Sl1nw6ukB" rel="noopener noreferrer" target="_blank">presentation</a> but I'm not sure whether a) this is anywhere useful b) WE is overkill.</p>
 <h3>References</h3>
 <ul>
-<li><a href="https://eprint.iacr.org/2013/258.pdf">GGSW13</a></li>
-<li><a href="https://eprint.iacr.org/2021/1530.pdf">OB21</a></li>
-<li><a href="https://people.csail.mit.edu/nickolai/papers/goldwasser-we.pdf">GKP+13</a></li>
-</ul>        </section>
-      </article>
-    </main>
-  </div>
+<li><a href="https://eprint.iacr.org/2013/258.pdf" rel="noopener noreferrer" target="_blank">GGSW13</a></li>
+<li><a href="https://eprint.iacr.org/2021/1530.pdf" rel="noopener noreferrer" target="_blank">OB21</a></li>
+<li><a href="https://people.csail.mit.edu/nickolai/papers/goldwasser-we.pdf" rel="noopener noreferrer" target="_blank">GKP+13</a></li>
+</ul> </section>
+</article>
+</main>
+</div>
 </body>
 </html>

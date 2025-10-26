@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post – Coming Soon</title>
-  <link rel="preload" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" as="font" type="font/woff2" crossorigin>
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post – Coming Soon</title>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
     // Apply saved colors before first paint to avoid flash
     (function() {
       try {
@@ -28,11 +29,10 @@
       } catch (_) {}
     })();
   </script>
-  <link rel="stylesheet" href="../styles.css" />
-
-  <!-- MathJax for LaTeX support -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script>
+<link href="../styles.css" rel="stylesheet"/>
+<!-- MathJax for LaTeX support -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script>
     // Configure MathJax (v3) before loading the script
     window.MathJax = {
       tex: {
@@ -45,34 +45,32 @@
       }
     };
   </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-  <div class="wrapper">
-    <nav class="sidebar">
-      <ul>
-  <li class="active"><a href="../index.html">index</a></li>
-  <li><a href="../index.html#about">about</a></li>
-  <li><a href="../index.html#subscribe">subscribe</a></li>
-      </ul>
-    </nav>
-
-    <main class="content">
-      <article class="post">
-        <header>
-          <h1 class="post-title">Vulnerability report: Binance PoR dummy user attack</h1>
-          <div class="post-date">2024-05-07</div>
-        </header>
-
-  <section class="post-content">
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li class="active"><a href="../index.html">index</a></li>
+<li><a href="../index.html#about">about</a></li>
+<li><a href="../index.html#subscribe">subscribe</a></li>
+</ul>
+</nav>
+<main class="content">
+<article class="post">
+<header>
+<h1 class="post-title">Vulnerability report: Binance PoR dummy user attack</h1>
+<div class="post-date">2024-05-07</div>
+</header>
+<section class="post-content">
 <blockquote>
-<p>You can leave comments on the hackMD version of this document <a href="https://hackmd.io/@summa/HygFa2eek0">here</a>.</p>
+<p>You can leave comments on the hackMD version of this document <a href="https://hackmd.io/@summa/HygFa2eek0" rel="noopener noreferrer" target="_blank">here</a>.</p>
 </blockquote>
 <p>This document describes a potential attack on Binance Proof of Reserves (PoR) <sup id="fnref:bin_1"><a class="footnote-ref" href="#fn:bin_1">1</a></sup><sup id="fnref:bin_2"><a class="footnote-ref" href="#fn:bin_2">2</a></sup><sup id="fnref:bin_3"><a class="footnote-ref" href="#fn:bin_3">3</a></sup> solution. </p>
 <p><strong>TL;DR</strong>: According to this attack, Binance has the ability to add dummy (non-existing) users to their userbase with an equity (positive) position in low-quality assets and a debt (negative) position in high-quality ones as long as, when converted to dollars, the net balance is greater than 0. This attack can be exploited by Binance to diminish the required on-chain reserves of high-quality assets (while increasing the required reserves of low-quality ones) and still be able to claim its solvency. If users wanted to withdraw their high-quality assets, Binance would not necessarily have these immediately at their disposal and would be required to liquidate low-quality assets. However, the liquidation may be unfeasible due to variable market conditions, exposing the user to the risk of not being able to withdraw their funds.</p>
 <h2>1. Intro to PoR</h2>
 <p>The core idea of a PoR protocol is to let users verify that the assets held by a Centralized Exchange (CEX) fully back their deposits so that these can be securely withdrawn at any time.</p>
-<p>A PoR protocol, according to the definition provided by <a href="https://vitalik.eth.limo/general/2022/11/19/proof_of_solvency.html">Vitalik</a>, is split into two sides: </p>
+<p>A PoR protocol, according to the definition provided by <a href="https://vitalik.eth.limo/general/2022/11/19/proof_of_solvency.html" rel="noopener noreferrer" target="_blank">Vitalik</a>, is split into two sides: </p>
 <ul>
 <li>Prove that CEX's customers deposits equal X - <strong>Proof of Liabilities (PoL)</strong> </li>
 <li>Prove CEX's ownership of the private keys of X assets - <strong>Proof of Assets (PoA)</strong></li>
@@ -80,12 +78,12 @@
 <p>With these two proofs, a CEX is able to prove that it has the funds to pay back all of its depositors. Binance<sup id="fnref2:bin_1"><a class="footnote-ref" href="#fn:bin_1">1</a></sup> makes an example: <em>When a user deposits one Bitcoin, Binance's reserves increase by at least one Bitcoin to ensure client funds are fully backed ... What this means in actual terms is that Binance holds all user assets 1:1 (as well as some reserves)</em>.</p>
 <p>The PoA is <em>relatively</em> easy to achieve. The CEX must sign an off-chain message to prove ownership of a private key and, therefore, of the assets controlled by that private key. </p>
 <p>The PoL is more tricky. Users' deposits are only stored inside the CEX's database. The two main problems involve privacy and verifiability. Information about the deposits of each user should not be revealed to the public. Furthermore, a single user can only verify the correctness of <em>their</em> deposit but cannot tell anything about other users' deposits. A way to achieve verifiability and (partial) privacy is to accumulate users inside a Merkle Sum Tree and publish the Merkle Root, containing a hash and a balance representing the sum of the CEX's liabilities. </p>
-<p><img alt="Screenshot 2024-03-26 at 09.46.32" src="https://hackmd.io/_uploads/S16Ojbx1C.png" /></p>
+<p><img alt="Screenshot 2024-03-26 at 09.46.32" src="https://hackmd.io/_uploads/S16Ojbx1C.png"/></p>
 <p>The CEX can provide users with their Merkle Proof (in blue, for Charlie) to let them verify they have been accounted for correctly in the liabilities summation. </p>
 <p>Note that the security of <strong>any</strong> PoR protocol relies on the assumption that a percentage of users<sup id="fnref:kostas_paper"><a class="footnote-ref" href="#fn:kostas_paper">4</a></sup> must verify their inclusion in the tree. A user that is not able to verify their correct inclusion in the tree signals that they were discarded from the computation of the total liabilities and should open a dispute.</p>
-<p>Protocols such as <a href="https://github.com/summa-dev">Summa</a> and exchanges such as <a href="https://www.bitmex.com/app/porl">BitMEX</a>, <a href="https://www.kraken.com/proof-of-reserves">Kraken</a>, and <a href="https://niccarter.info/proof-of-reserves/">many others</a> deployed different flavors of the PoR mentioned above. Binance's PoR is the only one that supports the user's lending feature<sup id="fnref2:bin_2"><a class="footnote-ref" href="#fn:bin_2">2</a></sup>. Namely, a user may use coin X as collateral to borrow another coin Y. In that case, the user's balance for coin X is negative, while the net balance across the two coins, when converted to dollars, must be positive. </p>
+<p>Protocols such as <a href="https://github.com/summa-dev" rel="noopener noreferrer" target="_blank">Summa</a> and exchanges such as <a href="https://www.bitmex.com/app/porl" rel="noopener noreferrer" target="_blank">BitMEX</a>, <a href="https://www.kraken.com/proof-of-reserves" rel="noopener noreferrer" target="_blank">Kraken</a>, and <a href="https://niccarter.info/proof-of-reserves/" rel="noopener noreferrer" target="_blank">many others</a> deployed different flavors of the PoR mentioned above. Binance's PoR is the only one that supports the user's lending feature<sup id="fnref2:bin_2"><a class="footnote-ref" href="#fn:bin_2">2</a></sup>. Namely, a user may use coin X as collateral to borrow another coin Y. In that case, the user's balance for coin X is negative, while the net balance across the two coins, when converted to dollars, must be positive. </p>
 <h2>2. Binance PoL Design</h2>
-<p>The main idea of Binance's PoL protocol is to wrap the process of accounting the liabilities inside a zk-SNARK to <a href="https://medium.com/starkware/how-can-cryptographic-proofs-provide-a-guarantee-of-financial-solvency-79ddc333116f">guarantee its correctness</a>. The <code>BatchCreateUserCircuit</code> is employed to:</p>
+<p>The main idea of Binance's PoL protocol is to wrap the process of accounting the liabilities inside a zk-SNARK to <a href="https://medium.com/starkware/how-can-cryptographic-proofs-provide-a-guarantee-of-financial-solvency-79ddc333116f" rel="noopener noreferrer" target="_blank">guarantee its correctness</a>. The <code>BatchCreateUserCircuit</code> is employed to:</p>
 <ul>
 <li>Generate the Account Merkle Tree starting from the users' data</li>
 <li>Compute the total summation of Binance's liabilities, starting from the users' data</li>
@@ -97,7 +95,7 @@
 <p>The account Merkle Tree is built starting from users' data:
 - each leaf is computed as: <code>hash(accountId, equity, debt, commitment(AssetInfo))</code>
 - each middle node is computed as <code>hash(left_node, right_node)</code></p>
-<p><img alt="Screenshot 2024-03-26 at 08.57.08" src="https://hackmd.io/_uploads/B1GJlZgyC.png" /></p>
+<p><img alt="Screenshot 2024-03-26 at 08.57.08" src="https://hackmd.io/_uploads/B1GJlZgyC.png"/></p>
 <p>The snapshot represents the following userbase (Scenario 1) (as described in<sup id="fnref2:bin_3"><a class="footnote-ref" href="#fn:bin_3">3</a></sup>):</p>
 <table>
 <thead>
@@ -162,7 +160,7 @@
 <p>The asset commitment is generated by hashing together the <code>CexAssetInfo</code> for each currency <code>asset_commimtent = hash(ele0, ele1, ..., elen)</code>.</p>
 <h3>2.3 Circuit Design</h3>
 <p>Providing the Account Tree root and the asset commitment out of nowhere would be meaningless. It is necessary to prove that rules were met while building such commitments. For example, that individual users' <code>AssetInfo</code> were included in the Account Tree (to compute the root) and in the <code>CexAssetInfo</code> (to compute the asset commitment). </p>
-<p>These are part of the constraints of the <a href="https://github.com/binance/zkmerkle-proof-of-solvency/blob/main/circuit/batch_create_user_circuit.go"><code>BatchCreateUserCircuit</code></a>. The circuit also has to check that, for each user's leaf added to the Account Tree, the <code>total_equity_usdt</code> and the <code>total_debt_usdt</code> are:
+<p>These are part of the constraints of the <a href="https://github.com/binance/zkmerkle-proof-of-solvency/blob/main/circuit/batch_create_user_circuit.go" rel="noopener noreferrer" target="_blank"><code>BatchCreateUserCircuit</code></a>. The circuit also has to check that, for each user's leaf added to the Account Tree, the <code>total_equity_usdt</code> and the <code>total_debt_usdt</code> are:
 - Correctly computed starting from the user's <code>AssetInfo</code>
 - <code>total_equity_usdt</code> - <code>total_debt_usdt</code> is greater than 0</p>
 <p>The last constraint is fundamental to avoid Binance adding dummy users with negative net balances to the Account Tree, which would reduce their total liabilities.</p>
@@ -175,7 +173,7 @@
 <li>Verify their correct inclusion inside the Account Tree. This is done by verifying a Merkle proof provided by Binance to each of them.</li>
 </ol>
 <p>Given a specific currency, the total liability for that currency is given by equity minus liabilities. In the previous example, the total liability for ETH equals 20, and the total liability for USDT equals 20000. Binance has to prove that it holds at least 20 ETH and at least 20000 USDT to guarantee its solvency to its users. This information is made available to the public through an interface<sup id="fnref3:bin_1"><a class="footnote-ref" href="#fn:bin_1">1</a></sup>.</p>
-<p><img alt="Screenshot 2024-03-26 at 11.31.07" src="https://hackmd.io/_uploads/By5l4mxyR.png" /></p>
+<p><img alt="Screenshot 2024-03-26 at 11.31.07" src="https://hackmd.io/_uploads/By5l4mxyR.png"/></p>
 <h2>3. Dummy User Attack</h2>
 <p>Such verification performed successfully <strong>by each user</strong> should guarantee the solvency of Binance according to the definition provided in paragraph 1. But there's a caveat here.</p>
 <p>Binance's (PoR) is designed under the assumption, consolidated in academia<sup id="fnref2:kostas_paper"><a class="footnote-ref" href="#fn:kostas_paper">4</a></sup>, that adding dummy users to the liabilities computation would only increase the liabilities and, therefore, be against the custodian's interest. This is apparently true, given that the circuit constraints that the net balance of a newly added user is greater than 0 dollars when added to the Account Tree. However,  given that Binance supports users' debt, this assumption is no longer true. Indeed, Binance could add a dummy user to the Account Tree and be able to claim themselves solvent (under the definition provided in paragraph 1) even if they are not.</p>
@@ -274,41 +272,38 @@
 </ul>
 <p>Considering Scenario 2, these would be the three Trees that the CEX has to create as part of their PoR.</p>
 <figure align="center">
-    <img src="https://hackmd.io/_uploads/rklUgP9WC.png" width="500">
+<img src="https://hackmd.io/_uploads/rklUgP9WC.png" width="500"/>
 </figure>
-
 <figure align="center">
-    <img src="https://hackmd.io/_uploads/SJl8eDqbA.png" width="500">
+<img src="https://hackmd.io/_uploads/SJl8eDqbA.png" width="500"/>
 </figure>
-
 <figure align="center">
-    <img src="https://hackmd.io/_uploads/SkgUxP9ZC.png" width="500">
+<img src="https://hackmd.io/_uploads/SkgUxP9ZC.png" width="500"/>
 </figure>
-
 <p>The user would then later verify their correct inclusion in the tree by verifying a Merkle Proof provided by the CEX, similar to what happens with the Account Tree.</p>
 <p>Comparing this solution to Scenario 2, the CEX is still able to perform the Dummy User Attack, but users are now provided with better information to evaluate its solvency. In particular, they are now aware that if they were all to withdraw their ETH from the CEX, the CEX would need to liquidate 4 BNB to satisfy the demand.</p>
 <p>It's worth noting that such a solution might be tricky to apply if the CEX offers users the possibility of borrowing multiple assets together by using multiple coins as collateral. In that case, a solution might be to extend the CTA Pair Tree to support these multiple coins as collateral and multiple coins as assets. Furthermore, such a solution might introduce significant computational complexity to the PoR. For example, if we consider 150 coins available for borrowing and the same 150 coins accepted as collateral (without considering the multiple coins feature), it would result in $150*149=22350$ CTA Pair Trees.</p>
-<p>A more elaborate solution to mitigate the "Dummy user attack" scenario by incorporating lending business logic into the zk-SNARK circuit <a href="https://github.com/binance/zkmerkle-proof-of-solvency/blob/main/docs/updated_proof_of_solvency_to_mitigate_dummy_user_attack.md">has been proposed</a> by Binance. This solution introduces a third field, labeled "collateral", within the token configuration for each user, which denotes the quantity of that token utilized as collateral for borrowing other assets.</p>
+<p>A more elaborate solution to mitigate the "Dummy user attack" scenario by incorporating lending business logic into the zk-SNARK circuit <a href="https://github.com/binance/zkmerkle-proof-of-solvency/blob/main/docs/updated_proof_of_solvency_to_mitigate_dummy_user_attack.md" rel="noopener noreferrer" target="_blank">has been proposed</a> by Binance. This solution introduces a third field, labeled "collateral", within the token configuration for each user, which denotes the quantity of that token utilized as collateral for borrowing other assets.</p>
 <div class="footnote">
-<hr />
+<hr/>
 <ol>
 <li id="fn:bin_1">
-<p>https://www.binance.com/en/proof-of-reserves&#160;<a class="footnote-backref" href="#fnref:bin_1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:bin_1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:bin_1" title="Jump back to footnote 1 in the text">&#8617;</a><a class="footnote-backref" href="#fnref4:bin_1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>https://www.binance.com/en/proof-of-reserves <a class="footnote-backref" href="#fnref:bin_1" title="Jump back to footnote 1 in the text">↩</a><a class="footnote-backref" href="#fnref2:bin_1" title="Jump back to footnote 1 in the text">↩</a><a class="footnote-backref" href="#fnref3:bin_1" title="Jump back to footnote 1 in the text">↩</a><a class="footnote-backref" href="#fnref4:bin_1" title="Jump back to footnote 1 in the text">↩</a></p>
 </li>
 <li id="fn:bin_2">
-<p>https://www.binance.com/en/blog/tech/how-zksnarks-improve-binances-proof-of-reserves-system-6654580406550811626#idrichtexttextconfigcontentperformancestyle&#160;<a class="footnote-backref" href="#fnref:bin_2" title="Jump back to footnote 2 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:bin_2" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+<p>https://www.binance.com/en/blog/tech/how-zksnarks-improve-binances-proof-of-reserves-system-6654580406550811626#idrichtexttextconfigcontentperformancestyle <a class="footnote-backref" href="#fnref:bin_2" title="Jump back to footnote 2 in the text">↩</a><a class="footnote-backref" href="#fnref2:bin_2" title="Jump back to footnote 2 in the text">↩</a></p>
 </li>
 <li id="fn:bin_3">
-<p>https://gusty-radon-13b.notion.site/Proof-of-solvency-61414c3f7c1e46c5baec32b9491b2b3d&#160;<a class="footnote-backref" href="#fnref:bin_3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:bin_3" title="Jump back to footnote 3 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:bin_3" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+<p>https://gusty-radon-13b.notion.site/Proof-of-solvency-61414c3f7c1e46c5baec32b9491b2b3d <a class="footnote-backref" href="#fnref:bin_3" title="Jump back to footnote 3 in the text">↩</a><a class="footnote-backref" href="#fnref2:bin_3" title="Jump back to footnote 3 in the text">↩</a><a class="footnote-backref" href="#fnref3:bin_3" title="Jump back to footnote 3 in the text">↩</a></p>
 </li>
 <li id="fn:kostas_paper">
-<p>https://eprint.iacr.org/2021/1350.pdf&#160;<a class="footnote-backref" href="#fnref:kostas_paper" title="Jump back to footnote 4 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:kostas_paper" title="Jump back to footnote 4 in the text">&#8617;</a><a class="footnote-backref" href="#fnref3:kostas_paper" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+<p>https://eprint.iacr.org/2021/1350.pdf <a class="footnote-backref" href="#fnref:kostas_paper" title="Jump back to footnote 4 in the text">↩</a><a class="footnote-backref" href="#fnref2:kostas_paper" title="Jump back to footnote 4 in the text">↩</a><a class="footnote-backref" href="#fnref3:kostas_paper" title="Jump back to footnote 4 in the text">↩</a></p>
 </li>
 </ol>
 </div>
-        </section>
-      </article>
-    </main>
-  </div>
+</section>
+</article>
+</main>
+</div>
 </body>
 </html>

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post – Coming Soon</title>
-  <link rel="preload" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" as="font" type="font/woff2" crossorigin>
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post – Coming Soon</title>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
     // Apply saved colors before first paint to avoid flash
     (function() {
       try {
@@ -28,11 +29,10 @@
       } catch (_) {}
     })();
   </script>
-  <link rel="stylesheet" href="../styles.css" />
-
-  <!-- MathJax for LaTeX support -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script>
+<link href="../styles.css" rel="stylesheet"/>
+<!-- MathJax for LaTeX support -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script>
     // Configure MathJax (v3) before loading the script
     window.MathJax = {
       tex: {
@@ -45,62 +45,58 @@
       }
     };
   </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-  <div class="wrapper">
-    <nav class="sidebar">
-      <ul>
-  <li class="active"><a href="../index.html">index</a></li>
-  <li><a href="../index.html#about">about</a></li>
-  <li><a href="../index.html#subscribe">subscribe</a></li>
-      </ul>
-    </nav>
-
-    <main class="content">
-      <article class="post">
-        <header>
-          <h1 class="post-title">Devcon key insight: indistinguishability obfuscation</h1>
-          <div class="post-date">2024-11-21</div>
-        </header>
-
-  <section class="post-content">
-<p>The key insight from Devcon 7 is that Indistinguishability Obfuscation (iO) is closer than I expected. Last year, at Devconnect, iO was <a href="https://youtu.be/lEPqwF9gPiM?si=9PLDXFzUBFhug_gz&amp;t=428">presented</a> as a <em>"very, very incomplete"</em> technology at the root of the cryptographic techniques dependency tree. iO can be used to derive any other primitives in the tree. Because of that, it is often deemed as the holy grail or endgame of cryptography.</p>
-<p><img alt="Screenshot 2024-11-19 at 10.00.09" src="https://hackmd.io/_uploads/B1WKrJttMyx.png" /></p>
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li class="active"><a href="../index.html">index</a></li>
+<li><a href="../index.html#about">about</a></li>
+<li><a href="../index.html#subscribe">subscribe</a></li>
+</ul>
+</nav>
+<main class="content">
+<article class="post">
+<header>
+<h1 class="post-title">Devcon key insight: indistinguishability obfuscation</h1>
+<div class="post-date">2024-11-21</div>
+</header>
+<section class="post-content">
+<p>The key insight from Devcon 7 is that Indistinguishability Obfuscation (iO) is closer than I expected. Last year, at Devconnect, iO was <a href="https://youtu.be/lEPqwF9gPiM?si=9PLDXFzUBFhug_gz&amp;t=428" rel="noopener noreferrer" target="_blank">presented</a> as a <em>"very, very incomplete"</em> technology at the root of the cryptographic techniques dependency tree. iO can be used to derive any other primitives in the tree. Because of that, it is often deemed as the holy grail or endgame of cryptography.</p>
+<p><img alt="Screenshot 2024-11-19 at 10.00.09" src="https://hackmd.io/_uploads/B1WKrJttMyx.png"/></p>
 <p>One year later, the attitude towards iO has changed:</p>
 <ul>
-<li>Sora is working on an <a href="https://github.com/SoraSuegami/iOMaker">iO implementation</a> based on standard assumptions</li>
-<li>Gauss Labs is working on a <a href="https://github.com/gausslabs/obfustopia">iO implementation</a> based on nonstandard assumptions and has opened a <a href="https://obfustopia.io/">bounty</a> to break its security</li>
-<li>Further presentations from <a href="https://www.youtube.com/live/-HAh09a5Qec?si=ki89n6nNCwgqVpd4&amp;t=3398">Barry</a> <a href="https://www.youtube.com/live/G_ey_WenFH8?si=aMMa4QtpUJ_Byhrr&amp;t=3221">Whitehat</a>, <a href="https://app.devcon.org/schedule?text=Scalable%2520multi-party%2520FHE%2520with%2520Phantom-zone">Janmajaya Mall</a>, and  <a href="https://www.youtube.com/live/G_ey_WenFH8?si=-hOaRK6KbggFAJTC&amp;t=261">Vitalik Buterin</a> illustrate practical applications that can be built using iO.</li>
+<li>Sora is working on an <a href="https://github.com/SoraSuegami/iOMaker" rel="noopener noreferrer" target="_blank">iO implementation</a> based on standard assumptions</li>
+<li>Gauss Labs is working on a <a href="https://github.com/gausslabs/obfustopia" rel="noopener noreferrer" target="_blank">iO implementation</a> based on nonstandard assumptions and has opened a <a href="https://obfustopia.io/" rel="noopener noreferrer" target="_blank">bounty</a> to break its security</li>
+<li>Further presentations from <a href="https://www.youtube.com/live/-HAh09a5Qec?si=ki89n6nNCwgqVpd4&amp;t=3398" rel="noopener noreferrer" target="_blank">Barry</a> <a href="https://www.youtube.com/live/G_ey_WenFH8?si=aMMa4QtpUJ_Byhrr&amp;t=3221" rel="noopener noreferrer" target="_blank">Whitehat</a>, <a href="https://app.devcon.org/schedule?text=Scalable%2520multi-party%2520FHE%2520with%2520Phantom-zone" rel="noopener noreferrer" target="_blank">Janmajaya Mall</a>, and  <a href="https://www.youtube.com/live/G_ey_WenFH8?si=-hOaRK6KbggFAJTC&amp;t=261" rel="noopener noreferrer" target="_blank">Vitalik Buterin</a> illustrate practical applications that can be built using iO.</li>
 </ul>
 <center>
-    <img src="https://hackmd.io/_uploads/rk5ZFFYf1e.png" width="600">
+<img src="https://hackmd.io/_uploads/rk5ZFFYf1e.png" width="600"/>
 </center>
-
 <p>I'm wondering: did a major scientific breakthrough lead to renewed confidence in iO, or are they promoting confidence to help make that breakthrough happen? Either way, they got my attention. </p>
 <h2>What is iO - informal definition</h2>
 <p>iO allows to encrypt (or obfuscate) a program such that the obfuscated program performs the exact same functionalities as the original program without revealing any information about its internal structure. To be even more informal, you can assume the existence of an iO compiler that takes a program, expressed as an arithmetic circuit, as input and returns its obfuscated version. More importantly, the obfuscated program can contain a secret key and the logic to perform various cryptographic operations such as signature or decryption. Such programs can be copied and distributed to people without any fear of leaking the obfuscated data.</p>
 <h2>What is iO - formal definition</h2>
-<p>If two programs $P$ and $Q$ compute the same function (are functionally equivalent), their obfuscated versions $P_{ob}$ and $Q_{ob}$ should be computationally indistinguishable. An intuitive example to understand such security definition is provided by <a href="https://ethresear.ch/t/how-obfuscation-can-help-ethereum/7380">Vitalik</a>:</p>
+<p>If two programs $P$ and $Q$ compute the same function (are functionally equivalent), their obfuscated versions $P_{ob}$ and $Q_{ob}$ should be computationally indistinguishable. An intuitive example to understand such security definition is provided by <a href="https://ethresear.ch/t/how-obfuscation-can-help-ethereum/7380" rel="noopener noreferrer" target="_blank">Vitalik</a>:</p>
 <ul>
 <li>$P$: Program that contains key $k$ and computes $sign(k, m)$ for $m \in [1...n]$</li>
 <li>$Q$: Program that contains a lookup table of all $n$ pre-computed signatures using $k$</li>
 </ul>
 <p>Even though $P$ and $Q$ use completely different methods, their obfuscated versions should be indistinguishable according to the security definition. The beauty of this definition is that it captures our intuitive notion of "hiding the inner workings" in a strong, formal way: if you can't even tell which of two known implementations was used, you certainly can't learn anything about how the implementation works. </p>
 <h2>Voting app with iO</h2>
-<p>To practically understand what you can do with iO, let's analyze how it can be used to construct a voting application that keeps the individual votes private and only reveals the final tally. This section extends the analysis performed by Vitalik in his recent <a href="https://vitalik.eth.limo/general/2024/10/29/futures6.html">blog post</a>. The logic of the tally is the following:</p>
+<p>To practically understand what you can do with iO, let's analyze how it can be used to construct a voting application that keeps the individual votes private and only reveals the final tally. This section extends the analysis performed by Vitalik in his recent <a href="https://vitalik.eth.limo/general/2024/10/29/futures6.html" rel="noopener noreferrer" target="_blank">blog post</a>. The logic of the tally is the following:</p>
 <pre><code>def vote(choice): # choice is either yes (1) or no (0)
 
     yes_votes += choice
     no_votes += (choice + 1) % 2
 </code></pre>
 <p>Intuitively, this could be designed using Homomorphic Encryption: votes are submitted in an encrypted form, and the tallies <code>yes_votes</code> and <code>no_votes</code> are computed homomorphically, namely, without having to decrypt the vote first. After the election is over, the tallies are decrypted, and the winner is announced. The biggest issue is the ownership of the decryption key. Outsourcing the control of the decryption key to a single individual is the least secure approach as he/she could silently decrypt any partial tally before the end of the process, learning precious information about the individual preferences and the trend of the election. On the other side of the spectrum, the decryption key can be split among the $n$ voters such that a contribution from each of them is required to decrypt the output once the election is over: this approach guarantees full security, but it is also very fragile since it only requires a single voter to drop-off or lose their decryption key share to make it impossible to recover the output. </p>
-<p>In practice, <a href="https://github.com/zama-ai/fhevm/blob/main/fhevm-whitepaper.pdf">similar</a> <a href="https://penumbra.zone/">applications</a> rely on a committee holding shares of the decryption key where only a threshold of them is required to perform any decryption operation accepting a tradeoff between security and liveness assumptions. This setup still poses the risk of collusion between committee members to collude and silently decrypt partial states, although there are <a href="https://eprint.iacr.org/2023/1724">proposals</a> to add accountability for misbehavior.</p>
+<p>In practice, <a href="https://github.com/zama-ai/fhevm/blob/main/fhevm-whitepaper.pdf" rel="noopener noreferrer" target="_blank">similar</a> <a href="https://penumbra.zone/" rel="noopener noreferrer" target="_blank">applications</a> rely on a committee holding shares of the decryption key where only a threshold of them is required to perform any decryption operation accepting a tradeoff between security and liveness assumptions. This setup still poses the risk of collusion between committee members to collude and silently decrypt partial states, although there are <a href="https://eprint.iacr.org/2023/1724" rel="noopener noreferrer" target="_blank">proposals</a> to add accountability for misbehavior.</p>
 <figure align="center">
-  <img src="https://hackmd.io/_uploads/r1UPF9Kz1e.jpg" alt="CCN Inference">
-  <figcaption>Source: https://speakerdeck.com/sorasuegami/ideal-obfuscation-io, where x-axis represents the probability of the program to succeed based on the liveness assumptions</figcaption>
+<img alt="CCN Inference" src="https://hackmd.io/_uploads/r1UPF9Kz1e.jpg"/>
+<figcaption>Source: https://speakerdeck.com/sorasuegami/ideal-obfuscation-io, where x-axis represents the probability of the program to succeed based on the liveness assumptions</figcaption>
 </figure>
-
 <p>iO allows us to break this tradeoff, obtaining maximum safety without requiring any liveness assumption for the protocol to successfully conclude. A (very inefficient) version of the desired voting app can be therefore constructed as follows: </p>
 <ol>
 <li>
@@ -109,10 +105,10 @@
     return decrypt(ct, s_k)
 else:
     return 0</code></p>
-<p>In practice, the input of the obfuscated program is the ciphertext $ct$ to be decrypted and a <a href="https://docs.telepathy.xyz/telepathy-protocol/proof-of-consensus">proof of blockchain consensus</a> $\pi$ that exists some smart contract application logic that authorizes the decryption of the ciphertext $ct$. $s_k$ is embedded into this obfuscated program such that it performs the decryption of the provided only if the proof $\pi$ verifies. $p_k$ and $O$ are the public outputs of the setup phase, while the decryption key $s_k$ is never seen by anyone.</p>
+<p>In practice, the input of the obfuscated program is the ciphertext $ct$ to be decrypted and a <a href="https://docs.telepathy.xyz/telepathy-protocol/proof-of-consensus" rel="noopener noreferrer" target="_blank">proof of blockchain consensus</a> $\pi$ that exists some smart contract application logic that authorizes the decryption of the ciphertext $ct$. $s_k$ is embedded into this obfuscated program such that it performs the decryption of the provided only if the proof $\pi$ verifies. $p_k$ and $O$ are the public outputs of the setup phase, while the decryption key $s_k$ is never seen by anyone.</p>
 </li>
 <li>
-<p>The logic of the voting application, as defined before, is encoded into a smart contract. The voting process finishes at block $999$. People have to encrypt their votes under $p_k$ and submit their ciphertexts to a smart contract together with a <a href="https://eprint.iacr.org/2024/594">proof of plaintext knowledge</a>. The contract homomorphically updates the tally according to the logic defined before.</p>
+<p>The logic of the voting application, as defined before, is encoded into a smart contract. The voting process finishes at block $999$. People have to encrypt their votes under $p_k$ and submit their ciphertexts to a smart contract together with a <a href="https://eprint.iacr.org/2024/594" rel="noopener noreferrer" target="_blank">proof of plaintext knowledge</a>. The contract homomorphically updates the tally according to the logic defined before.</p>
 </li>
 <li>
 <p>After block $999$, no more votes are accepted; the tally is frozen and should now be decryptable. The input of the obfuscated circuit $O$ are the encrypted tally $ct$ and a proof $\pi$ that proves, according to the blockchain consensus, that the ciphertext can be decrypted (i.e. the election is over). If the proof verifies, $O$ returns the tally of the election in an encrypted format. Since the obfuscated circuit is public, anyone can locally re-run the evaluation $O(\pi, ct)$ and check that the tally is correct.</p>
@@ -124,11 +120,11 @@ else:
 <p>A "simple" attack would be to create a new smart contract that performs a homomorphic identity function over a specific vote ciphertext and authorizes the decryption of the output. One way to avoid that is to force any proof of plaintext knowledge behind a ciphertext to contain the address of the smart contracts that are authorized to consume such ciphertext. </p>
 <p>A further attack requires the majority of validators to collude and sign a state that allows the decryption of a ciphertext against the rules defined in the smart contract. This attack can happen silently, and slashing the malicious validators might not be possible. I don't have a valid solution for that.</p>
 <h2>Further applications</h2>
-<p>The previous construction can be extended to many other applications. The whole set of multi-party applications can be made collusion-resistant (under the trusted setup assumption) while providing non-interactive decryptions. Examples are auctions, encrypted mempools, AI model training, or multilateral trade credit set-off. Another interesting application relates to the further <em>succintization</em> of zkSNARKs: the iO obfuscated circuit can be designed to verify a proof $\pi$ and sign the statement that it proves iff the proof verifies. In such a scenario, verifying a proof is equivalent to verifying a signature, making it extremely gas-efficient. Since iO basically allows blockchain programs to hold secrets, all the use cases listed in section 5 of the <a href="https://eprint.iacr.org/2020/464.pdf">paper</a> "Can a Public Blockchain Keep a Secret?", such trustless cross-blockchain token bridges, are enabled.</p>
+<p>The previous construction can be extended to many other applications. The whole set of multi-party applications can be made collusion-resistant (under the trusted setup assumption) while providing non-interactive decryptions. Examples are auctions, encrypted mempools, AI model training, or multilateral trade credit set-off. Another interesting application relates to the further <em>succintization</em> of zkSNARKs: the iO obfuscated circuit can be designed to verify a proof $\pi$ and sign the statement that it proves iff the proof verifies. In such a scenario, verifying a proof is equivalent to verifying a signature, making it extremely gas-efficient. Since iO basically allows blockchain programs to hold secrets, all the use cases listed in section 5 of the <a href="https://eprint.iacr.org/2020/464.pdf" rel="noopener noreferrer" target="_blank">paper</a> "Can a Public Blockchain Keep a Secret?", such trustless cross-blockchain token bridges, are enabled.</p>
 <h2>Conclusions</h2>
-<p>If iO is a new concept for you, as it is for me, you might be feeling super thrilled after reading this article. The reality, according to the <em>experts</em>, is that such iO constructions are far from usable in practice. I am curious to see the concrete results from the works of Sora, based on standard security assumptions and, therefore, likely very, very slow, and Gauss Labs, based on non-standard (less battle-tested) security assumptions, and likely faster. On my side, I will spend the next months trying to demystify the topic and publish what I have learned on this blog.</p>        </section>
-      </article>
-    </main>
-  </div>
+<p>If iO is a new concept for you, as it is for me, you might be feeling super thrilled after reading this article. The reality, according to the <em>experts</em>, is that such iO constructions are far from usable in practice. I am curious to see the concrete results from the works of Sora, based on standard security assumptions and, therefore, likely very, very slow, and Gauss Labs, based on non-standard (less battle-tested) security assumptions, and likely faster. On my side, I will spend the next months trying to demystify the topic and publish what I have learned on this blog.</p> </section>
+</article>
+</main>
+</div>
 </body>
 </html>

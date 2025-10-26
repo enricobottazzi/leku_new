@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post – Coming Soon</title>
-  <link rel="preload" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" as="font" type="font/woff2" crossorigin>
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post – Coming Soon</title>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
     // Apply saved colors before first paint to avoid flash
     (function() {
       try {
@@ -28,11 +29,10 @@
       } catch (_) {}
     })();
   </script>
-  <link rel="stylesheet" href="../styles.css" />
-
-  <!-- MathJax for LaTeX support -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script>
+<link href="../styles.css" rel="stylesheet"/>
+<!-- MathJax for LaTeX support -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script>
     // Configure MathJax (v3) before loading the script
     window.MathJax = {
       tex: {
@@ -45,44 +45,41 @@
       }
     };
   </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-  <div class="wrapper">
-    <nav class="sidebar">
-      <ul>
-  <li class="active"><a href="../index.html">index</a></li>
-  <li><a href="../index.html#about">about</a></li>
-  <li><a href="../index.html#subscribe">subscribe</a></li>
-      </ul>
-    </nav>
-
-    <main class="content">
-      <article class="post">
-        <header>
-          <h1 class="post-title">Greco: fast ZKP for valid FHE encryption</h1>
-          <div class="post-date">2024-03-20</div>
-        </header>
-
-  <section class="post-content">
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li class="active"><a href="../index.html">index</a></li>
+<li><a href="../index.html#about">about</a></li>
+<li><a href="../index.html#subscribe">subscribe</a></li>
+</ul>
+</nav>
+<main class="content">
+<article class="post">
+<header>
+<h1 class="post-title">Greco: fast ZKP for valid FHE encryption</h1>
+<div class="post-date">2024-03-20</div>
+</header>
+<section class="post-content">
 <blockquote>
-<p>Thanks to Janmajaya Mall and Xiang Xie for discussions and reviews. You can leave comments of the hackMD version of this document <a href="https://hackmd.io/@gaussian/r1W98Kqqa">here</a>.</p>
+<p>Thanks to Janmajaya Mall and Xiang Xie for discussions and reviews. You can leave comments of the hackMD version of this document <a href="https://hackmd.io/@gaussian/r1W98Kqqa" rel="noopener noreferrer" target="_blank">here</a>.</p>
 </blockquote>
 <figure align="center">
-  <img src="https://hackmd.io/_uploads/rJYXGUdCa.jpg" alt="Artwork by Alighiero Boetti" width="50%">
-  <figcaption>Alighiero Boetti, Autodisporsi, 1975</figcaption>
+<img alt="Artwork by Alighiero Boetti" src="https://hackmd.io/_uploads/rJYXGUdCa.jpg" width="50%"/>
+<figcaption>Alighiero Boetti, Autodisporsi, 1975</figcaption>
 </figure>
-
 <blockquote>
-<p>Also available on <a href="https://eprint.iacr.org/2024/594">eprint</a></p>
+<p>Also available on <a href="https://eprint.iacr.org/2024/594" rel="noopener noreferrer" target="_blank">eprint</a></p>
 </blockquote>
 <h2>1. Introduction</h2>
 <p>Fully homomorphic encryption allows for evaluations of arbitrary functions over encrypted data. One of the most common applications of FHE is confidential outsourcing of computation. A user can encrypt their data, send it to a server that performs the (intensive) computation, and return back the encrypted result. In this scenario, the user is the only one affected by the outcome of the computation, so it is not necessary for them to prove to anyone that the submitted ciphertext to the server is properly formed.</p>
-<p>However, there are other applications of FHE in which ciphertexts coming from different parties are submitted, such as sealed bid auctions, secret voting (namely, the vote is hidden), or FHE-EVMs, such as <a href="https://github.com/zama-ai/fhevm/blob/main/fhevm-whitepaper.pdf">Zama's</a>. In such applications, a party (or a network of parties) receives the ciphertexts and performs computation on top of them. The result of this computation is then decrypted. In these multi-party applications, the result is affecting more than one user. In these scenarios, it is important that each party proves that they submitted a well-formed ciphertext. Otherwise, the final result might be, unknowingly to the other participants, constructed from invalid data. Furthermore, key recovery attacks can be mounted if malformed ciphertexts are decrypted, assuming the resulting decryptions are shared with the attacker (which is the case in Zama's FHE-EVMs).</p>
+<p>However, there are other applications of FHE in which ciphertexts coming from different parties are submitted, such as sealed bid auctions, secret voting (namely, the vote is hidden), or FHE-EVMs, such as <a href="https://github.com/zama-ai/fhevm/blob/main/fhevm-whitepaper.pdf" rel="noopener noreferrer" target="_blank">Zama's</a>. In such applications, a party (or a network of parties) receives the ciphertexts and performs computation on top of them. The result of this computation is then decrypted. In these multi-party applications, the result is affecting more than one user. In these scenarios, it is important that each party proves that they submitted a well-formed ciphertext. Otherwise, the final result might be, unknowingly to the other participants, constructed from invalid data. Furthermore, key recovery attacks can be mounted if malformed ciphertexts are decrypted, assuming the resulting decryptions are shared with the attacker (which is the case in Zama's FHE-EVMs).</p>
 <p>For example, in a secret voting application, the tally is computed by summing up the encrypted votes. Valid encrypted votes are of the form $E(0)$ and $E(1)$. But here's the trick; since the votes are encrypted, the application cannot tell the difference between a valid encrypted vote such as $E(1)$ and an invalid encrypted vote such as $E(145127835)$, which can mess up the whole election. Because of that, users must prove that (1) the ciphertext they submitted is a valid ciphertext. This might not be enough for the requirements of the application. Users should also prove that (2) the plaintext message they encrypted is a valid vote (for example, either a 1 or 0). </p>
-<p><a href="https://github.com/privacy-scaling-explorations/greco">Greco</a> prover allows to prove the validity of a Fully Homomorphic Encryption (FHE) ciphertext. Greco makes use of zero-knowledge proof to let a user prove that their ciphertext is well-formed. Or, in other words, that the encryption operation was performed correctly. The resulting proof can be, therefore, composed with additional application-specific logic and subject to public verification in a non-interactive setting. Considering the secret voting application, one can prove further properties of the message being encrypted or even properties about the voter, allowing the application to support anonymous voting as well. </p>
-<p>The writeup focuses on <a href="https://www.inferati.com/blog/fhe-schemes-bfv">BFV</a> Secret Key Encryption and, eventually, extends the scheme to Public Key Encryption. Note that all the techniques described in this document can be easily applied to generate proof of correctness for any RLWE-based operation, such as Key Generation and Public/Secret Key Decryption.</p>
-<p>The implementation of the techniques described hereafter is <a href="https://github.com/privacy-scaling-explorations/greco">open source</a>.</p>
+<p><a href="https://github.com/privacy-scaling-explorations/greco" rel="noopener noreferrer" target="_blank">Greco</a> prover allows to prove the validity of a Fully Homomorphic Encryption (FHE) ciphertext. Greco makes use of zero-knowledge proof to let a user prove that their ciphertext is well-formed. Or, in other words, that the encryption operation was performed correctly. The resulting proof can be, therefore, composed with additional application-specific logic and subject to public verification in a non-interactive setting. Considering the secret voting application, one can prove further properties of the message being encrypted or even properties about the voter, allowing the application to support anonymous voting as well. </p>
+<p>The writeup focuses on <a href="https://www.inferati.com/blog/fhe-schemes-bfv" rel="noopener noreferrer" target="_blank">BFV</a> Secret Key Encryption and, eventually, extends the scheme to Public Key Encryption. Note that all the techniques described in this document can be easily applied to generate proof of correctness for any RLWE-based operation, such as Key Generation and Public/Secret Key Decryption.</p>
+<p>The implementation of the techniques described hereafter is <a href="https://github.com/privacy-scaling-explorations/greco" rel="noopener noreferrer" target="_blank">open source</a>.</p>
 <p>The logic for the BFV implementation at the core of the protocol is based on [KPZ21] and [HPS19]. The techniques employed to generate a proof of ciphertext correctness are based on [DLS19]. </p>
 <p>The main tricks employed when designing Greco are the following:</p>
 <ul>
@@ -90,12 +87,12 @@
 <li>Constraining polynomial multiplication with a 2-phase challenge circuit design with $O(n)$ complexity, dramatically reducing the cost of polynomial multiplication constrained with the direct method $O(n^2)$.</li>
 </ul>
 <p>The circuit has been implemented using Halo2 as a proving system, and the results have shown that Greco can already be integrated into user-facing applications without creating excessive friction for the user. As an example, for parameters $\log{Q}=27$ and 
-$n=1024$ targeting 128-bits of security according to the <a href="https://homomorphicencryption.org/wp-content/uploads/2018/11/HomomorphicEncryptionStandardv1.1.pdf">Homomorphic Encryption Standard</a>, the prover time is equal to 685 ms benchmarked on an M2 Laptop. The verification time is extremely fast, around 3 ms.</p>
-<p>Learnings from previous implementations such as <a href="https://github.com/enricobottazzi/zk-fhe">zk-fhe</a> and Sunscreen's zkp <a href="https://github.com/Sunscreen-tech/Sunscreen/tree/main/sunscreen_zkp_backend">backend</a> informed many of the design decisions adopted in Greco.</p>
+$n=1024$ targeting 128-bits of security according to the <a href="https://homomorphicencryption.org/wp-content/uploads/2018/11/HomomorphicEncryptionStandardv1.1.pdf" rel="noopener noreferrer" target="_blank">Homomorphic Encryption Standard</a>, the prover time is equal to 685 ms benchmarked on an M2 Laptop. The verification time is extremely fast, around 3 ms.</p>
+<p>Learnings from previous implementations such as <a href="https://github.com/enricobottazzi/zk-fhe" rel="noopener noreferrer" target="_blank">zk-fhe</a> and Sunscreen's zkp <a href="https://github.com/Sunscreen-tech/Sunscreen/tree/main/sunscreen_zkp_backend" rel="noopener noreferrer" target="_blank">backend</a> informed many of the design decisions adopted in Greco.</p>
 <h2>2. BFV</h2>
 <p>BFV is a leveled Fully Homomorphic Encryption (FHE) scheme based on the Ring-Learning with Errors (RLWE) problem.</p>
-<p>A comprehensive and easy-to-digest introduction to the BFV scheme can be found at <a href="https://www.inferati.com/blog/fhe-schemes-bfv">Inferati</a>. This section is focused on the setup of a BFV scheme in its Residue Number System (RNS) setting and only its secret key encryption algorithm.</p>
-<p>Let $Q$ be the ciphertext modulus and $t$ be the plaintext modulus. Let $R_Q$ denote the polynomial ring $\frac{Z_Q[X]}{X^N+1}$. In practice, we leverage RNS and use the Chinese Remainder Theorem (CRT) setting $Q = \prod{q_i}$ where $\log q_i < 61$ and the $q_i$ factor are pairwise coprime. This modification was originally suggested by [BEH+16] to make arithmetic operations faster as these no longer need to work with Big integer arithmetic. Note that $Q$ and $t$ are co-prime. Furthermore, each $q_i$ can be chosen as a prime number to leverage NTT to achieve fast polynomial multiplication.</p>
+<p>A comprehensive and easy-to-digest introduction to the BFV scheme can be found at <a href="https://www.inferati.com/blog/fhe-schemes-bfv" rel="noopener noreferrer" target="_blank">Inferati</a>. This section is focused on the setup of a BFV scheme in its Residue Number System (RNS) setting and only its secret key encryption algorithm.</p>
+<p>Let $Q$ be the ciphertext modulus and $t$ be the plaintext modulus. Let $R_Q$ denote the polynomial ring $\frac{Z_Q[X]}{X^N+1}$. In practice, we leverage RNS and use the Chinese Remainder Theorem (CRT) setting $Q = \prod{q_i}$ where $\log q_i &lt; 61$ and the $q_i$ factor are pairwise coprime. This modification was originally suggested by [BEH+16] to make arithmetic operations faster as these no longer need to work with Big integer arithmetic. Note that $Q$ and $t$ are co-prime. Furthermore, each $q_i$ can be chosen as a prime number to leverage NTT to achieve fast polynomial multiplication.</p>
 <p>Using this technique, an integer $x ∈ Z_Q$ can be represented by its CRT components 
 $\{ x_i = x \mod q_i \in \mathbb{Z}_{q_i} \}_i$, and operations on $x$ in $Z_Q$ can be implemented by applying the same operations to each CRT component $x_i$ in its own ring $Z_{q_{i}}$. </p>
 <p>The secret key encryption of a message $M$ is defined as:</p>
@@ -121,7 +118,7 @@ $$</p>
 <p>The main challenge that appears when translating an FHE algorithm into a zk circuit is the different groups in which the element of the circuit and the coefficients of the polynomials involved in the FHE scheme live:
 - The elements of a circuit are defined in a group $G$ of order $p$, $Z_p$. All the operations inside a circuit are performed $\mod p$. 
 - The coefficients of $Ct_{0,i}$ are defined in the group $Z_{q_i}$. All the polynomial operations are performed in the ring $R_{q_i}$, namely modulo the cyclotomic polynomial $X^N+1$.</p>
-<p>The assumption is that $Q = \prod q_i$ where $\log{q_i} < 61$ and $\forall q_i, q_i << p$. This assumption is required to avoid the coefficients of the polynomial ever overflowing the prime $p$ and potentially pass the range checks constraints (more on that later) even if when they shouldn't.  </p>
+<p>The assumption is that $Q = \prod q_i$ where $\log{q_i} &lt; 61$ and $\forall q_i, q_i &lt;&lt; p$. This assumption is required to avoid the coefficients of the polynomial ever overflowing the prime $p$ and potentially pass the range checks constraints (more on that later) even if when they shouldn't.  </p>
 <p>The polynomial ring $\frac{Z_{q_i}[X]}{X^N+1}$ is denoted as $R_{q_i}$. Any polynomial $H \in R_Q$ is represented via its CRT components $H_i \in R_{q_i}$.</p>
 <p>Polynomial multiplications and additions in the ring $Z_{q_i}[X]/X^N+1$ are operations that are non-native to the prime field of the circuit, therefore these operations are really expensive. The main trick employed here to alleviate the cost of such operations is to embed the ring reduction inside the polynomial definition. For example, the modulo reduction of $y= z \mod n$ can be constrained inside the circuit as $y = q \cdot n + z$ with $q$ that can be pre-computed outside the circuit. </p>
 <p>Let's first outline the operation that needs to be verified and therefore translated into circuit constraints:</p>
@@ -148,7 +145,7 @@ $$</p>
 $$
 \hat{Ct_{0,i}} = Ct_{0,i} - R_{2, i} (X^N+1) - R_{1, i}q_i
 $$</p>
-<p>Since $q_i << p$, the equation stays unchanged in $Z_p$:</p>
+<p>Since $q_i &lt;&lt; p$, the equation stays unchanged in $Z_p$:</p>
 <p>$$
 \hat{Ct_{0,i}} = Ct_{0,i} - R_{2, i} (X^N+1) - R_{1, i}q_i \mod{Z_p}
 $$</p>
@@ -161,7 +158,7 @@ $$</p>
 
 $$
 \begin{bmatrix}
-         A_i & 1 & K_{0,i} & (X^N+1) &q_i\\
+         A_i &amp; 1 &amp; K_{0,i} &amp; (X^N+1) &amp;q_i\\
          \end{bmatrix}
               \times
      \begin{bmatrix}
@@ -196,7 +193,7 @@ $$</p>
 
 $$
 \begin{bmatrix}
-         A_i(\gamma) & 1 & K_{0,i} & (\gamma^N+1) &q_i\\
+         A_i(\gamma) &amp; 1 &amp; K_{0,i} &amp; (\gamma^N+1) &amp;q_i\\
          \end{bmatrix}
               \times
      \begin{bmatrix}
@@ -269,15 +266,15 @@ $$
 </ul>
 <p>A more extended analysis of these ranges can be found at [C]</p>
 <p>Note that when assigned to the circuit, the coefficients of the polynomial must be in the prime field $[0, p)$. Negative coefficients $-z$ are assigned as field elements $p - z$. </p>
-<p>Let's take the polynomial $E$ as an example. The coefficients of $E$ live in the range $[-B, B]$. This means that when assigned to the circuit, the coefficients of $E$ must live in the ranges $[0, B]$ or $[-B, p)$. Enforcing the range check in this manner has the downside of requiring the performance of two range checks and adding an additional OR constraint to that. A more efficient way to perform such a range check is to normalize the coefficients such that the coefficients of $E$ must live in the range $[0, 2B]$. The normalization is constrained inside the circuit by adding $B$ to each coefficient of $E$. Note that the range check is secure as long as $2B < p$. This normalize operations before performing the actual range check is constraint to each of the polynomial of $S_i$.</p>
-<p>In general, for each secret polynomial, given their upper bound $Ub$, the relation $2Ub < p$ must hold in order to avoid any overflow issue. This is true under the assumption $\log{q_i} < 61$.</p>
+<p>Let's take the polynomial $E$ as an example. The coefficients of $E$ live in the range $[-B, B]$. This means that when assigned to the circuit, the coefficients of $E$ must live in the ranges $[0, B]$ or $[-B, p)$. Enforcing the range check in this manner has the downside of requiring the performance of two range checks and adding an additional OR constraint to that. A more efficient way to perform such a range check is to normalize the coefficients such that the coefficients of $E$ must live in the range $[0, 2B]$. The normalization is constrained inside the circuit by adding $B$ to each coefficient of $E$. Note that the range check is secure as long as $2B &lt; p$. This normalize operations before performing the actual range check is constraint to each of the polynomial of $S_i$.</p>
+<p>In general, for each secret polynomial, given their upper bound $Ub$, the relation $2Ub &lt; p$ must hold in order to avoid any overflow issue. This is true under the assumption $\log{q_i} &lt; 61$.</p>
 <h3>3.4. Proving Correctness of <code>k</code> Ciphertexts</h3>
-<p>In the RNS setting of BFV, each ciphertext $Ct$ defined in the ring $R_Q$ is represented using its CRT components $\{ Ct = Ct_i \mod R_{q_i} \}_i$. Given the assumption that $Q = \prod q_i$ where $\log{q_i} < 61$, this allows the encryption to be performed more efficiently by performing single-precision integers arithmetic operations instead of big integers. </p>
+<p>In the RNS setting of BFV, each ciphertext $Ct$ defined in the ring $R_Q$ is represented using its CRT components $\{ Ct = Ct_i \mod R_{q_i} \}_i$. Given the assumption that $Q = \prod q_i$ where $\log{q_i} &lt; 61$, this allows the encryption to be performed more efficiently by performing single-precision integers arithmetic operations instead of big integers. </p>
 <p>In particular, considering the encryption operation, small integers such as noise and key coefficients are drawn from $\chi_{error}$ and $\chi_{key}$ as single-precision integers, while uniform elements in $a ← Z_{q}$ are chosen directly in the CRT basis by drawing uniform values $a_i ← Z_{q_{i}}$ for all $i$. All the operations that are supposed to be performed in $Z_{q}$ are performed in $Z_{q_{i}}$ for each $i$-th decomposition.</p>
 <p>To prove the correct computation of a ciphertext starting from a message, it is needed to prove the computation of each of the $k$ ciphertexts $Ct_{q_i}$. There are two ideas that can be explored here.</p>
 <h4>3.4.1. Parallel Proof Generation</h4>
 <p>This means that a π of correct encryption needs to be generated for each $i$. The good news is that these proofs can be generated in parallel. Furthermore, these proofs (for each $Z_{qi}$) can eventually be aggregated in a single proof that verifies the encryption for each smaller modulus. In this way, the user only has to verify a single proof.</p>
-<p><img alt="zkfhe.drawio" src="https://hackmd.io/_uploads/ByejqTloa.png" /></p>
+<p><img alt="zkfhe.drawio" src="https://hackmd.io/_uploads/ByejqTloa.png"/></p>
 <p>When performing the first recursion, it is important to check whether the common polynomials across each $i$-th encryption circuit are matching. These polynomials are $S$, $E$, $K_1$</p>
 <h4>3.4.2. Proving the correctness of multiple ciphertexts in the same proof</h4>
 <p>Apparently, this approach seems to be the naive version of approach 1. In reality, there are some benefits to this approach, too. In the previous approach, the constraints on the common polynomials $S$, $E$, and $K_1$ are enforced within each $i$-th encryption circuit. These constraints are the range checks on these polynomials and the evaluation at $\gamma$ (which will be different for each $i$-th circuit) of these polynomials. In the previous approach, there are, therefore, some constraints duplicated $n$ times over the same polynomials.</p>
@@ -291,15 +288,15 @@ $$
 </ul>
 <p>Given that $k$ is generally very small, this approach allows us to save some duplicated constraints and the overhead given by the recursion approach. On the other side, it sacrifices the parallelization benefit given by the recursion-based approach. </p>
 <h3>3.5. Circuit Implementation</h3>
-<p>Greco Prover has been implemented in Halo2 and is available <a href="https://github.com/gaussian-dev/greco">here</a>. The circuit logic is split between <code>phase0</code> and <code>phase1</code>. The implementation details are based on the setting described in the paragraph 3.4.2. Note that setting $k$ to 1 would result in a proof of a single ciphertext.</p>
-<p><a href="https://github.com/gaussian-dev/greco/blob/main/src/constants/sk_enc_constants_1024_15x60_65537.rs">Parameters</a> such as $k$ (the number of ciphertexts), the degree of the cyclotomic polynomial defining the ring $N$, the range check bounds and the values of the scalars <code>qis[]</code> and <code>k0is[]</code> must be defined during key generation and are encoded into the constraining structure of the circuit since then. This implies that each tuple <code>(n, qis[], t)</code> results in different circuit artifacts.</p>
+<p>Greco Prover has been implemented in Halo2 and is available <a href="https://github.com/gaussian-dev/greco" rel="noopener noreferrer" target="_blank">here</a>. The circuit logic is split between <code>phase0</code> and <code>phase1</code>. The implementation details are based on the setting described in the paragraph 3.4.2. Note that setting $k$ to 1 would result in a proof of a single ciphertext.</p>
+<p><a href="https://github.com/gaussian-dev/greco/blob/main/src/constants/sk_enc_constants_1024_15x60_65537.rs" rel="noopener noreferrer" target="_blank">Parameters</a> such as $k$ (the number of ciphertexts), the degree of the cyclotomic polynomial defining the ring $N$, the range check bounds and the values of the scalars <code>qis[]</code> and <code>k0is[]</code> must be defined during key generation and are encoded into the constraining structure of the circuit since then. This implies that each tuple <code>(n, qis[], t)</code> results in different circuit artifacts.</p>
 <h4>Phase 0</h4>
 <h5>Assignment</h5>
 <p>In this phase, the polynomials of each matrix $S_i$ are assigned to the circuit. Namely:
 * polynomials <code>s,</code> <code>e,</code> and <code>k1</code> are assigned to the witness table. This has to be done only once, as these polynomials are common to each $S_i$ matrix
 * polynomials <code>r1i</code>, <code>r2i</code> are assigned to the witness table for each $S_i$ matrix</p>
 <p>Witness values are elements of the finite field $\mod{p}$. Negative coefficients $-z$ are assigned as field elements $p - z$.</p>
-<p>At the end of phase 0, the witness generated so far is interpolated into a polynomial and committed by the prover. The hash of this commitment is used as a challenge and will be used as a source of randomness $\gamma$ in Phase 1. This feature is made available by Halo2 <a href="https://hackmd.io/@axiom/SJw3p-qX3">Challenge API</a>.</p>
+<p>At the end of phase 0, the witness generated so far is interpolated into a polynomial and committed by the prover. The hash of this commitment is used as a challenge and will be used as a source of randomness $\gamma$ in Phase 1. This feature is made available by Halo2 <a href="https://hackmd.io/@axiom/SJw3p-qX3" rel="noopener noreferrer" target="_blank">Challenge API</a>.</p>
 <h4>Phase 1</h4>
 <p>In this phase, the following constraints are enforced:</p>
 <ul>
@@ -335,7 +332,7 @@ $$
 <ul>
 <li>$Greco.KeyGen(\lambda)=pk, vk$</li>
 </ul>
-<p>The application developer chooses the parameters for the FHE scheme, given the security parameters and the required fhe circuit depths identified by $\lambda$. These are the parameters $t, Q, n, \sigma$ and $B$. The standardization <a href="https://homomorphicencryption.org/wp-content/uploads/2018/11/HomomorphicEncryptionStandardv1.1.pdf">document</a> provides a good basis for choosing such parameters. In particular, the document fixes the standard deviation of the Gaussian distribution used for error polynomial sampling $\sigma \approx 3.2$ and the bound of the distribution $B \approx 19$. Hence, only the ring degree $n$ and the plaintext and ciphertext space moduli $t$ and $Q$ remain to be determined. These parameters are encoded into the zk circuit to generate the proving key $pk$ and the verification $vk$. Note that different applications might have different security and depth requirements. Therefore, the artifacts $pk$ and $vk$ can not be reused for different applications. The chosen parameters should be known to everybody.</p>
+<p>The application developer chooses the parameters for the FHE scheme, given the security parameters and the required fhe circuit depths identified by $\lambda$. These are the parameters $t, Q, n, \sigma$ and $B$. The standardization <a href="https://homomorphicencryption.org/wp-content/uploads/2018/11/HomomorphicEncryptionStandardv1.1.pdf" rel="noopener noreferrer" target="_blank">document</a> provides a good basis for choosing such parameters. In particular, the document fixes the standard deviation of the Gaussian distribution used for error polynomial sampling $\sigma \approx 3.2$ and the bound of the distribution $B \approx 19$. Hence, only the ring degree $n$ and the plaintext and ciphertext space moduli $t$ and $Q$ remain to be determined. These parameters are encoded into the zk circuit to generate the proving key $pk$ and the verification $vk$. Note that different applications might have different security and depth requirements. Therefore, the artifacts $pk$ and $vk$ can not be reused for different applications. The chosen parameters should be known to everybody.</p>
 <h4>Prove</h4>
 <ul>
 <li>$BFV.SecretKeyGen()=s$</li>
@@ -379,7 +376,7 @@ $$
 
 $$
 \begin{bmatrix}
-         Pk_{0,q_i} & 1 & K_{0,i} & (X^N+1) &q_i\\
+         Pk_{0,q_i} &amp; 1 &amp; K_{0,i} &amp; (X^N+1) &amp;q_i\\
          \end{bmatrix}
               \times
      \begin{bmatrix}
@@ -401,7 +398,7 @@ $$
 
 $$
 \begin{bmatrix}
-         Pk_{1,q_i} & 1 &  (X^N+1) &q_i\\
+         Pk_{1,q_i} &amp; 1 &amp;  (X^N+1) &amp;q_i\\
          \end{bmatrix}
               \times
      \begin{bmatrix}
@@ -431,8 +428,8 @@ $$
 </ul>
 <p>Note that the circuit underlying the generation of $π_2$ can be written in any language or prover framework available.</p>
 <h2>7. Benchmarks</h2>
-<p>All the benchmarks were run on an M2 Macbook Pro with 12 cores and 32GB of RAM. All the benchmarks can be reproduced as described <a href="https://github.com/gaussian-dev/greco?tab=readme-ov-file#benches">here</a>. The key benches extracted relate to the setup ($pk$ and $vk$ generation), proof generation and proof verification phases. </p>
-<p>The parameters have been chosen targeting 128-bit security level for different values of <code>n</code>. For more information on parameters choise, please check <a href="https://homomorphicencryption.org/wp-content/uploads/2018/11/HomomorphicEncryptionStandardv1.1.pdf">Homomorphic Encryption Standard</a>. </p>
+<p>All the benchmarks were run on an M2 Macbook Pro with 12 cores and 32GB of RAM. All the benchmarks can be reproduced as described <a href="https://github.com/gaussian-dev/greco?tab=readme-ov-file#benches" rel="noopener noreferrer" target="_blank">here</a>. The key benches extracted relate to the setup ($pk$ and $vk$ generation), proof generation and proof verification phases. </p>
+<p>The parameters have been chosen targeting 128-bit security level for different values of <code>n</code>. For more information on parameters choise, please check <a href="https://homomorphicencryption.org/wp-content/uploads/2018/11/HomomorphicEncryptionStandardv1.1.pdf" rel="noopener noreferrer" target="_blank">Homomorphic Encryption Standard</a>. </p>
 <table>
 <thead>
 <tr>
@@ -504,12 +501,12 @@ $$
 </table>
 <p>The setup time seems to grow linearly with $n$ as it roughly doubles everytime $n$ doubles. Proof Generation shows a sublinear growth when compared to the growth of $n$. </p>
 <p>The main cost center of the proof generation in terms of contraints is dominated by the Range Checks. In particular, analyzing the number of constraints when $n$ is set to 4096 the distribution is the following:</p>
-<p><img alt="Constraints Distribution" src="https://hackmd.io/_uploads/BJzHY4I2p.svg" /></p>
+<p><img alt="Constraints Distribution" src="https://hackmd.io/_uploads/BJzHY4I2p.svg"/></p>
 <p>The second most expensive operation is the Evaluation at Gamma Constraint followed by the Phase 0 polynomial assignement. Both grow linearly with $n$. The constraints required to enforce Phase 1 assignment and Correct Encryption are irrelavant to the overall cost model. </p>
-<p>Such data can be reproduced by running the Generate Parameters <a href="https://github.com/gaussian-dev/greco?tab=readme-ov-file#generate-parameters">python script</a>.</p>
+<p>Such data can be reproduced by running the Generate Parameters <a href="https://github.com/gaussian-dev/greco?tab=readme-ov-file#generate-parameters" rel="noopener noreferrer" target="_blank">python script</a>.</p>
 <h2>8. Conclusions</h2>
 <p>In this write-up, we have detailed the design and implementation of the Greco prover system, showcasing its utility in verifying the correct formation of Fully Homomorphic Encryption (FHE) ciphertexts. The importance of such system is paramount in multi-party applications such as voting. In such application, Greco can be composed with application-specific circuits that require to prove additional properties on the message being encryption or on the author of such encryption. The benchmarks provide a practical reference for its deployment in real-world scenarios.</p>
-<p>In order to increase the prover performance, proof systems capable of supporting larger lookup tables such as <a href="https://github.com/a16z/Lasso">Lasso</a>, may further speed up the range checks constraints, which are the larger cost center of Greco. </p>
+<p>In order to increase the prover performance, proof systems capable of supporting larger lookup tables such as <a href="https://github.com/a16z/Lasso" rel="noopener noreferrer" target="_blank">Lasso</a>, may further speed up the range checks constraints, which are the larger cost center of Greco. </p>
 <p>A further step is to adapt the techniques decribed above to other FHE schemes, such as CKKS or TFHE/FHEW. In particular, in CKKS, the message needs to be encoded using FFT, which is not trivial to prove. </p>
 <h2>9. References</h2>
 <p>[BEH+16] Bajard, J. C., Eynard, J., Hasan, M. A., &amp; Zucca, V. (2016, August). A full RNS variant of FV-like, somewhat homomorphic encryption schemes. In International Conference on Selected Areas in Cryptography (pp. 423-442). Cham: Springer International Publishing.</p>
@@ -529,9 +526,9 @@ $G(x) = b_nx^n + b_{n-1}x^{n-1} + ... + b_{1}x + b_0$</p>
 <p>$H(x) = c_nx^{2n} + c_{n-1}x^{2n - 1} + ... + c_{1}x + c_0$</p>
 <ul>
 <li>The coefficients of $H$ are calculate as follows: $c_k = \sum_{i+j=k} a_i \cdot b_j$The sum is taken over all the pairs $a_i$ and $b_j$ such that the sum of the indexes is equal to $k$</li>
-<li>For values of $k$ such that $k < n$ the number of pairs $(i, j)$ such that $i + j = k$ increseas as $k$ increases. This is intuitive because there are more ways to partition a number into two non-negative integers as the number increases. In particular for $k = 0$ there's gonna be $1$ pair (= $1$ multiplication and $0$ additions), while for $k = n-1$, there's gonna be $n$ pairs (= $n$ multiplications and $n-1$ additions)</li>
+<li>For values of $k$ such that $k &lt; n$ the number of pairs $(i, j)$ such that $i + j = k$ increseas as $k$ increases. This is intuitive because there are more ways to partition a number into two non-negative integers as the number increases. In particular for $k = 0$ there's gonna be $1$ pair (= $1$ multiplication and $0$ additions), while for $k = n-1$, there's gonna be $n$ pairs (= $n$ multiplications and $n-1$ additions)</li>
 <li>At $k=n$ there's the maximum number of pairs $(i, j)$ such that $i + j = k$. Specifically, there are $n+1$ pairs that satisfy this condition. In particular for $k = n$ there's gonna be $n+1$ pairs (= $n+1$ multiplications and $n$ additions)</li>
-<li>For values of $k$ such that $k > n$ the number of pairs $(i, j)$ such that $i + j = k$ decreases as $k$ increases. This is because the maximum value that $i$ and $j$ can take is $n$. So the number of pairs starts to decrease. Think of $k = 2n$; in that case, there's only one pair, which is $(i=n, j=n)$. In particular for $k = n+1$, there's gonna be $n$ pairs (= $n$ multiplications and $n-1$ additions) and for $k = 2n$ there's gonna be $1$ pair (= $1$ multiplication and $0$ additions)</li>
+<li>For values of $k$ such that $k &gt; n$ the number of pairs $(i, j)$ such that $i + j = k$ decreases as $k$ increases. This is because the maximum value that $i$ and $j$ can take is $n$. So the number of pairs starts to decrease. Think of $k = 2n$; in that case, there's only one pair, which is $(i=n, j=n)$. In particular for $k = n+1$, there's gonna be $n$ pairs (= $n$ multiplications and $n-1$ additions) and for $k = 2n$ there's gonna be $1$ pair (= $1$ multiplication and $0$ additions)</li>
 </ul>
 <p>In total there's gonna be ${2 * (\sum_{i=0}^{n-1}} i+1) + (n+1)$ multiplications and ${2 * (\sum_{i=0}^{n-1}} i) + n$ additions. When simplified $2 * \frac{n(n+1)}{2} + (n+1) = (n+1)^2$ multiplications and $2 * \frac{n(n-1)}{2} + n = n^2$ additions</p>
 <h4>[C]</h4>
@@ -556,8 +553,8 @@ $G(x) = b_nx^n + b_{n-1}x^{n-1} + ... + b_{1}x + b_0$</p>
 </ul>
 <p>Now, let's determine which $c_k$ will have the most elements in its sum.</p>
 <ul>
-<li>For values of $k$ such that $k < n$ the number of pairs $(i, j)$ such that $i + j = k$ increseas as $k$ increases. This is intuitive because there are more ways to partition a number into two non-negative integers as the number increases.</li>
-<li>For values of $k$ such that $k > n$ the number of pairs $(i, j)$ such that $i + j = k$ decreases as $k$ increases. This is because the maximum value that $i$ and $j$ can take is $n$. So the number of pairs starts to decrease. Think of $k = 2n$, in that case there's only one pair which is $(i=n, j=n)$</li>
+<li>For values of $k$ such that $k &lt; n$ the number of pairs $(i, j)$ such that $i + j = k$ increseas as $k$ increases. This is intuitive because there are more ways to partition a number into two non-negative integers as the number increases.</li>
+<li>For values of $k$ such that $k &gt; n$ the number of pairs $(i, j)$ such that $i + j = k$ decreases as $k$ increases. This is because the maximum value that $i$ and $j$ can take is $n$. So the number of pairs starts to decrease. Think of $k = 2n$, in that case there's only one pair which is $(i=n, j=n)$</li>
 <li>At $k=n$ there's the maximum number of pairs $(i, j)$ such that $i + j = k$. Specifically, there are $n+1$ pairs that satisfy this condition.</li>
 </ul>
 <p>Given the case in which:</p>
@@ -598,9 +595,9 @@ $G(x) = b_nx^n + b_{n-1}x^{n-1} + ... + b_{1}x + b_0$</p>
 <li>$Ct_{0,i} - \hat{Ct_{0,i}} - R_{2, i} (X^N+1) = [- ((N+2) \cdot \frac{q_i - 1}{2} + B +\frac{t - 1}{2} \cdot |K_{0,i}|), (N+2) \cdot \frac{q_i - 1}{2} + B + \frac{t - 1}{2} \cdot |K_{0,i}|]$</li>
 <li>$R_{1, i} = \frac{Ct_{0,i} - \hat{Ct_{0,i}} - R_{2, i} (X^N+1)}{q_i} = [\frac{- ((N+2) \cdot \frac{q_i - 1}{2} + B +\frac{t - 1}{2} \cdot |K_{0,i}|)}{q_i}, \frac{(N+2) \cdot \frac{q_i - 1}{2} + B + \frac{t - 1}{2} \cdot |K_{0,i}|}{q_i}]$</li>
 </ul>
-        </section>
-      </article>
-    </main>
-  </div>
+</section>
+</article>
+</main>
+</div>
 </body>
 </html>

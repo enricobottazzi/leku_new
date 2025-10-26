@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post – Coming Soon</title>
-  <link rel="preload" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" as="font" type="font/woff2" crossorigin>
-  <script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post – Coming Soon</title>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
     // Apply saved colors before first paint to avoid flash
     (function() {
       try {
@@ -28,11 +29,10 @@
       } catch (_) {}
     })();
   </script>
-  <link rel="stylesheet" href="../styles.css" />
-
-  <!-- MathJax for LaTeX support -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script>
+<link href="../styles.css" rel="stylesheet"/>
+<!-- MathJax for LaTeX support -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script>
     // Configure MathJax (v3) before loading the script
     window.MathJax = {
       tex: {
@@ -45,30 +45,28 @@
       }
     };
   </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-  <div class="wrapper">
-    <nav class="sidebar">
-      <ul>
-  <li class="active"><a href="../index.html">index</a></li>
-  <li><a href="../index.html#about">about</a></li>
-  <li><a href="../index.html#subscribe">subscribe</a></li>
-      </ul>
-    </nav>
-
-    <main class="content">
-      <article class="post">
-        <header>
-          <h1 class="post-title">A gentle introduction to functional encryption</h1>
-          <div class="post-date">2024-11-25</div>
-        </header>
-
-  <section class="post-content">
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li class="active"><a href="../index.html">index</a></li>
+<li><a href="../index.html#about">about</a></li>
+<li><a href="../index.html#subscribe">subscribe</a></li>
+</ul>
+</nav>
+<main class="content">
+<article class="post">
+<header>
+<h1 class="post-title">A gentle introduction to functional encryption</h1>
+<div class="post-date">2024-11-25</div>
+</header>
+<section class="post-content">
 <p>Functional encryption (FE) can be seen as a generalization of public key encryption (PKE) allowing  for a more fine-grained control of the decryption capabilities of third parties. </p>
 <p>In PKE the public key $p_k$ is used to hide a value $x$ inside a ciphertext $ct$ (encryption algo) while the secret key $s_k$ is used to retrieve $x$ from $ct$ (decryption algo). PKE enforces an all or nothing access rule - one can either decrypt and read the entire plaintext or learn nothing at all about the plaintext. In FE the secret key $sk_{f}$ is associated to a specific function $f$ such that the decryption function returns $f(x)$. You can notice how PKE can be derived from FE by setting $f$ as the identity function.</p>
 <p>More explicitely, here you see the different "APIs" between the two encryption protocols. The setup phase of FE generates a master secret key $msk$, which can be used in the keygen phase to derive the secret key $sk_{f}$ for a specific function $f$. The encryption algorithm follows the same logic, while the decryption requires the function secret key $sk_{f}$ to obtain $f(x)$.</p>
-<p><img alt="FE" src="https://hackmd.io/_uploads/H1eisG3Gkg.png" /></p>
+<p><img alt="FE" src="https://hackmd.io/_uploads/H1eisG3Gkg.png"/></p>
 <p>Informally, the security of a FE scheme requires that an adversary learns nothing about $x$ more than what is revealed by $f(x)$. [BSW10] provides a more formal security definition of such scheme. I'll also try to explain it in detail later. Now, let's consolidate the understanding of the encryption scheme by considering an example application. </p>
 <h2>Application example</h2>
 <p>Let's consider an hospital that custodies plenty patient records and there are $n$ categories of professionals with different access levels to those data. In such scenario the hospital administration will run the setup phase and later create different function secret keys $sk_{f_1}, \dots, sk_{f_i}, \dots, sk_{f_n}$ such that each function $f_i$ encodes a specific access policy on the patient record. The administration later distributes the secret keys to the respective categories. The patient records are encrypted under $pk$ and each professional is able to perform a decryption function that only reveals the information that they are allowed to access and nothing else.</p>
@@ -80,12 +78,12 @@
 <li>Bob evaluates the function $f$ over the ciphertext $ct$ to obtain $ct'$ and sends the result to Alice</li>
 <li>Alice decrypts the ciphertext and obtains $f(x)$</li>
 </ul>
-<p><img alt="FHE" src="https://hackmd.io/_uploads/BkBD4m2Mkl.png" /></p>
+<p><img alt="FHE" src="https://hackmd.io/_uploads/BkBD4m2Mkl.png"/></p>
 <p>In FHE, the function $f$ to be performed on encrypted data (evaluation phase) is arbitrary: Bob can apply any arithmetic function on top of the ciphertext $ct$, which can also be private to Alice. In contrast, in FE, the set of functions that can be performed on the ciphertext is bounded by the function secret keys generated by the master. On the other hand, the FHE evaluation function returns another ciphertext, which requires Alice's intervention to decrypt it. In FE, no further interaction is required to access $f(x)$ as the evaluation and decryption function are performed simultaneously.</p>
 <p>In short, FHE always requires an interaction with the key owner to obtain $f(x)$ but the function $f$ can be arbitrary (and, optionally, secret). In HE, no interaction with the key owner is required to obtain $f(x)$ but the set of functions that can be performed is limited.</p>
 <h2>Security definition of FE</h2>
 <p>The security of FE is defined under the notion of indistinguishability under chosen plaintext attack (IND-CPA). The security is demonstrated via a game between an adversary $A$ and a challenger. The logic of the game is similar to the one applied to prove the semantic security of a PKE scheme, as illustrated below.</p>
-<p><img alt="Screenshot 2024-11-21 at 13.05.58" src="https://hackmd.io/_uploads/ByE06B3Gyx.png" /></p>
+<p><img alt="Screenshot 2024-11-21 at 13.05.58" src="https://hackmd.io/_uploads/ByE06B3Gyx.png"/></p>
 <p>Let's analyze the PKE case first. For $b = \{ 0; 1 \}$ the experiment $b$ proceeds as follows:: </p>
 <ul>
 <li>The challenger generates a key pair $(pk, sk)$ using function $G()$ and gives $pk$ to $A$</li>
@@ -95,9 +93,9 @@
 <li>$A$ receives the ciphertext $c$ and outputs a guess $b' \in {0,1}$</li>
 </ul>
 <p>The scheme $E$ identified starting from its functions $(G, E,D)$ is semantically secure if no efficient (polynomial-time) adversary $A$ can distinguish between the encryption of $m_0$ and $m_1$. Mathematically, this is expressed as: $$
-|Pr[EXP(0)=1] - Pr[EXP(1)=1]| < \text{negligible}
+|Pr[EXP(0)=1] - Pr[EXP(1)=1]| &lt; \text{negligible}
 $$</p>
-<p>Where $Pr[EXP(0)=1]$ measures the probability that the adversary incorrectly outputs 1 in the experiment 0 and $Pr[EXP(1)=1]$ the probability that the adversary correctly outputs 1 in the experiment 1. In other words, the probability of the adversary correctly guessing which message was encrypted should be very close to random chance. In practice, this ensures that an adversary cannot learn anything about the plaintext by looking at the ciphertext, even if they can choose the messages to be encrypted. As noted by <a href="https://crypto.stackexchange.com/questions/100361/security-definition-for-ind-cpa-of-public-key-encryption">Morrolan</a>, this security property holds iff the encryption scheme is non-detrministic i.e. two encryptions of the same plaintext under the same public key must produce different ciphertexts with overwhelming probability. </p>
+<p>Where $Pr[EXP(0)=1]$ measures the probability that the adversary incorrectly outputs 1 in the experiment 0 and $Pr[EXP(1)=1]$ the probability that the adversary correctly outputs 1 in the experiment 1. In other words, the probability of the adversary correctly guessing which message was encrypted should be very close to random chance. In practice, this ensures that an adversary cannot learn anything about the plaintext by looking at the ciphertext, even if they can choose the messages to be encrypted. As noted by <a href="https://crypto.stackexchange.com/questions/100361/security-definition-for-ind-cpa-of-public-key-encryption" rel="noopener noreferrer" target="_blank">Morrolan</a>, this security property holds iff the encryption scheme is non-detrministic i.e. two encryptions of the same plaintext under the same public key must produce different ciphertexts with overwhelming probability. </p>
 <p>In FE, the game is just slightly different. For $b = \{ 0; 1 \}$ the experiment $b$ proceeds as follows:
 - The challenger generates a key pair $\{ pk, msk \}$ to $A$
 - $A$ adaptively submit queries for different function $f_1, f_2, \dots, f_i$ to the challenger and receives the corresponding function secret keys $sk_{f_1}, sk_{f_2}, \dots, sk_{f_i}$
@@ -106,14 +104,14 @@ $$</p>
 - $A$ receives the ciphertext $c$ and outputs a guess $b' \in {0,1}$</p>
 <p>The adversary is able to decrypt the ciphertext $c$ and obtain $f(m_{b})$ but, similarly to before, cannot distinguish if the ciphertext $c$ is an encryption of $m_1$ or of $m_2$. This proves the definition of security that was given in the introduction. To be even more precise, [BSW10] demonstrates that this security definition is inadequate for specific functions $f$ and provides a more rigorous security definition in the paper.</p>
 <h2>Conclusions</h2>
-<p>Aside from its relevance to real-world applications for computing on encrypted data, as described in this blogpost,  FE has proved to be a powerful tool in the theory of cryptography and can be used to build advanced primitives such as <a href="https://www.leku.blog/io/">Indistinguishability Obfuscation (iO)</a>, which is considered essentially “crypto-complete” by its ability to instantiate almost every known cryptographic primitive. In particular, according to Sora's <a href="https://speakerdeck.com/sorasuegami/ideal-obfuscation-io">presentation</a>, iO can constructed using recursive FE. The actual construction of FE is reserved for a follow-up blogpost.</p>
+<p>Aside from its relevance to real-world applications for computing on encrypted data, as described in this blogpost,  FE has proved to be a powerful tool in the theory of cryptography and can be used to build advanced primitives such as <a href="https://www.leku.blog/io/" rel="noopener noreferrer" target="_blank">Indistinguishability Obfuscation (iO)</a>, which is considered essentially “crypto-complete” by its ability to instantiate almost every known cryptographic primitive. In particular, according to Sora's <a href="https://speakerdeck.com/sorasuegami/ideal-obfuscation-io" rel="noopener noreferrer" target="_blank">presentation</a>, iO can constructed using recursive FE. The actual construction of FE is reserved for a follow-up blogpost.</p>
 <h2>References</h2>
 <ul>
-<li><a href="https://eprint.iacr.org/2010/543.pdf">BSW10</a></li>
+<li><a href="https://eprint.iacr.org/2010/543.pdf" rel="noopener noreferrer" target="_blank">BSW10</a></li>
 </ul>
-        </section>
-      </article>
-    </main>
-  </div>
+</section>
+</article>
+</main>
+</div>
 </body>
 </html>
