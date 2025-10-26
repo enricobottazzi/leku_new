@@ -1,0 +1,392 @@
+/* Fonts: keep only what's used (Regular + Bold) */
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scrollbar-gutter: stable both-edges; }
+body {
+  line-height: 1.6;
+  color: #111;
+  /* Always reserve vertical scrollbar to avoid horizontal re-centering jitter */
+  overflow-y: scroll;
+}
+a { text-decoration: none; color: inherit; }
+
+/* ---------- Layout ---------- */
+.wrapper {
+  display: flex;
+  max-width: 960px;
+  margin: 10rem auto;
+  padding: 0 1rem;
+  align-items: flex-start;
+}
+
+/* Sidebar */
+.sidebar {
+  flex: 0 0 160px;
+  border-right: 1px solid #111;
+  padding-right: 1.5rem;
+  padding-top: 0.35rem;
+  contain: layout paint;
+}
+.sidebar ul { list-style: none; }
+.sidebar li {
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-transform: none;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-synthesis: none;
+  transition: opacity 0.3s ease;
+}
+.sidebar li:hover { opacity: 0.8; }
+.sidebar li.active { font-weight: 700; }
+
+/* Content */
+.content { flex: 1 1 0; padding-left: 1.5rem; min-width: 0; }
+.posts  { list-style: none; }
+.post-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+}
+
+/* Title with lighter dotted leader */
+.post-link {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-synthesis: none;
+  font-weight: 400;
+  text-transform: uppercase;
+  transition: opacity 0.3s ease;
+}
+.post-item:hover .post-link { opacity: 0.8; }
+.post-link::after {
+  content: "";
+  flex-grow: 1;
+  margin-left: 0.5rem;
+  height: 1px;
+  background-image: repeating-linear-gradient(to right, currentColor 0 2px, transparent 2px 12px);
+  background-repeat: repeat-x;
+  transform: translateY(0.35em);
+  transition: background-image 0.3s ease;
+}
+.post-item:hover .post-link::after {
+  background-image: linear-gradient(to right, currentColor, currentColor);
+}
+
+.post-date {
+  white-space: nowrap;
+  color: #000;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Blog post layout (placeholder and future posts) --- */
+.post header { margin-bottom: 1rem; }
+.post-title {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-synthesis: none;
+  font-weight: 400; /* match index title weight */
+  text-transform: uppercase; /* requested uppercase */
+  line-height: 1.2;
+  margin: 0; /* align flush-left like About/Subscribe paragraphs */
+  padding: 0.35rem 0;
+  border-bottom: 1px solid currentColor; /* separator between title and subtitle */
+}
+.post header .post-date { margin-top: 0.35rem; }
+
+/* Color Game Styles */
+.color-game {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  min-width: 200px;
+  backdrop-filter: blur(10px);
+}
+.color-controls { display: flex; flex-direction: column; gap: 0.75rem; }
+.color-row { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+
+.preset-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  transition: transform 0.2s ease;
+}
+.preset-color:hover { transform: scale(1.1); }
+
+.reset-btn {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  margin-top: 0.75rem;
+  transition: background 0.2s ease;
+}
+.reset-btn:hover { background: #555; }
+
+.game-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #333;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 1001;
+  transition: background 0.2s ease;
+}
+.game-toggle:hover { opacity: 0.8; }
+
+.color-game.hidden { display: none; }
+
+/* Justify paragraphs for About, Subscribe, and blog placeholder */
+.placeholder-text p,
+.subscribe-placeholder p,
+.post .post-content p {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+
+/* Style all headings to use JetBrains Mono */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-synthesis: none;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 1.5rem 0 0.75rem 0;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+}
+
+/* Fix list alignment to not extend beyond justified margin */
+.post .post-content ol,
+.post .post-content ul {
+  margin-left: 0;
+  padding-left: 1.2rem;
+  margin-top: 0.5rem; /* Same spacing as between list items */
+}
+
+.post .post-content li {
+  margin-bottom: 0.5rem;
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+
+/* Unified hyperlink styles with dotted animation */
+.post .post-content a,
+.placeholder-text a,
+.subscribe-placeholder a {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dotted currentColor;
+  transition: border-bottom 0.3s ease;
+}
+
+.post .post-content a:hover,
+.placeholder-text a:hover,
+.subscribe-placeholder a:hover {
+  border-bottom: 1px solid currentColor;
+}
+
+/* Blog post images */
+.post .post-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  display: block;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+}
+
+/* Figure and figcaption styling */
+.post .post-content figure {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.post .post-content figure img {
+  margin: 0 auto 0.5rem auto;
+  display: block;
+}
+
+.post .post-content figcaption {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: #888;
+  text-align: center;
+  margin: 0 auto;
+  max-width: 80%;
+}
+
+/* Code blocks */
+.post .post-content pre {
+  background-color: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+  padding: 0.5rem;
+  margin: 0.75rem 0;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.3;
+  position: relative;
+}
+
+.post .post-content code {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.85rem;
+}
+
+/* Inline code (not in pre blocks) */
+.post .post-content p code,
+.post .post-content li code,
+.post .post-content h1 code,
+.post .post-content h2 code,
+.post .post-content h3 code,
+.post .post-content h4 code,
+.post .post-content h5 code,
+.post .post-content h6 code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.15rem 0.3rem;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: 0.8em;
+}
+
+/* Table styling */
+.post .post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+
+.post .post-content table th,
+.post .post-content table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  vertical-align: top;
+}
+
+.post .post-content table th {
+  background-color: rgba(0, 0, 0, 0.03);
+  font-weight: 700;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+.post .post-content table tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.post .post-content table tr:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Center numeric data in tables */
+.post .post-content table td:not(:first-child) {
+  text-align: center;
+}
+
+/* Dark mode adjustments for tables */
+@media (prefers-color-scheme: dark) {
+  .post .post-content table th,
+  .post .post-content table td {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .post .post-content table th {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .post .post-content table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+  
+  .post .post-content table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Dark mode adjustments for code blocks */
+@media (prefers-color-scheme: dark) {
+  .post .post-content pre {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #d4d4d4;
+  }
+  
+  .post .post-content p code,
+  .post .post-content li code,
+  .post .post-content h1 code,
+  .post .post-content h2 code,
+  .post .post-content h3 code,
+  .post .post-content h4 code,
+  .post .post-content h5 code,
+  .post .post-content h6 code {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #d4d4d4;
+  }
+  
+  .post .post-content figcaption {
+    color: #999;
+  }
+}

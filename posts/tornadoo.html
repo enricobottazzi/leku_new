@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post – Coming Soon</title>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
+    // Apply saved colors before first paint to avoid flash
+    (function() {
+      try {
+        var bg = localStorage.getItem('customBgColor');
+        var fg = localStorage.getItem('customFontColor');
+        var css = '';
+        if (bg) css += 'body{background-color:' + bg + ' !important;}';
+        if (fg) {
+          css += 'body{color:' + fg + ' !important;}';
+          css += '.sidebar{border-right-color:' + fg + ' !important;}';
+          css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
+        }
+        if (css) {
+          var s = document.createElement('style');
+          s.id = 'early-theme';
+          s.textContent = css;
+          document.head.appendChild(s);
+        }
+      } catch (_) {}
+    })();
+  </script>
+<link href="../styles.css" rel="stylesheet"/>
+<!-- MathJax for LaTeX support -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script>
+    // Configure MathJax (v3) before loading the script
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li class="active"><a href="../index.html">index</a></li>
+<li><a href="../index.html#about">about</a></li>
+<li><a href="../index.html#subscribe">subscribe</a></li>
+</ul>
+</nav>
+<main class="content">
+<article class="post">
+<header>
+<h1 class="post-title">You should not build Tornado Cash with FHE</h1>
+<div class="post-date">2025-02-18</div>
+</header>
+<section class="post-content">
+<blockquote>
+<p>Thanks to Auryn Macmillan for discussions and reviews.</p>
+</blockquote>
+<p><img alt="Screenshot 2025-02-13 at 08.53.26" src="https://hackmd.io/_uploads/H17-HXit1x.png"/></p>
+<p><a href="https://x.com/randhindi" rel="noopener noreferrer" target="_blank">Rand Hindi</a>, CEO of Zama, argued in this <a href="https://x.com/randhindi/status/1779832338228105726?s=61" rel="noopener noreferrer" target="_blank">tweet</a> about the difference between privacy applications built with ZK and with FHE. Tornado Cash-like systems (based on ZK), similar to Tor, are focused on anonymizing who is doing something (the identity/metadata) while the content of the transaction is visible on the public blockchain. FHE-powered applications, similar to Signal's end-to-end encryption, reveal the parties (metadata) involved in a transaction while the content of such transaction remains hidden. While this is a valid heuristic, there's much more to say about such differences. In this blog post, we will consider the specific case of <a href="https://github.com/tornadocash" rel="noopener noreferrer" target="_blank">Tornado Cash</a> and compare it with an FHE version of Tornado Cash that we'll build. I assume that the reader is familiar with the main functionalites of ZK (prove and verify) and FHE (encrypt, perform addition and multiplication on encrypted data and decrypt).</p>
+<h2>Tornado Cash</h2>
+<p>Let's first recap the design of the existing ZK-powered Tornado Cash, which will be after TC. TC is a mixer that allows the transfer of ETH and other tokens from address A to address B while hiding the link between the two accounts. It works as follows: </p>
+<ol>
+<li>Create a secret, hash it into a commitment, and send x ETH with the commitment to the TC Smart Contract (SC). Upon TX confirmation, the commitment is added as a leaf to the Merkle tree, accumulating all the TC depositors. Note that this operation is performed by address A </li>
+<li>Wait some time ...</li>
+<li>To withdraw the money, submit a ZK proof to the TC SC with the address B to which you wish to transfer x ETH. The proof is proving that:<ul>
+<li>You know the secret behind a commitment in the depositors' Merkle tree</li>
+<li>You haven't withdrawn before via the so-called nullifier</li>
+</ul>
+</li>
+<li>On proof verification, x ETH is transferred from TC SC to address B. Note that the proof doesn't reveal any detail about the identity of address A.</li>
+</ol>
+<p>Notably, the transaction at step 3 could be formally submitted by a <a href="https://x.com/_jefflau/status/1468065481324392453?s=61" rel="noopener noreferrer" target="_blank">relayer</a>, whose role is to submit proof on behalf of address B, which might not have any ETH to pay for the gas fees.</p>
+<h2>FHE-powered Tornado Cash</h2>
+<p>I don't know whether such an application exists. Here, I'm going to present a naive way in which I would design it. Notice that a cryptographic scheme, like El-Gamal, that supports additive homomorphism should be enough. I won't argue about the efficiency of performing such operation natively on Ethereum because you can always imagine an L2 rollup, similar to <a href="https://www.fhenix.io/" rel="noopener noreferrer" target="_blank">Fhenix</a>, that bears the computation burden. The contract stores a mapping of type <code>address -&gt; enc(amount).</code></p>
+<p>The application works as follows:</p>
+<ol>
+<li>Send an initial deposit of y ETH from address A to the FHE-TC SC. Upon transaction confirmation, the contract is going to update the deposit mapping as follows: 
+    <code>address A -&gt; += enc(y)</code></li>
+<li>To send x ETH from address A to address B, submit a transaction that includes: <ul>
+<li>the address of the designated receiver </li>
+<li>the encrypted amount <code>enc(x)</code> that you wish to send</li>
+<li>a ZK proof that <code>x</code> is less or equal to your current deposit <code>y</code>. You can use <a href="https://github.com/privacy-scaling-explorations/greco" rel="noopener noreferrer" target="_blank">Greco</a> for that</li>
+</ul>
+</li>
+<li>On proof verification, the mapping is updated by leveraging the additive homomorphism of the employed scheme as follows: 
+    <code>address A -&gt; -= enc(x)</code>
+<code>address B -&gt; += enc(x)</code></li>
+</ol>
+<h2>Comparison</h2>
+<h4>Sender-receiver anonymity</h4>
+<p>Sender anonymity is guaranteed if an external actor cannot identify the address A sending x ETH. Similarly, receiver anonymity is guaranteed if an external actor cannot identify the address B receiving x ETH. </p>
+<p>TC accomplishes it with a few caveats. The addresses of the TC depositors are public, so the sender's anonymity is limited within that set of addresses. The degree of anonymity increases with the number of TC depositors. Further chain analysis attacks based on the timing of the deposit and the withdrawal can be used to deanonymize the link between the sender and the receiver. The identity of the receiver is public.</p>
+<p>In FHE-TC, both the identity of the sender and the receiver are public, as their entries in the mapping get updated after a transfer. Interestingly, if the transaction at step 2 is sent to the smart contract through a relayer, the mapping update would not necessarily disclose who is the receiver and who is the sender. This principle can be stretched to the limit by updating all the entries by adding an encryption of 0 to their balance every time a token transfer is performed. Similar to differential privacy, this strategy would guarantee sender-receiver anonymity with the cost of a considerable performance overhead.</p>
+<h4>Amount privacy</h4>
+<p>That is, the guarantee that the withdrawn amount x of the transaction is not revealed to any external actor. </p>
+<p>Legacy TC doesn't support this feature and consists of different mixer pools for fixed amounts such as 1ETH, 10ETH, 100ETH. Nevertheless, more advanced systems like <a href="https://www.railgun.org/" rel="noopener noreferrer" target="_blank">Railgun</a>: once deposited into the Railgun pool, tokens can move in arbitrary amounts between arbitrary parties in a way that is completely opaque thanks to its UTXO private transactions model supporting amount privacy.</p>
+<p>FHE-TC also supports amount privacy since the amount being transferred is encrypted. Note that for the FHE case, the amount deposited to the smart contract is public. It follows that if the first action performed by the user is an outbound transfer, the amount is known to be less than the initial deposited amount.</p>
+<h4>Security</h4>
+<p>This is one of the most overlooked aspects when comparing ZK-based architecture vs FHE-based ones. In particular, I'm concerned about the possibility of breaking the privacy that the application is supposed to guarantee. </p>
+<p>In any ZK system, the zero-knowledge property of any proof is guaranteed even if the initial trusted set-up is attacked. By contrast, FHE-TC needs to rely on a committee managing shares of the decryption key, which can silently <a href="https://mirror.xyz/privacy-scaling-explorations.eth/nXUhkZ84ckZi_5mYRFCCKgkLVFAmM2ECdEFCQul2jPs" rel="noopener noreferrer" target="_blank">collude</a> and decrypt any information related to users' balances and transfers.</p>
+<p>It is worth noting that if an adversary gains access to <em>all</em> the secret wastes used during the initial trusted set-up, they can use it to create valid-looking proofs even for false statements, breaking the soundness of the system. This is worse than breaking the privacy of the users. Since both TC and FHE-TC rely on ZK proofs, they are equally affected by this potential attack.</p>
+<h4>Bonus point: complexity</h4>
+<p>FHE's logic is generally more straightforward for people to understand. A <a href="https://www.loom.com/share/f145592ad2974613b8669f8f38cc98a4" rel="noopener noreferrer" target="_blank">demo</a> from Zama illustrates how a developer can take any existing smart contract logic and change data types into encrypted ones. In contrast, ZK app often requires builders to develop off-chain data structures (such as Merkle trees) and carefully manage commitment updates on chain based on some proof-verification logic.</p>
+<h2>Conclusion</h2>
+<p>The main takeaway from this article is that building Tornado Cash-like applications with FHE doesn't make much sense as it underperforms the corresponding solely ZK-based construction over almost all the axes. The meta intention of this post is not to discredit FHE but to raise awareness of the risk of spreading FHE over all the applications. Indeed there is a broad set of powerful multi-party <a href="https://www.leku.blog/beyond-zkml/" rel="noopener noreferrer" target="_blank">applications</a> in which the computation involves aggregating private inputs from many parties that cannot be built with ZK-only and require FHE.</p> </section>
+</article>
+</main>
+</div>
+</body>
+</html>

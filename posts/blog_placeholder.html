@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post – Coming Soon</title>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
+    // Apply saved colors before first paint to avoid flash
+    (function() {
+      try {
+        var bg = localStorage.getItem('customBgColor');
+        var fg = localStorage.getItem('customFontColor');
+        var css = '';
+        if (bg) css += 'body{background-color:' + bg + ' !important;}';
+        if (fg) {
+          css += 'body{color:' + fg + ' !important;}';
+          css += '.sidebar{border-right-color:' + fg + ' !important;}';
+          css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
+        }
+        if (css) {
+          var s = document.createElement('style');
+          s.id = 'early-theme';
+          s.textContent = css;
+          document.head.appendChild(s);
+        }
+      } catch (_) {}
+    })();
+  </script>
+<link href="../styles.css" rel="stylesheet"/>
+<!-- MathJax for LaTeX support -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script>
+    // Configure MathJax (v3) before loading the script
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li class="active"><a href="../index.html">index</a></li>
+<li><a href="../index.html#about">about</a></li>
+<li><a href="../index.html#subscribe">subscribe</a></li>
+</ul>
+</nav>
+<main class="content">
+<article class="post">
+<header>
+<h1 class="post-title">This post is coming soon</h1>
+<div class="post-date">Work in progress</div>
+</header>
+<section class="post-content">
+<p>
+            The full article isn't published yet. Check back later, or return to the
+            <a href="../index.html">index</a> to read other posts. ADD more stuff here ADD more stuff hereADD more stuff hereADD more stuff hereADD more stuff hereADD more stuff hereADD more stuff hereADD more stuff hereADD more stuff hereADD more stuff hereADD more stuff here
+          </p>
+<h3>LaTeX Example</h3>
+<p>Here's an example of inline LaTeX: $E = mc^2$ and another one: $\alpha + \beta = \gamma$.</p>
+<p>And here's a display equation:</p>
+<p>$$\int_{a}^{b} f(x) \, dx = F(b) - F(a)$$</p>
+<p>
+      $$\begin{align}
+        \mathbf{c}_{B} &amp;:= \underline{\mathbf{s}^{T}\mathbf{B}} \\
+        \mathbf{X} &amp;:= \textsf{GSWFHE.Enc}(\mathbf{s}, (\mathbf{x}, \textsf{sd})) \\
+        \mathbf{c}_{\textsf{att}} &amp;:= \underline{\mathbf{s}^T(\mathbf{A}_{\textsf{att}} - \textsf{bits}(1,\mathbf{X})\otimes G)} \\
+        	extsf{ct} &amp;:= (\mathbf{c}_{B}, \mathbf{X}, \mathbf{c}_{\textsf{att}})
+      \end{align}$$
+      </p>
+</section>
+</article>
+</main>
+</div>
+</body>
+</html>

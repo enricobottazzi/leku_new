@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>{{ site.title | default: "My Blog" }}</title>
+<link as="font" crossorigin="" href="JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
+    // Apply saved colors before first paint to avoid flash
+    (function() {
+      try {
+        var bg = localStorage.getItem('customBgColor');
+        var fg = localStorage.getItem('customFontColor');
+        var css = '';
+        if (bg) css += 'body{background-color:' + bg + ' !important;}';
+        if (fg) {
+          css += 'body{color:' + fg + ' !important;}';
+          css += '.sidebar{border-right-color:' + fg + ' !important;}';
+          css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
+          css += '.game-toggle{background:' + fg + ' !important;}';
+        }
+        if (css) {
+          var s = document.createElement('style');
+          s.id = 'early-theme';
+          s.textContent = css;
+          document.head.appendChild(s);
+        }
+      } catch (_) {}
+    })();
+  </script>
+<style>
+    /* Hide sections until JS decides which to show (prevents wrong-section flash) */
+    #posts-list, #placeholder-text, #subscribe-placeholder { display: none; }
+  </style>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Color Game Toggle Button -->
+<button class="game-toggle" onclick="toggleColorGame()"></button>
+<!-- Color Game Panel -->
+<div class="color-game hidden" id="colorGame">
+<div class="color-controls">
+<div class="color-row">
+<div class="preset-color" onclick="updateBackgroundColor('#ffffff')" style="background: #ffffff" title="White"></div>
+<div class="preset-color" onclick="updateBackgroundColor('#000000')" style="background: #000000" title="Black"></div>
+<div class="preset-color bg-random-1" onclick="updateBackgroundColorFromBox(this)"></div>
+<div class="preset-color bg-random-2" onclick="updateBackgroundColorFromBox(this)"></div>
+<div class="preset-color bg-random-3" onclick="updateBackgroundColorFromBox(this)"></div>
+<div class="preset-color bg-random-4" onclick="updateBackgroundColorFromBox(this)"></div>
+</div>
+<div class="color-row">
+<div class="preset-color" onclick="updateFontColor('#000000')" style="background: #000000" title="Black"></div>
+<div class="preset-color" onclick="updateFontColor('#ffffff')" style="background: #ffffff" title="White"></div>
+<div class="preset-color font-random-1" onclick="updateFontColorFromBox(this)"></div>
+<div class="preset-color font-random-2" onclick="updateFontColorFromBox(this)"></div>
+<div class="preset-color font-random-3" onclick="updateFontColorFromBox(this)"></div>
+<div class="preset-color font-random-4" onclick="updateFontColorFromBox(this)"></div>
+</div>
+</div>
+<button class="reset-btn" onclick="resetColors()">Reset</button>
+<button class="reset-btn" onclick="refreshRandomColors()" style="margin-left: 0.5rem;">Refresh</button>
+</div>
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li class="active"><a href="#" onclick="showPosts(); return false;">index</a></li>
+<li><a href="#" onclick="showAbout(); return false;">about</a></li>
+<li><a href="#" onclick="showSubscribe(); return false;">subscribe</a></li>
+</ul>
+</nav>
+<main class="content">
+<ul class="posts" id="posts-list">
+<li class="post-item">
+<a class="post-link" href="posts/tornadoo.html">You should not build Tornado Cash with FHE</a>
+<span class="post-date">2025-02-18</span>
+</li>
+<li class="post-item">
+<a class="post-link" href="posts/fe.html">A gentle introduction to functional encryption</a>
+<span class="post-date">2024-11-25</span>
+</li>
+<li class="post-item">
+<a class="post-link" href="posts/io.html">Devcon key insight: indistinguishability obfuscation</a>
+<span class="post-date">2024-11-21</span>
+</li>
+<li class="post-item">
+<a class="post-link" href="posts/kzg-we.html">Notes on extractable witness encryption for KZG commitments</a>
+<span class="post-date">2024-09-03</span>
+</li>
+<li class="post-item">
+<a class="post-link" href="https://colab.research.google.com/drive/1Vdv7keKRXXBsBwl_N-FwYdf9HJWusyxH?usp=sharing" rel="noopener noreferrer" target="_blank">Notes on SPDZ</a>
+<span class="post-date">2024-05-29</span>
+</li>
+<li class="post-item">
+<a class="post-link" href="posts/co-snarks.html">Notes on collaborative zk-SNARKs</a>
+<span class="post-date">2024-05-17</span>
+</li>
+<li class="post-item">
+<a class="post-link" href="posts/binance_vuln.html">Vulnerability report: Binance PoR dummy user attack</a>
+<span class="post-date">2024-05-07</span>
+</li>
+<li class="post-item">
+<a class="post-link" href="posts/beyond-zkml.html">Beyond ZKML</a>
+<span class="post-date">2024-04-26</span>
+</li>
+<li class="post-item">
+<a class="post-link" href="posts/ouragan.html">Ouragan, a Tornado Cash offramp</a>
+<span class="post-date">2024-04-15</span>
+</li>
+<li class="post-item">
+<a class="post-link" href="posts/greco.html">Greco: fast ZKP for valid FHE encryption</a>
+<span class="post-date">2024-03-20</span>
+</li>
+</ul>
+<div class="placeholder-text" id="placeholder-text" style="display: none;">
+<p style="font-family: 'JetBrains Mono', monospace; font-size: inherit; color: inherit; line-height: 1.6; text-transform: uppercase; padding: 0.35rem 0; margin: 0;">
+          My name is Enrico Bottazzi. Here's my Spotify <a href="https://open.spotify.com/user/pvischetti?si=e30fe8bba36b43f9" rel="noopener noreferrer" target="_blank">profile</a>.<br/><br/>
+          You can reach me at <a href="mailto:enricobottazzi@icloud.com">enricobottazzi@icloud.com</a>
+</p>
+</div>
+<div class="subscribe-placeholder" id="subscribe-placeholder" style="display: none;">
+<p style="font-family: 'JetBrains Mono', monospace; font-size: inherit; color: inherit; line-height: 1.6; text-transform: uppercase; padding: 0.35rem 0; margin: 0;">
+<a href="https://docs.google.com/forms/d/e/1FAIpQLSdBcFt0MT83J4YdrFdPA8qE5tSv_61zB6GS7Fov8kFZG3AGwQ/viewform" rel="noopener noreferrer" target="_blank">Subscribe</a> to get notified about new posts. <br/><br/>
+</p>
+</div>
+</main>
+</div>
+<script>
+    // Color Game JavaScript
+    let gameVisible = false;
+    const defaultBgColor = '#ffffff';
+    const defaultFontColor = '#111111';
+
+    // Keep the early theme <style id="early-theme"> in sync so !important rules don't block changes
+    function applyEarlyTheme(bg, fg) {
+      try {
+        let css = '';
+        if (bg) css += 'body{background-color:' + bg + ' !important;}';
+        if (fg) {
+          css += 'body{color:' + fg + ' !important;}';
+          css += '.sidebar{border-right-color:' + fg + ' !important;}';
+          css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
+          css += '.game-toggle{background:' + fg + ' !important;}';
+        }
+        let s = document.getElementById('early-theme');
+        if (!css) {
+          if (s) s.remove();
+          return;
+        }
+        if (!s) {
+          s = document.createElement('style');
+          s.id = 'early-theme';
+          document.head.appendChild(s);
+        }
+        s.textContent = css;
+      } catch (_) {}
+    }
+
+    function toggleColorGame() {
+      const game = document.getElementById('colorGame');
+      gameVisible = !gameVisible;
+      if (gameVisible) game.classList.remove('hidden');
+      else game.classList.add('hidden');
+    }
+
+    function updateBackgroundColor(color) {
+      // Apply immediately (win over existing !important with inline !important)
+      document.body.style.setProperty('background-color', color, 'important');
+      localStorage.setItem('customBgColor', color);
+      // Sync early theme so future paints and other pages match
+      const fg = localStorage.getItem('customFontColor');
+      applyEarlyTheme(color, fg);
+    }
+
+    function updateBackgroundColorFromBox(box) {
+      const color = window.getComputedStyle(box).backgroundColor;
+      const hexColor = rgbToHex(color);
+      updateBackgroundColor(hexColor);
+    }
+
+    function updateFontColorFromBox(box) {
+      const color = window.getComputedStyle(box).backgroundColor;
+      const hexColor = rgbToHex(color);
+      updateFontColor(hexColor);
+    }
+
+    function rgbToHex(rgb) {
+      const result = rgb.match(/\d+/g);
+      if (result) {
+        const r = parseInt(result[0], 10);
+        const g = parseInt(result[1], 10);
+        const b = parseInt(result[2], 10);
+        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+      }
+      return rgb;
+    }
+
+    function updateFontColor(color) {
+  // Apply immediately
+  document.body.style.setProperty('color', color, 'important');
+
+      const elements = document.querySelectorAll('.post-date, .sidebar li, .post-link');
+  elements.forEach(el => { el.style.setProperty('color', color, 'important'); });
+
+      const sidebar = document.querySelector('.sidebar');
+  sidebar.style.setProperty('border-right-color', color, 'important');
+
+      const toggleButton = document.querySelector('.game-toggle');
+  toggleButton.style.setProperty('background-color', color, 'important');
+
+      localStorage.setItem('customFontColor', color);
+  // Sync early theme so future paints and other pages match
+  const bg = localStorage.getItem('customBgColor');
+  applyEarlyTheme(bg, color);
+    }
+
+    function refreshRandomColors() {
+      function getRandomHexColor() {
+        return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+      }
+      for (let i = 1; i <= 4; i++) {
+        document.querySelector(`.bg-random-${i}`).style.backgroundColor = getRandomHexColor();
+        document.querySelector(`.font-random-${i}`).style.backgroundColor = getRandomHexColor();
+      }
+    }
+
+    function initializeRandomColors() { refreshRandomColors(); }
+
+    function resetColors() {
+      updateBackgroundColor(defaultBgColor);
+      updateFontColor(defaultFontColor);
+      localStorage.removeItem('customBgColor');
+      localStorage.removeItem('customFontColor');
+      // Remove inline overrides and early theme completely
+      try {
+        document.body.style.removeProperty('background-color');
+        document.body.style.removeProperty('color');
+        document.querySelectorAll('.post-date, .sidebar li, .post-link').forEach(el => {
+          el.style.removeProperty('color');
+        });
+        const sidebar = document.querySelector('.sidebar');
+        if (sidebar) sidebar.style.removeProperty('border-right-color');
+        const toggleButton = document.querySelector('.game-toggle');
+        if (toggleButton) toggleButton.style.removeProperty('background-color');
+      } catch (_) {}
+      applyEarlyTheme(null, null);
+    }
+
+    function loadSavedColors() {
+      const savedBgColor = localStorage.getItem('customBgColor');
+      const savedFontColor = localStorage.getItem('customFontColor');
+      if (savedBgColor) updateBackgroundColor(savedBgColor);
+      if (savedFontColor) updateFontColor(savedFontColor);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeRandomColors();
+      loadSavedColors();
+      // Initialize the page based on URL hash (supports links from placeholder page)
+      handleHashRouting();
+    });
+
+    window.addEventListener('hashchange', handleHashRouting);
+
+    function handleHashRouting() {
+      const hash = window.location.hash.toLowerCase();
+      if (hash === '#about') {
+        showAbout();
+      } else if (hash === '#subscribe') {
+        showSubscribe();
+      } else {
+        showPosts();
+      }
+    }
+
+    // Navigation functions
+    function showPosts() {
+      document.getElementById('posts-list').style.display = 'block';
+      document.getElementById('placeholder-text').style.display = 'none';
+      document.getElementById('subscribe-placeholder').style.display = 'none';
+      
+      // Update active state
+      document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+      document.querySelector('.sidebar li:first-child').classList.add('active');
+    }
+
+    function showAbout() {
+      document.getElementById('posts-list').style.display = 'none';
+      document.getElementById('placeholder-text').style.display = 'block';
+      document.getElementById('subscribe-placeholder').style.display = 'none';
+      
+      // Update active state
+      document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+      document.querySelector('.sidebar li:nth-child(2)').classList.add('active');
+    }
+
+    function showSubscribe() {
+      document.getElementById('posts-list').style.display = 'none';
+      document.getElementById('placeholder-text').style.display = 'none';
+      document.getElementById('subscribe-placeholder').style.display = 'block';
+      
+      // Update active state
+      document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+      document.querySelector('.sidebar li:nth-child(3)').classList.add('active');
+    }
+  </script>
+</body>
+</html>
