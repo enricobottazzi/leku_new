@@ -4,7 +4,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>{{ site.title | default: "My Blog" }}</title>
+<title>Leku</title>
+<script>
+  function updateTitle(title) {
+    document.title = title;
+  }
+</script>
 <link as="font" crossorigin="" href="JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
 <link as="font" crossorigin="" href="JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
 <script>
@@ -276,6 +281,7 @@
 
     // Navigation functions
     function showPosts() {
+      updateTitle('Leku - index');
       document.getElementById('posts-list').style.display = 'block';
       document.getElementById('placeholder-text').style.display = 'none';
       document.getElementById('subscribe-placeholder').style.display = 'none';
@@ -286,6 +292,7 @@
     }
 
     function showAbout() {
+      updateTitle('Leku - about');
       document.getElementById('posts-list').style.display = 'none';
       document.getElementById('placeholder-text').style.display = 'block';
       document.getElementById('subscribe-placeholder').style.display = 'none';
@@ -296,6 +303,7 @@
     }
 
     function showSubscribe() {
+      updateTitle('Leku - subscribe');
       document.getElementById('posts-list').style.display = 'none';
       document.getElementById('placeholder-text').style.display = 'none';
       document.getElementById('subscribe-placeholder').style.display = 'block';
