@@ -4,7 +4,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>{{ site.title | default: "My Blog" }}</title>
+<title>Leku</title>
+<script>
+  function updateTitle(title) {
+    document.title = title;
+  }
+</script>
 <link as="font" crossorigin="" href="JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
 <link as="font" crossorigin="" href="JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
 <script>
@@ -72,6 +77,10 @@
 </nav>
 <main class="content">
 <ul class="posts" id="posts-list">
+<li class="post-item">
+<a class="post-link" href="posts/tlock.html">Revocable time-lock encryption</a>
+<span class="post-date">2025-10-27</span>
+</li>
 <li class="post-item">
 <a class="post-link" href="posts/tornadoo.html">You should not build Tornado Cash with FHE</a>
 <span class="post-date">2025-02-18</span>
@@ -276,6 +285,7 @@
 
     // Navigation functions
     function showPosts() {
+      updateTitle('Leku - index');
       document.getElementById('posts-list').style.display = 'block';
       document.getElementById('placeholder-text').style.display = 'none';
       document.getElementById('subscribe-placeholder').style.display = 'none';
@@ -286,6 +296,7 @@
     }
 
     function showAbout() {
+      updateTitle('Leku - about');
       document.getElementById('posts-list').style.display = 'none';
       document.getElementById('placeholder-text').style.display = 'block';
       document.getElementById('subscribe-placeholder').style.display = 'none';
@@ -296,6 +307,7 @@
     }
 
     function showSubscribe() {
+      updateTitle('Leku - subscribe');
       document.getElementById('posts-list').style.display = 'none';
       document.getElementById('placeholder-text').style.display = 'none';
       document.getElementById('subscribe-placeholder').style.display = 'block';
