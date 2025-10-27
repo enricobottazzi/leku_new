@@ -422,6 +422,7 @@ h3 {
   }
 
   .post-link {
+    display: block;         /* Override flex to allow wrapping */
     white-space: normal;    /* Allow title to wrap */
     overflow: visible;      /* Ensure wrapping is not hidden */
     text-overflow: clip;    /* Reset text-overflow */
