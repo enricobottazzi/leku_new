@@ -100,6 +100,8 @@ a { text-decoration: none; color: inherit; }
   font-weight: 400;
   text-transform: uppercase;
   font-variant-numeric: tabular-nums;
+  font-size: 0.9rem; /* Slightly larger for readability */
+  margin-bottom: 1rem; /* Add spacing below the date */
 }
 
 /* --- Blog post layout (placeholder and future posts) --- */
@@ -388,6 +390,36 @@ h3 {
   
   .post .post-content figcaption {
     color: #999;
+  }
+}
+
+/* --- Responsive adjustments for mobile --- */
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column; /* Stack sidebar and content vertically */
+    margin-top: 2rem;       /* Reduce top margin for a tighter layout */
+  }
+
+  .sidebar {
+    border-right: none;     /* Remove the vertical line */
+    padding-right: 0;       /* Remove right padding */
+    padding-bottom: 1rem;   /* Add space between nav and content */
+    border-bottom: 1px solid #111; /* Add a bottom border instead */
+    margin-bottom: 1rem;    /* Space below the new bottom border */
+    align-self: stretch;    /* Make sidebar span the full width */
+    flex-basis: auto;       /* Reset flex-basis */
+  }
+
+  .content {
+    padding-left: 0;        /* Remove left padding to align with sidebar */
+  }
+
+  .post-item {
+    flex-direction: column;   /* Stack title and date vertically */
+    align-items: flex-start;  /* Align items to the start */
+    border-bottom: 1px solid #ddd; /* Add a separator */
+    padding-bottom: 0.5rem;   /* Space below the item */
+    margin-bottom: 0.5rem;    /* Space between items */
   }
 }
 
