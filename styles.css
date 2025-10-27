@@ -403,7 +403,7 @@ h3 {
     border-right: none;     /* Remove the vertical line */
     padding-right: 0;       /* Remove right padding */
     padding-bottom: 1rem;   /* Add space between nav and content */
-    border-bottom: 1px solid #111; /* Add a bottom border instead */
+    border-bottom: 1px solid currentColor; /* Add a bottom border instead */
     margin-bottom: 1rem;    /* Space below the new bottom border */
     align-self: stretch;    /* Make sidebar span the full width */
     flex-basis: auto;       /* Reset flex-basis */
