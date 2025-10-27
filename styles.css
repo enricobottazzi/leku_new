@@ -416,6 +416,7 @@ h3 {
   }
 
   .post-item {
+    display: block;           /* Force block display to ensure wrapping */
     flex-direction: column;   /* Stack title and date vertically */
     align-items: flex-start;  /* Align items to the start */
     margin-bottom: 1rem;    /* Restore spacing between items */
