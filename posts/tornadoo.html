@@ -66,7 +66,7 @@
 <blockquote>
 <p>Thanks to Auryn Macmillan for discussions and reviews.</p>
 </blockquote>
-<p><img alt="Screenshot 2025-02-13 at 08.53.26" src="https://hackmd.io/_uploads/H17-HXit1x.png"/></p>
+<p><img alt="Screenshot 2025-02-13 at 08.53.26" src="../assets/H17-HXit1x.png"/></p>
 <p><a href="https://x.com/randhindi" rel="noopener noreferrer" target="_blank">Rand Hindi</a>, CEO of Zama, argued in this <a href="https://x.com/randhindi/status/1779832338228105726?s=61" rel="noopener noreferrer" target="_blank">tweet</a> about the difference between privacy applications built with ZK and with FHE. Tornado Cash-like systems (based on ZK), similar to Tor, are focused on anonymizing who is doing something (the identity/metadata) while the content of the transaction is visible on the public blockchain. FHE-powered applications, similar to Signal's end-to-end encryption, reveal the parties (metadata) involved in a transaction while the content of such transaction remains hidden. While this is a valid heuristic, there's much more to say about such differences. In this blog post, we will consider the specific case of <a href="https://github.com/tornadocash" rel="noopener noreferrer" target="_blank">Tornado Cash</a> and compare it with an FHE version of Tornado Cash that we'll build. I assume that the reader is familiar with the main functionalites of ZK (prove and verify) and FHE (encrypt, perform addition and multiplication on encrypted data and decrypt).</p>
 <h2>Tornado Cash</h2>
 <p>Let's first recap the design of the existing ZK-powered Tornado Cash, which will be after TC. TC is a mixer that allows the transfer of ETH and other tokens from address A to address B while hiding the link between the two accounts. It works as follows: </p>

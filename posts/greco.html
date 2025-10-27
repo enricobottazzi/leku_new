@@ -67,7 +67,7 @@
 <p>Thanks to Janmajaya Mall and Xiang Xie for discussions and reviews. You can leave comments of the hackMD version of this document <a href="https://hackmd.io/@gaussian/r1W98Kqqa" rel="noopener noreferrer" target="_blank">here</a>.</p>
 </blockquote>
 <figure align="center">
-<img alt="Artwork by Alighiero Boetti" src="https://hackmd.io/_uploads/rJYXGUdCa.jpg" width="50%"/>
+<img alt="Artwork by Alighiero Boetti" src="../assets/rJYXGUdCa.jpg" width="50%"/>
 <figcaption>Alighiero Boetti, Autodisporsi, 1975</figcaption>
 </figure>
 <blockquote>
@@ -274,7 +274,7 @@ $$
 <p>To prove the correct computation of a ciphertext starting from a message, it is needed to prove the computation of each of the $k$ ciphertexts $Ct_{q_i}$. There are two ideas that can be explored here.</p>
 <h4>3.4.1. Parallel Proof Generation</h4>
 <p>This means that a π of correct encryption needs to be generated for each $i$. The good news is that these proofs can be generated in parallel. Furthermore, these proofs (for each $Z_{qi}$) can eventually be aggregated in a single proof that verifies the encryption for each smaller modulus. In this way, the user only has to verify a single proof.</p>
-<p><img alt="zkfhe.drawio" src="https://hackmd.io/_uploads/ByejqTloa.png"/></p>
+<p><img alt="zkfhe.drawio" src="../assets/ByejqTloa.png"/></p>
 <p>When performing the first recursion, it is important to check whether the common polynomials across each $i$-th encryption circuit are matching. These polynomials are $S$, $E$, $K_1$</p>
 <h4>3.4.2. Proving the correctness of multiple ciphertexts in the same proof</h4>
 <p>Apparently, this approach seems to be the naive version of approach 1. In reality, there are some benefits to this approach, too. In the previous approach, the constraints on the common polynomials $S$, $E$, and $K_1$ are enforced within each $i$-th encryption circuit. These constraints are the range checks on these polynomials and the evaluation at $\gamma$ (which will be different for each $i$-th circuit) of these polynomials. In the previous approach, there are, therefore, some constraints duplicated $n$ times over the same polynomials.</p>
@@ -501,7 +501,7 @@ $$
 </table>
 <p>The setup time seems to grow linearly with $n$ as it roughly doubles everytime $n$ doubles. Proof Generation shows a sublinear growth when compared to the growth of $n$. </p>
 <p>The main cost center of the proof generation in terms of contraints is dominated by the Range Checks. In particular, analyzing the number of constraints when $n$ is set to 4096 the distribution is the following:</p>
-<p><img alt="Constraints Distribution" src="https://hackmd.io/_uploads/BJzHY4I2p.svg"/></p>
+<p><img alt="Constraints Distribution" src="../assets/BJzHY4I2p.svg"/></p>
 <p>The second most expensive operation is the Evaluation at Gamma Constraint followed by the Phase 0 polynomial assignement. Both grow linearly with $n$. The constraints required to enforce Phase 1 assignment and Correct Encryption are irrelavant to the overall cost model. </p>
 <p>Such data can be reproduced by running the Generate Parameters <a href="https://github.com/gaussian-dev/greco?tab=readme-ov-file#generate-parameters" rel="noopener noreferrer" target="_blank">python script</a>.</p>
 <h2>8. Conclusions</h2>

@@ -73,18 +73,18 @@
 <p>Machine learning is a powerful technique that can detect (with high probability) whether an image contains elephant content. More specifically, <a href="https://ujjwalkarn.me/2016/08/11/intuitive-explanation-convnets/" rel="noopener noreferrer" target="_blank">convolutional neural networks</a> (CNNs) can be used for image recognition and classification. Such models go through a <strong>training phase</strong>, in which these are fed with large datasets to identify patterns and characteristics to classify an image between the categories <em>elephant</em> or <em>non-elephant</em>. This long and expensive phase outputs a set of <em>weights</em> and <em>biases</em> that define the model. </p>
 <p>During the inference phase, the model is shown new images and is asked to classify them as elephants or non-elephants. As a rule of thumb, the bigger and more diverse the dataset used in the training phase, the more accurate the classification will be during the inference phase.</p>
 <figure align="center">
-<img alt="CCN Inference" src="https://hackmd.io/_uploads/HyC4pb-bR.png"/>
+<img alt="CCN Inference" src="../assets/HyC4pb-bR.png"/>
 <figcaption>Source: SeeFood app from Jian-Yang</figcaption>
 </figure>
 <p>To comply with the regulation, applications like Signal, WhatsApp, and Apple's iMessage can use CNNs to scan the images sent by their users. In practice, this would require every message to go through a CNN running on the companies' premises and classify whether these images contain elephants.</p>
 <figure align="center">
-<img src="https://hackmd.io/_uploads/r1eQCW-b0.png" width="600"/>
+<img src="../assets/r1eQCW-b0.png" width="600"/>
 </figure>
 <p>Such a solution allows companies to comply with EU regulations but does not protect the confidentiality of user communications. </p>
 <h3>Effort #2</h3>
 <p>An alternative solution would require users to run the CNN locally on the User device and only share the inference function's (benign or malign) output with the messaging company server.</p>
 <figure align="center">
-<img src="https://hackmd.io/_uploads/rysBAbbbR.png" width="600"/>
+<img src="../assets/rysBAbbbR.png" width="600"/>
 </figure>
 <p>This solution would protect the User's data, but there's a caveat here: from a system design perspective, we require the messaging app not to access any bit of the user's computation. So how can the server be assured that the User runs the expected model, not a dummy function that always returns benign? Alternatively, how can the server be assured that this model wasn't run on an image different from the one the User will share with one of their contacts?</p>
 <p>In such a scenario, the adversary is the User. They can perform attacks to bypass the CNN inference scanning. Therefore, such a solution wouldn't prevent the proliferation of images of elephants.</p>
@@ -96,7 +96,7 @@
 <p>These features can help solve the problem identified in the previous solution, which relied solely on ML. In particular, the company should require the User to run the CNN <strong>locally</strong> on their device and share <strong>proof</strong> that a specific CNN model inference function was run on a particular image (without revealing it!) and that the output of the inference function is benign. </p>
 <p>In such a scenario, the user attack described in Effort #2 is prevented by requiring the User to generate a proof of verifiable CNN inference. </p>
 <figure align="center">
-<img src="https://hackmd.io/_uploads/rkuRMG--0.png" width="600"/>
+<img src="../assets/rkuRMG--0.png" width="600"/>
 </figure>
 <p>This category of solutions is broadly known as ZKML and includes projects such as <a href="https://github.com/zkonduit/ezkl" rel="noopener noreferrer" target="_blank">EZKL</a>, <a href="https://www.modulus.xyz/" rel="noopener noreferrer" target="_blank">Modulus Labs</a> and <a href="https://github.com/socathie/circomlib-ml/tree/master" rel="noopener noreferrer" target="_blank">circomlib-ml</a>. In short, ZKML is the process of snarkyfying the inference function of an ML model. </p>
 <p>Sharing the proof with the server would allow them to check whether an image shared on their application has undergone a CNN inference and is, therefore, benign, complying with the EU regulation. At the same time, the confidentiality of the user content is protected since the image is a private input of the zkSNARK.</p>
@@ -113,7 +113,7 @@
 - not revealing the weights and biases of the model to the User</p>
 <p>In the real world, we cannot build a secure application based on the assumption of the existence of such a trusted third party. Instead, we replace it with a set of cryptographic techniques (MPC) that allows us to achieve a similar result. Note that a possible alternative to building such a solution would be to replace the trusted third party with a Trusted Execution Environment (TEE). In such a case, the security is guaranteed by trusted hardware. </p>
 <figure align="center">
-<img src="https://hackmd.io/_uploads/rJLRs8SW0.png" width="600"/>
+<img src="../assets/rJLRs8SW0.png" width="600"/>
 </figure>
 <p>This category of solutions is known as <a href="https://eprint.iacr.org/2022/1483.pdf" rel="noopener noreferrer" target="_blank">Secure Neural Network Inference</a>. Different techniques can be used to achieve that, each with its tradeoffs in terms of security and efficiency.</p>
 <p>A solution based on MPC and Secure Neural Network Inference would protect the confidentiality of the User's data and guarantee the server's adherence to EU requirements.</p>
@@ -128,7 +128,7 @@
 <p>Still, as described before, any MPC-based solution would require to be wrapped inside zkSNARK if third-party verifiability (or on-chain verifiability) is required.</p>
 <p>Most likely, your final solution would look like a Frankenstein leveraging a <a href="https://youtu.be/lEPqwF9gPiM?si=-edA5FNyf_Fd0XLP" rel="noopener noreferrer" target="_blank">mix of cryptographic techniques</a> at our disposal</p>
 <figure align="center">
-<img alt="CCN Inference" src="https://hackmd.io/_uploads/BJOq2GWWR.png"/>
+<img alt="CCN Inference" src="../assets/BJOq2GWWR.png"/>
 <figcaption>gubsheep, Progcrypto 2023</figcaption>
 </figure>
 </section>

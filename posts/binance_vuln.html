@@ -78,7 +78,7 @@
 <p>With these two proofs, a CEX is able to prove that it has the funds to pay back all of its depositors. Binance<sup id="fnref2:bin_1"><a class="footnote-ref" href="#fn:bin_1">1</a></sup> makes an example: <em>When a user deposits one Bitcoin, Binance's reserves increase by at least one Bitcoin to ensure client funds are fully backed ... What this means in actual terms is that Binance holds all user assets 1:1 (as well as some reserves)</em>.</p>
 <p>The PoA is <em>relatively</em> easy to achieve. The CEX must sign an off-chain message to prove ownership of a private key and, therefore, of the assets controlled by that private key. </p>
 <p>The PoL is more tricky. Users' deposits are only stored inside the CEX's database. The two main problems involve privacy and verifiability. Information about the deposits of each user should not be revealed to the public. Furthermore, a single user can only verify the correctness of <em>their</em> deposit but cannot tell anything about other users' deposits. A way to achieve verifiability and (partial) privacy is to accumulate users inside a Merkle Sum Tree and publish the Merkle Root, containing a hash and a balance representing the sum of the CEX's liabilities. </p>
-<p><img alt="Screenshot 2024-03-26 at 09.46.32" src="https://hackmd.io/_uploads/S16Ojbx1C.png"/></p>
+<p><img alt="Screenshot 2024-03-26 at 09.46.32" src="../assets/S16Ojbx1C.png"/></p>
 <p>The CEX can provide users with their Merkle Proof (in blue, for Charlie) to let them verify they have been accounted for correctly in the liabilities summation. </p>
 <p>Note that the security of <strong>any</strong> PoR protocol relies on the assumption that a percentage of users<sup id="fnref:kostas_paper"><a class="footnote-ref" href="#fn:kostas_paper">4</a></sup> must verify their inclusion in the tree. A user that is not able to verify their correct inclusion in the tree signals that they were discarded from the computation of the total liabilities and should open a dispute.</p>
 <p>Protocols such as <a href="https://github.com/summa-dev" rel="noopener noreferrer" target="_blank">Summa</a> and exchanges such as <a href="https://www.bitmex.com/app/porl" rel="noopener noreferrer" target="_blank">BitMEX</a>, <a href="https://www.kraken.com/proof-of-reserves" rel="noopener noreferrer" target="_blank">Kraken</a>, and <a href="https://niccarter.info/proof-of-reserves/" rel="noopener noreferrer" target="_blank">many others</a> deployed different flavors of the PoR mentioned above. Binance's PoR is the only one that supports the user's lending feature<sup id="fnref2:bin_2"><a class="footnote-ref" href="#fn:bin_2">2</a></sup>. Namely, a user may use coin X as collateral to borrow another coin Y. In that case, the user's balance for coin X is negative, while the net balance across the two coins, when converted to dollars, must be positive. </p>
@@ -95,7 +95,7 @@
 <p>The account Merkle Tree is built starting from users' data:
 - each leaf is computed as: <code>hash(accountId, equity, debt, commitment(AssetInfo))</code>
 - each middle node is computed as <code>hash(left_node, right_node)</code></p>
-<p><img alt="Screenshot 2024-03-26 at 08.57.08" src="https://hackmd.io/_uploads/B1GJlZgyC.png"/></p>
+<p><img alt="Screenshot 2024-03-26 at 08.57.08" src="../assets/B1GJlZgyC.png"/></p>
 <p>The snapshot represents the following userbase (Scenario 1) (as described in<sup id="fnref2:bin_3"><a class="footnote-ref" href="#fn:bin_3">3</a></sup>):</p>
 <table>
 <thead>
@@ -173,7 +173,7 @@
 <li>Verify their correct inclusion inside the Account Tree. This is done by verifying a Merkle proof provided by Binance to each of them.</li>
 </ol>
 <p>Given a specific currency, the total liability for that currency is given by equity minus liabilities. In the previous example, the total liability for ETH equals 20, and the total liability for USDT equals 20000. Binance has to prove that it holds at least 20 ETH and at least 20000 USDT to guarantee its solvency to its users. This information is made available to the public through an interface<sup id="fnref3:bin_1"><a class="footnote-ref" href="#fn:bin_1">1</a></sup>.</p>
-<p><img alt="Screenshot 2024-03-26 at 11.31.07" src="https://hackmd.io/_uploads/By5l4mxyR.png"/></p>
+<p><img alt="Screenshot 2024-03-26 at 11.31.07" src="../assets/By5l4mxyR.png"/></p>
 <h2>3. Dummy User Attack</h2>
 <p>Such verification performed successfully <strong>by each user</strong> should guarantee the solvency of Binance according to the definition provided in paragraph 1. But there's a caveat here.</p>
 <p>Binance's (PoR) is designed under the assumption, consolidated in academia<sup id="fnref2:kostas_paper"><a class="footnote-ref" href="#fn:kostas_paper">4</a></sup>, that adding dummy users to the liabilities computation would only increase the liabilities and, therefore, be against the custodian's interest. This is apparently true, given that the circuit constraints that the net balance of a newly added user is greater than 0 dollars when added to the Account Tree. However,  given that Binance supports users' debt, this assumption is no longer true. Indeed, Binance could add a dummy user to the Account Tree and be able to claim themselves solvent (under the definition provided in paragraph 1) even if they are not.</p>
@@ -272,13 +272,13 @@
 </ul>
 <p>Considering Scenario 2, these would be the three Trees that the CEX has to create as part of their PoR.</p>
 <figure align="center">
-<img src="https://hackmd.io/_uploads/rklUgP9WC.png" width="500"/>
+<img src="../assets/rklUgP9WC.png" width="500"/>
 </figure>
 <figure align="center">
-<img src="https://hackmd.io/_uploads/SJl8eDqbA.png" width="500"/>
+<img src="../assets/SJl8eDqbA.png" width="500"/>
 </figure>
 <figure align="center">
-<img src="https://hackmd.io/_uploads/SkgUxP9ZC.png" width="500"/>
+<img src="../assets/SkgUxP9ZC.png" width="500"/>
 </figure>
 <p>The user would then later verify their correct inclusion in the tree by verifying a Merkle Proof provided by the CEX, similar to what happens with the Account Tree.</p>
 <p>Comparing this solution to Scenario 2, the CEX is still able to perform the Dummy User Attack, but users are now provided with better information to evaluate its solvency. In particular, they are now aware that if they were all to withdraw their ETH from the CEX, the CEX would need to liquidate 4 BNB to satisfy the demand.</p>
