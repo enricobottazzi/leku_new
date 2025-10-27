@@ -420,6 +420,15 @@ h3 {
     align-items: flex-start;  /* Align items to the start */
     margin-bottom: 1rem;    /* Restore spacing between items */
   }
+
+  .post-link {
+    white-space: normal;    /* Allow title to wrap */
+    overflow: visible;      /* Ensure wrapping is not hidden */
+    text-overflow: clip;    /* Reset text-overflow */
+  }
+  .post-link::after {
+    content: none;          /* Remove the dotted leader line */
+  }
 }
 
 /* Blockquote styling */
