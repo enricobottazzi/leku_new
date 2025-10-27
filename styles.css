@@ -19,7 +19,9 @@ html { scrollbar-gutter: stable both-edges; }
 body {
   line-height: 1.6;
   color: #111;
-  /* Always reserve vertical scrollbar to avoid horizontal re-centering jitter eeee */ 
+  -webkit-text-size-adjust: 100%; /* Stop Safari from resizing text */
+  text-size-adjust: 100%;
+  /* Always reserve vertical scrollbar to avoid horizontal re-centering jitter eeee */
   overflow-y: scroll;
 }
 a { text-decoration: none; color: inherit; }
