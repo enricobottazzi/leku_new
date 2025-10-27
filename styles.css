@@ -390,3 +390,25 @@ h3 {
     color: #999;
   }
 }
+
+/* Blockquote styling */
+.post .post-content blockquote {
+  margin: 1.5rem 0;
+  padding: 0.5rem 1.5rem;
+  font-style: italic;
+}
+
+.post .post-content blockquote p {
+  margin-bottom: 1rem;
+}
+
+.post .post-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Dark mode adjustments for blockquotes */
+@media (prefers-color-scheme: dark) {
+  .post .post-content blockquote {
+  }
+}
+

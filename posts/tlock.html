@@ -70,7 +70,9 @@ Of course, this is an all-or-nothing strategy. WikiLeaks has no guarantees that 
 Now, it's hard to imagine how some abstract math could observe an assassination and decrypt embarrassing files. Perhaps a different question could be answered—can you design an encryption scheme which requires no trusted parties but can only be broken after a certain date?</em></p>
 </blockquote>
 <p>We first provide a solution to this question, then pose a follow-up question:</p>
+<blockquote>
 <p><em>What if, after having encrypted the file under such a scheme, the encryptor changes their mind and decides to revoke the permission to access the file after a certain date?</em></p>
+</blockquote>
 <h2>Standard time-lock encryption</h2>
 <p>The solution proposed by Gwern is to rely on <em>time-lock encryption</em>. Time-lock encryption allows to take a secret file $s$, set a time $T$, and obtain a ciphertext $ct$. Once time $T$ has elapsed, any external party can decrypt $ct$ and obtain $s$. More importantly, the decryption can be carried out without any interaction at all with the encryptor, who might have disappeared in the meantime. Such a solution allows for the removal on any trusted parties. The security of time-lock encryption guarantees that the secret file cannot be accessed before $T$. Furthermore, there's no risk that the file won't be released at all.</p>
 <p>We start by describing the "standard" way of building time-lock encryption relying on sequential computation. For this, let's use the dummy example of hashes described in the Gwern's article.</p>
