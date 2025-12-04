@@ -86,7 +86,7 @@
 <p>Even though $P$ and $Q$ use completely different methods, their obfuscated versions should be indistinguishable according to the security definition. The beauty of this definition is that it captures our intuitive notion of "hiding the inner workings" in a strong, formal way: if you can't even tell which of two known implementations was used, you certainly can't learn anything about how the implementation works. </p>
 <h2>Voting app with iO</h2>
 <p>To practically understand what you can do with iO, let's analyze how it can be used to construct a voting application that keeps the individual votes private and only reveals the final tally. This section extends the analysis performed by Vitalik in his recent <a href="https://vitalik.eth.limo/general/2024/10/29/futures6.html" rel="noopener noreferrer" target="_blank">blog post</a>. The logic of the tally is the following:</p>
-<pre><code>def vote(choice): # choice is either yes (1) or no (0)
+<pre><code style="white-space: pre-wrap;">def vote(choice): # choice is either yes (1) or no (0)
 
     yes_votes += choice
     no_votes += (choice + 1) % 2
@@ -101,7 +101,7 @@
 <ol>
 <li>
 <p>Run a public trusted setup open to everyone where each party will contribute with some randomness to generate the FHE key pair encryption (public) key $p_k$ and the underlying decryption (secret) key $s_k$. As part of the trusted setup, the randomness will also contribute to the generation of an obfuscated program $O$. The logic of the program is the following:</p>
-<p><code>if verify(π, ct) == true:
+<p><code style="white-space: pre-wrap;">if verify(π, ct) == true:
     return decrypt(ct, s_k)
 else:
     return 0</code></p>
