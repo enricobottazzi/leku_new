@@ -454,3 +454,27 @@ h3 {
   }
 }
 
+/* Make wide tables scroll horizontally on small screens — no JS */
+@media (max-width: 768px) {
+  .post .post-content table {
+    display: block;               /* enables horizontal scroll */
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-collapse: separate;    /* keeps borders looking decent when block */
+    border-spacing: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .post .post-content th,
+  .post .post-content td {
+    white-space: normal;    /* was nowrap */
+    word-break: break-word; /* prevent overflow from long tokens */
+    text-align: left;       /* optional: reads better when wrapped */
+  }
+  /* If you like numbers centered on desktop, you can relax that on mobile */
+  .post .post-content table td:not(:first-child) {
+    text-align: left;
+  }
+}
