@@ -12,4 +12,4 @@
     - Check the links
     - Check the images (these are not automatically imported from HackMD)
     - Check the Latex formatting
-7. Delete the `output.html` file.
+7. Delete the `output.html` file
