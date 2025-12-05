@@ -478,3 +478,19 @@ h3 {
     text-align: left;
   }
 }
+
+.image-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.image-container img {
+    width: 48%;
+    height: auto;
+}
+
+.reduced-size {
+    width: 50%;
+    margin: 1.5rem auto;
+}
