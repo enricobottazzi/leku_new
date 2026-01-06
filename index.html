@@ -329,6 +329,17 @@
       }
     }
 
+    // Hide loading glitch immediately on page show (handles both normal loads and back navigation)
+    window.addEventListener('pageshow', function(event) {
+      // Hide glitch immediately, especially important when page is restored from bfcache
+      hideLoadingGlitch();
+      
+      // If page was restored from bfcache, just handle routing
+      if (event.persisted) {
+        handleHashRouting();
+      }
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
       initializeRandomColors();
       loadSavedColors();
