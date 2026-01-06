@@ -38,8 +38,6 @@
 <style>
     /* Hide sections until JS decides which to show (prevents wrong-section flash) */
     #posts-list, #placeholder-text, #subscribe-placeholder { display: none; }
-    /* Ensure loading glitch is hidden by default */
-    #loadingGlitch { opacity: 0 !important; pointer-events: none !important; }
   </style>
 <link href="styles.css" rel="stylesheet"/>
 </head>
@@ -328,29 +326,8 @@
       const loader = document.getElementById('loadingGlitch');
       if (loader) {
         loader.classList.remove('active');
-        // Force hide with inline style as well
-        loader.style.opacity = '0';
-        loader.style.pointerEvents = 'none';
       }
     }
-
-    // Hide glitch immediately on page load (before DOMContentLoaded)
-    (function() {
-      try {
-        var loader = document.getElementById('loadingGlitch');
-        if (loader) {
-          loader.classList.remove('active');
-          loader.style.opacity = '0';
-          loader.style.pointerEvents = 'none';
-        }
-      } catch (_) {}
-    })();
-
-    // Handle back/forward navigation
-    window.addEventListener('pageshow', function(event) {
-      // Hide glitch when page is shown (including back/forward navigation)
-      hideLoadingGlitch();
-    });
 
     document.addEventListener('DOMContentLoaded', function() {
       initializeRandomColors();
