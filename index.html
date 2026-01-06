@@ -66,6 +66,10 @@
 </div>
 <button class="reset-btn" onclick="resetColors()">Reset</button>
 <button class="reset-btn" onclick="refreshRandomColors()" style="margin-left: 0.5rem;">Refresh</button>
+  </div>
+<!-- Loading Glitch Overlay -->
+<div class="loading-glitch" id="loadingGlitch">
+  <img src="assets/logo/logo.png" alt="Loading..." class="loading-glitch-logo" id="loadingGlitchLogo"/>
 </div>
 <div class="wrapper">
 <nav class="sidebar">
@@ -268,11 +272,56 @@
       if (savedFontColor) updateFontColor(savedFontColor);
     }
 
+    // Loading glitch functionality
+    function showLoadingGlitch() {
+      const loader = document.getElementById('loadingGlitch');
+      const logo = document.getElementById('loadingGlitchLogo');
+      if (loader && logo) {
+        // Preload logo to ensure it's ready
+        const img = new Image();
+        img.onload = function() {
+          loader.classList.add('active');
+        };
+        img.onerror = function() {
+          // If logo doesn't exist, still show loader (will be empty but functional)
+          loader.classList.add('active');
+        };
+        img.src = 'assets/logo/logo.png';
+      }
+    }
+
+    function hideLoadingGlitch() {
+      const loader = document.getElementById('loadingGlitch');
+      if (loader) {
+        loader.classList.remove('active');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       initializeRandomColors();
       loadSavedColors();
       // Initialize the page based on URL hash (supports links from placeholder page)
       handleHashRouting();
+
+      // Ensure glitch is hidden on page load (in case of back navigation)
+      hideLoadingGlitch();
+
+      // Add click listeners to all blog post links
+      const postLinks = document.querySelectorAll('.post-link[href^="posts/"]');
+      postLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          // Only intercept internal blog post links (not external links)
+          if (href && href.startsWith('posts/') && !this.hasAttribute('target')) {
+            e.preventDefault();
+            showLoadingGlitch();
+            // Navigate after a brief delay to ensure animation starts
+            setTimeout(() => {
+              window.location.href = href;
+            }, 50);
+          }
+        });
+      });
     });
 
     window.addEventListener('hashchange', handleHashRouting);
