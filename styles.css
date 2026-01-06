@@ -528,146 +528,15 @@ h3 {
 }
 
 @keyframes glitch {
-    0% {
-        transform: translate(0) scale(1);
-        filter: hue-rotate(0deg) brightness(1);
-    }
-    5% {
-        transform: translate(-3px, 3px) scale(1.02);
-        filter: hue-rotate(90deg) brightness(1.1);
-    }
-    10% {
-        transform: translate(-3px, -3px) scale(0.98);
-        filter: hue-rotate(180deg) brightness(0.9);
-    }
-    15% {
-        transform: translate(3px, 3px) scale(1.01);
-        filter: hue-rotate(270deg) brightness(1.05);
-    }
-    20% {
-        transform: translate(3px, -3px) scale(0.99);
-        filter: hue-rotate(360deg) brightness(0.95);
-    }
-    25% {
-        transform: translate(-4px, 2px) scale(1.03);
-        filter: hue-rotate(45deg) brightness(1.15);
-    }
-    30% {
-        transform: translate(-2px, -4px) scale(0.97);
-        filter: hue-rotate(135deg) brightness(0.85);
-    }
-    35% {
-        transform: translate(4px, 2px) scale(1.02);
-        filter: hue-rotate(225deg) brightness(1.1);
-    }
-    40% {
-        transform: translate(2px, -4px) scale(0.98);
-        filter: hue-rotate(315deg) brightness(0.9);
-    }
-    45% {
-        transform: translate(-3px, 3px) scale(1.01);
-        filter: hue-rotate(90deg) brightness(1.05);
-    }
-    50% {
-        transform: translate(-3px, -3px) scale(0.99);
-        filter: hue-rotate(180deg) brightness(0.95);
-    }
-    55% {
-        transform: translate(3px, 3px) scale(1.02);
-        filter: hue-rotate(270deg) brightness(1.1);
-    }
-    60% {
-        transform: translate(3px, -3px) scale(0.98);
-        filter: hue-rotate(360deg) brightness(0.9);
-    }
-    65% {
-        transform: translate(-2px, 4px) scale(1.01);
-        filter: hue-rotate(45deg) brightness(1.05);
-    }
-    70% {
-        transform: translate(-4px, -2px) scale(0.97);
-        filter: hue-rotate(135deg) brightness(0.85);
-    }
-    75% {
-        transform: translate(2px, 4px) scale(1.03);
-        filter: hue-rotate(225deg) brightness(1.15);
-    }
-    80% {
-        transform: translate(4px, -2px) scale(0.99);
-        filter: hue-rotate(315deg) brightness(0.95);
-    }
-    85% {
-        transform: translate(-3px, 2px) scale(1.01);
-        filter: hue-rotate(90deg) brightness(1.05);
-    }
-    90% {
-        transform: translate(3px, -2px) scale(0.98);
-        filter: hue-rotate(180deg) brightness(0.95);
-    }
-    95% {
-        transform: translate(-2px, 3px) scale(1.02);
-        filter: hue-rotate(270deg) brightness(1.1);
-    }
-    100% {
-        transform: translate(0) scale(1);
-        filter: hue-rotate(0deg) brightness(1);
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
     }
 }
 
 .loading-glitch-logo::before,
 .loading-glitch-logo::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: inherit;
-    mix-blend-mode: screen;
-    animation: glitch-split 2s infinite;
-}
-
-.loading-glitch-logo::before {
-    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-    transform: translate(-3px, 0);
-}
-
-.loading-glitch-logo::after {
-    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-    transform: translate(3px, 0);
-}
-
-@keyframes glitch-split {
-    0%, 100% {
-        transform: translate(0);
-    }
-    10% {
-        transform: translate(-4px, 0);
-    }
-    20% {
-        transform: translate(4px, 0);
-    }
-    30% {
-        transform: translate(-5px, 0);
-    }
-    40% {
-        transform: translate(5px, 0);
-    }
-    50% {
-        transform: translate(-3px, 0);
-    }
-    60% {
-        transform: translate(3px, 0);
-    }
-    70% {
-        transform: translate(-4px, 0);
-    }
-    80% {
-        transform: translate(4px, 0);
-    }
-    90% {
-        transform: translate(-2px, 0);
-    }
+    display: none;
 }
 
 /* Dark mode support for loading glitch */
