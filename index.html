@@ -66,6 +66,10 @@
 </div>
 <button class="reset-btn" onclick="resetColors()">Reset</button>
 <button class="reset-btn" onclick="refreshRandomColors()" style="margin-left: 0.5rem;">Refresh</button>
+  </div>
+<!-- Loading Glitch Overlay -->
+<div class="loading-glitch" id="loadingGlitch">
+  <img src="assets/logo/logo.png" alt="Loading..." class="loading-glitch-logo" id="loadingGlitchLogo"/>
 </div>
 <div class="wrapper">
 <nav class="sidebar">
@@ -268,11 +272,88 @@
       if (savedFontColor) updateFontColor(savedFontColor);
     }
 
+    // Loading glitch functionality
+    function showLoadingGlitch() {
+      const loader = document.getElementById('loadingGlitch');
+      const logo = document.getElementById('loadingGlitchLogo');
+      if (loader && logo) {
+        // Get custom background color from localStorage or use current body background
+        const customBgColor = localStorage.getItem('customBgColor');
+        if (customBgColor) {
+          // Convert hex to rgba with 0.98 opacity
+          const hex = customBgColor.replace('#', '');
+          if (hex.length === 6) {
+            const r = parseInt(hex.substr(0, 2), 16);
+            const g = parseInt(hex.substr(2, 2), 16);
+            const b = parseInt(hex.substr(4, 2), 16);
+            loader.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.98)`;
+          } else {
+            // Fallback if hex format is unexpected
+            loader.style.backgroundColor = customBgColor;
+            loader.style.opacity = '0.98';
+          }
+        } else {
+          // Use current body background color (respects any custom colors already applied)
+          const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+          if (bodyBg && bodyBg !== 'rgba(0, 0, 0, 0)' && bodyBg !== 'transparent') {
+            // Extract RGB values and add opacity
+            const rgbMatch = bodyBg.match(/\d+/g);
+            if (rgbMatch && rgbMatch.length >= 3) {
+              loader.style.backgroundColor = `rgba(${rgbMatch[0]}, ${rgbMatch[1]}, ${rgbMatch[2]}, 0.98)`;
+            } else {
+              loader.style.backgroundColor = bodyBg;
+            }
+          } else {
+            // Fallback to default white
+            loader.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+          }
+        }
+        
+        // Preload logo to ensure it's ready
+        const img = new Image();
+        img.onload = function() {
+          loader.classList.add('active');
+        };
+        img.onerror = function() {
+          // If logo doesn't exist, still show loader (will be empty but functional)
+          loader.classList.add('active');
+        };
+        img.src = 'assets/logo/logo.png';
+      }
+    }
+
+    function hideLoadingGlitch() {
+      const loader = document.getElementById('loadingGlitch');
+      if (loader) {
+        loader.classList.remove('active');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       initializeRandomColors();
       loadSavedColors();
       // Initialize the page based on URL hash (supports links from placeholder page)
       handleHashRouting();
+
+      // Ensure glitch is hidden on page load (in case of back navigation)
+      hideLoadingGlitch();
+
+      // Add click listeners to all blog post links
+      const postLinks = document.querySelectorAll('.post-link[href^="posts/"]');
+      postLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          // Only intercept internal blog post links (not external links)
+          if (href && href.startsWith('posts/') && !this.hasAttribute('target')) {
+            e.preventDefault();
+            showLoadingGlitch();
+            // Navigate after a brief delay to ensure animation starts
+            setTimeout(() => {
+              window.location.href = href;
+            }, 50);
+          }
+        });
+      });
     });
 
     window.addEventListener('hashchange', handleHashRouting);
