@@ -12,4 +12,5 @@
     - Check the links
     - Check the images (these are not automatically imported from HackMD)
     - Check the Latex formatting
+    - Check the block quotes (not done automatically via the provided script)
 7. Delete the `output.html` file
