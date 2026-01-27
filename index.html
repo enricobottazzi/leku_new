@@ -406,7 +406,8 @@
       document.querySelector('.sidebar li:nth-child(2)').classList.add('active');
     }
 
-    // Email signup: send to Zapier webhook
+    // Email signup: send to Google Apps Script
+    const EMAIL_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkUimNkCcWbEhnHWo2zjU1Mq6iqVqiiVzy1bHCma2fX1j3a4_eLYZ_HmN0nWG0ILBy/exec';
     document.querySelector('.email-signup-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       const input = document.getElementById('email-input');
@@ -417,17 +418,13 @@
       btn.textContent = 'Subscribing…';
       btn.disabled = true;
       try {
-        const res = await fetch('https://hooks.zapier.com/hooks/catch/24820293/u96tqvb/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email })
+        const res = await fetch(EMAIL_SCRIPT_URL + '?email=' + encodeURIComponent(email), {
+          method: 'GET',
+          mode: 'no-cors'
         });
-        if (res.ok) {
-          btn.textContent = 'Subscribed ✓';
-          input.value = '';
-        } else {
-          throw new Error('Request failed');
-        }
+        // no-cors responses are opaque; assume success if no exception
+        btn.textContent = 'Subscribed ✓';
+        input.value = '';
       } catch (err) {
         btn.textContent = originalText;
         btn.disabled = false;
