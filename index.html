@@ -25,6 +25,7 @@
           css += '.sidebar{border-right-color:' + fg + ' !important;}';
           css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
           css += '.game-toggle{background:' + fg + ' !important;}';
+          css += '.email-signup-input::placeholder{color:' + fg + ' !important;opacity:0.6;}';
         }
         if (css) {
           var s = document.createElement('style');
@@ -37,7 +38,7 @@
   </script>
 <style>
     /* Hide sections until JS decides which to show (prevents wrong-section flash) */
-    #posts-list, #placeholder-text, #subscribe-placeholder { display: none; }
+    #posts-list, #email-signup, #placeholder-text { display: none; }
   </style>
 <link href="styles.css" rel="stylesheet"/>
 </head>
@@ -76,7 +77,6 @@
 <ul>
 <li class="active"><a href="#" onclick="showPosts(); return false;">index</a></li>
 <li><a href="#" onclick="showAbout(); return false;">about</a></li>
-<li><a href="#" onclick="showSubscribe(); return false;">subscribe</a></li>
 </ul>
 </nav>
 <main class="content">
@@ -134,16 +134,17 @@
 <span class="post-date">2024-03-20</span>
 </li>
 </ul>
+<div class="email-signup" id="email-signup">
+  <form class="email-signup-form" action="#" method="post" autocomplete="on" novalidate>
+    <input type="email" id="email-input" name="email" class="email-signup-input" placeholder="you@example.com" required/>
+    <button type="submit" class="email-signup-btn">Subscribe</button>
+  </form>
+</div>
 <div class="placeholder-text" id="placeholder-text" style="display: none;">
 <p style="font-family: 'JetBrains Mono', monospace; font-size: inherit; color: inherit; line-height: 1.6; text-transform: uppercase; padding: 0.35rem 0; margin: 0;">
           Leku, Place. Origin: basque. Cognate with latin locu(m) and celtic lek.<br/><br/>
           My name is Enrico Bottazzi. Here's my Spotify <a href="https://open.spotify.com/user/pvischetti?si=e30fe8bba36b43f9" rel="noopener noreferrer" target="_blank">profile</a>.<br/><br/>
           You can reach me at <a href="mailto:enricobottazzi@icloud.com">enricobottazzi@icloud.com</a>
-</p>
-</div>
-<div class="subscribe-placeholder" id="subscribe-placeholder" style="display: none;">
-<p style="font-family: 'JetBrains Mono', monospace; font-size: inherit; color: inherit; line-height: 1.6; text-transform: uppercase; padding: 0.35rem 0; margin: 0;">
-<a href="https://docs.google.com/forms/d/e/1FAIpQLSdBcFt0MT83J4YdrFdPA8qE5tSv_61zB6GS7Fov8kFZG3AGwQ/viewform" rel="noopener noreferrer" target="_blank">Subscribe</a> to get notified about new posts. <br/><br/>
 </p>
 </div>
 </main>
@@ -164,6 +165,7 @@
           css += '.sidebar{border-right-color:' + fg + ' !important;}';
           css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
           css += '.game-toggle{background:' + fg + ' !important;}';
+          css += '.email-signup-input::placeholder{color:' + fg + ' !important;opacity:0.6;}';
         }
         let s = document.getElementById('early-theme');
         if (!css) {
@@ -377,8 +379,6 @@
       const hash = window.location.hash.toLowerCase();
       if (hash === '#about') {
         showAbout();
-      } else if (hash === '#subscribe') {
-        showSubscribe();
       } else {
         showPosts();
       }
@@ -388,9 +388,8 @@
     function showPosts() {
       updateTitle('Leku - index');
       document.getElementById('posts-list').style.display = 'block';
+      document.getElementById('email-signup').style.display = 'block';
       document.getElementById('placeholder-text').style.display = 'none';
-      document.getElementById('subscribe-placeholder').style.display = 'none';
-      
       // Update active state
       document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
       document.querySelector('.sidebar li:first-child').classList.add('active');
@@ -399,24 +398,41 @@
     function showAbout() {
       updateTitle('Leku - about');
       document.getElementById('posts-list').style.display = 'none';
+      document.getElementById('email-signup').style.display = 'none';
       document.getElementById('placeholder-text').style.display = 'block';
-      document.getElementById('subscribe-placeholder').style.display = 'none';
       
       // Update active state
       document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
       document.querySelector('.sidebar li:nth-child(2)').classList.add('active');
     }
 
-    function showSubscribe() {
-      updateTitle('Leku - subscribe');
-      document.getElementById('posts-list').style.display = 'none';
-      document.getElementById('placeholder-text').style.display = 'none';
-      document.getElementById('subscribe-placeholder').style.display = 'block';
-      
-      // Update active state
-      document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
-      document.querySelector('.sidebar li:nth-child(3)').classList.add('active');
-    }
+    // Email signup: send to Google Apps Script
+    const EMAIL_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkUimNkCcWbEhnHWo2zjU1Mq6iqVqiiVzy1bHCma2fX1j3a4_eLYZ_HmN0nWG0ILBy/exec';
+    document.querySelector('.email-signup-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const input = document.getElementById('email-input');
+      const email = input.value.trim();
+      if (!email) return;
+      const btn = this.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+      btn.textContent = 'Subscribing…';
+      btn.disabled = true;
+      try {
+        const res = await fetch(EMAIL_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'email=' + encodeURIComponent(email),
+          mode: 'no-cors'
+        });
+        // no-cors responses are opaque; assume success if no exception
+        btn.textContent = 'Subscribed ✓';
+        input.value = '';
+      } catch (err) {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
+    });
+
   </script>
 </body>
 </html>

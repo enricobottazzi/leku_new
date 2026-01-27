@@ -113,7 +113,7 @@ a { text-decoration: none; color: inherit; }
   font-weight: 400; /* match index title weight */
   text-transform: uppercase; /* requested uppercase */
   line-height: 1.2;
-  margin: 0; /* align flush-left like About/Subscribe paragraphs */
+  margin: 0; /* align flush-left like About paragraphs */
   padding: 0.35rem 0;
   border-bottom: 1px solid currentColor; /* separator between title and subtitle */
 }
@@ -181,9 +181,61 @@ a { text-decoration: none; color: inherit; }
 
 .color-game.hidden { display: none; }
 
-/* Justify paragraphs for About, Subscribe, and blog placeholder */
+/* Email signup form (dotted style) at bottom of index */
+.email-signup {
+  margin-top: 2.5rem;
+}
+
+.email-signup-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-synthesis: none;
+  text-transform: uppercase;
+}
+
+.email-signup-input {
+  flex: 1 1 12rem;
+  min-width: 10rem;
+  padding: 0.35rem 0.5rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: inherit;
+  background: transparent;
+  border: 1px dotted currentColor;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.email-signup-input::placeholder {
+  opacity: 0.6;
+}
+
+.email-signup-input:focus {
+  border-style: solid;
+}
+
+.email-signup-btn {
+  padding: 0.35rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: inherit;
+  background: transparent;
+  border: 1px dotted currentColor;
+  cursor: pointer;
+  transition: border-color 0.2s ease, border-style 0.2s ease;
+}
+
+.email-signup-btn:hover {
+  border-style: solid;
+}
+
+/* Justify paragraphs for About and blog placeholder */
 .placeholder-text p,
-.subscribe-placeholder p,
 .post .post-content p {
   text-align: justify;
   text-justify: inter-word;
@@ -229,8 +281,7 @@ h3 {
 
 /* Unified hyperlink styles with dotted animation */
 .post .post-content a,
-.placeholder-text a,
-.subscribe-placeholder a {
+.placeholder-text a {
   position: relative;
   color: inherit;
   text-decoration: none;
@@ -239,8 +290,7 @@ h3 {
 }
 
 .post .post-content a:hover,
-.placeholder-text a:hover,
-.subscribe-placeholder a:hover {
+.placeholder-text a:hover {
   border-bottom: 1px solid currentColor;
 }
 
@@ -430,6 +480,16 @@ h3 {
   }
   .post-link::after {
     content: none;          /* Remove the dotted leader line */
+  }
+
+  .email-signup-form {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .email-signup-input {
+    width: 100%;
+    min-width: 0;
   }
 }
 
