@@ -406,6 +406,34 @@
       document.querySelector('.sidebar li:nth-child(2)').classList.add('active');
     }
 
+    // Email signup: send to Zapier webhook
+    document.querySelector('.email-signup-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const input = document.getElementById('email-input');
+      const email = input.value.trim();
+      if (!email) return;
+      const btn = this.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+      btn.textContent = 'Subscribing…';
+      btn.disabled = true;
+      try {
+        const res = await fetch('https://hooks.zapier.com/hooks/catch/24820293/u96tqvb/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+        if (res.ok) {
+          btn.textContent = 'Subscribed ✓';
+          input.value = '';
+        } else {
+          throw new Error('Request failed');
+        }
+      } catch (err) {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
+    });
+
   </script>
 </body>
 </html>
