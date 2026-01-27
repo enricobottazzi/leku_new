@@ -418,8 +418,10 @@
       btn.textContent = 'Subscribing…';
       btn.disabled = true;
       try {
-        const res = await fetch(EMAIL_SCRIPT_URL + '?email=' + encodeURIComponent(email), {
-          method: 'GET',
+        const res = await fetch(EMAIL_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'email=' + encodeURIComponent(email),
           mode: 'no-cors'
         });
         // no-cors responses are opaque; assume success if no exception
