@@ -181,9 +181,16 @@ a { text-decoration: none; color: inherit; }
 
 .color-game.hidden { display: none; }
 
-/* Email signup form (dotted style) at bottom of index */
+/* Subscribe section description */
+.subscribe-section p {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+}
+
+/* Email signup form (dotted style) */
 .email-signup {
-  margin-top: 2.5rem;
+  margin-top: 0;
 }
 
 .email-signup-form {
