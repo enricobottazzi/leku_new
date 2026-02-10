@@ -2,15 +2,21 @@
 
 ### How to add a blogpost
 
-1. Write the blogpost in markdown format and add it inside the `md` folder. For example, `md/example.md`. Make sure that all your latex format are inside `$` or `$$` for inline and block latex respectively. 
-2. Run `python3 generate_post.py md/example.md md/output.html` to generate a HTML file with proper latex formatting.
-3. Duplicate the `blog_placeholder.html` file inside the `posts` folder and rename it to `your_title.html`.
-4. Copy the content of `output.html` into the `<section class="post-content">` class of `your_title.html`. Update `title`, `post-title` and `post-date`. Recall to remove the `<h1>` tag from the content of `your_title.html`.
-5. Add your post inside the `<ul class="posts" id="posts-list">` in `index.html` pointing to the correctly file, with the correct date and title
-6. Double check the correctness of the newly added blogpost by running `open index.html` and checking the browser:
-    - Is the title correct? Appearing twice?
-    - Check the links
-    - Check the images (these are not automatically imported from HackMD)
-    - Check the Latex formatting
-    - Check the block quotes (not done automatically via the provided script)
-7. Delete the `output.html` file
+1. Write the blogpost in markdown format and add it inside the `md` folder. For example, `md/example.md`. Make sure that all your LaTeX is inside `$` or `$$` for inline and block math respectively. The title is extracted from the first `# heading` in the file.
+
+2. Run the generator:
+
+   ```bash
+   python3 generate_post.py md/example.md --date 2026-02-10
+   ```
+
+   Omit `--date` to use today's date. 
+
+3. If the markdown contains HackMD image URLs, run `python3 download_images.py` to download them into `assets/` and rewrite the paths. Not sure if this works.
+
+4. Double check the result by running `open index.html` and verifying in the browser:
+   - Title, date are correct both in the index.html and the post.html files
+   - Links are correct
+   - Images render correctly
+   - LaTeX formatting
+   - Code blocks and blockquotes
