@@ -657,12 +657,9 @@
 </tr>
 </tbody>
 </table>
-<p>An equivalent model instance can be access from this repositiory (TO ADD). Running <code>python model.py</code> logs the total number of parameters of the model matching the total calculated above.</p>
+<p>An equivalent model instance can be access from this [repository](https://github.com/enricobottazzi/gpt2-graphically-spelled-out). Running <code>python model.py</code> logs the total number of parameters of the model matching the total calculated above.</p>
 <h2>Layers</h2>
 <p>This section describes in more detail the operation performed inside each layer with focus on the ones that were overlooked in Karpaty's tutorial. </p>
-<ul>
-<li>Feed forward layer </li>
-</ul>
 <h3>Embedding layers</h3>
 <p>Both embedding layers (<code>token_embedding_table</code> and <code>position_embedding_table</code>) are <strong>lookup tables</strong>. The former maps each token id (for a total of <code>vocab_size</code>) to a vector of size <code>n_embd</code>. The latter maps each position id (for a total of <code>block_size</code>) to a vector of size <code>n_embd</code>. They don't perform any matrix multiplication. Given an input vector of shape <code>(block_size x 1)</code>, it replaces each integer with the corresponsing row producing a matrix of shape <code>(block_size x n_embd)</code></p>
 <h3>Addition layer</h3>
