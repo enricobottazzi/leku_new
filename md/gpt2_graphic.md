@@ -1,10 +1,10 @@
 # GPT2, graphically spelled out
 
-This week I went through the *Let's build GPT2* [tutorial](https://www.youtube.com/watch?v=kCc8FmEb1nY) from Andrej Karpathy. Andrej does an amazing job in building from scratch a transformer model piece by piece (read layer by layer) and use that to train a dummy GPT2 model. This article provides a graphical complementary to the tutorial, which mainly focuses on the python code. More specifically, I start from the Transformer architecture figure from the seminal *Attention Is All You Need* [paper](https://arxiv.org/pdf/1706.03762) and enanche it with an interactive view of the matematical artifcats (vectors or matrices) for:
+This week I went through the *Let's build GPT2* [tutorial](https://www.youtube.com/watch?v=kCc8FmEb1nY) from Andrej Karpathy. Andrej does an amazing job in building from scratch a transformer model piece by piece (read layer by layer) and uses that to train a dummy GPT2 model. This article provides a graphical complement to the tutorial, which mainly focuses on the python code. More specifically, I start from the Transformer architecture figure from the seminal *Attention Is All You Need* [paper](https://arxiv.org/pdf/1706.03762) and enhance it with an interactive view of the mathematical artifacts (vectors or matrices) for:
 - input/output of each layer which can be viewed by clicking on the arrows between layers
 - parameters stored inside each layer which can be viewed by clicking over the quadrant of each layer
 
-The remaining sections are dedicated to a more detailed description of the matematical operations done at each layer and to the difference between training and inference phase with respect to the transformer architecture.
+The remaining sections are dedicated to a more detailed description of the mathematical operations done at each layer and to the difference between training and inference phase with respect to the transformer architecture.
 
 The architecture described in this article refers to the one deployed up to 01:37:49 in the youtube tutorial. For the sake of simplicity we don't consider the input of the transformer to come in batch (`batch_size = 1`). Furthermore, the self-attention layer to be single-headed (`n_head=1`). In other words, we disregard the optimization performed by Andrej at 01:21:59. 
 
@@ -30,17 +30,17 @@ By setting `vocab_size=65`, `n_embd=32`, `block_size=8` and `N=3`, the architect
 | | LM Head | bias | 1×65 | 65 |
 | | | **Total** | | **39,201** |
 
-An equivalent model instance can be access from this repositiory (TO ADD). Running `python model.py` logs the total number of parameters of the model matching the total calculated above.
+An equivalent model instance can be accessed from this repository (TO ADD). Running `python model.py` logs the total number of parameters of the model matching the total calculated above.
 
 ## Layers
 
-This section describes in more detail the operation performed inside each layer with focus on the ones that were overlooked in Karpaty's tutorial. 
+This section describes in more detail the operation performed inside each layer with focus on the ones that were overlooked in Karpathy's tutorial. 
 
 - Feed forward layer 
 
 ### Embedding layers
 
-Both embedding layers (`token_embedding_table` and `position_embedding_table`) are **lookup tables**. The former maps each token id (for a total of `vocab_size`) to a vector of size `n_embd`. The latter maps each position id (for a total of `block_size`) to a vector of size `n_embd`. They don't perform any matrix multiplication. Given an input vector of shape `(block_size x 1)`, it replaces each integer with the corresponsing row producing a matrix of shape `(block_size x n_embd)`
+Both embedding layers (`token_embedding_table` and `position_embedding_table`) are **lookup tables**. The former maps each token id (for a total of `vocab_size`) to a vector of size `n_embd`. The latter maps each position id (for a total of `block_size`) to a vector of size `n_embd`. They don't perform any matrix multiplication. Given an input vector of shape `(block_size x 1)`, it replaces each integer with the corresponding row producing a matrix of shape `(block_size x n_embd)`
 
 ### Addition layer
 
@@ -68,4 +68,4 @@ Both the training and inference phase start with a forward pass through the tran
 
 During training phase, the logits for each token are compared with the expected next token (from `targets`) to compute the loss. The overall loss is calculated as mean of each token's loss and backpropagated through the transformer architecture to update the parameters to reduce the loss. Note that all `block_size` predictions are produced in a single forward pass: this is possible because the self-attention layer applies a **causal mask**: when computing the representation at position `t`, the mask zeroes out any contribution from positions `t+1, ..., block_size-1`. Without it, the model could "cheat" by simply reading the next token from its own input and learn nothing useful.
 
-During inference phase, only the logits for the last token are extracted. These scores are then normalized via Softmax to produce a probability distrution which is eventually used to sample the next token, which is further appended to the `idx` vector.
+During inference phase, only the logits for the last token are extracted. These scores are then normalized via Softmax to produce a probability distribution which is eventually used to sample the next token, which is further appended to the `idx` vector.
