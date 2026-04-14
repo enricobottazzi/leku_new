@@ -151,6 +151,7 @@
 
   function renderBreadcrumb() {
     breadcrumb.innerHTML = '';
+    if (path.length <= 1) return;
     path.forEach((node, i) => {
       const span = document.createElement('span');
       span.textContent = node.label || node.id;
