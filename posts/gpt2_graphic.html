@@ -99,13 +99,15 @@
 <div class="post-date">2026-04-15</div>
 </header>
 <section class="post-content">
-<p>This week I went through the <em>Let's build GPT2</em> <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">tutorial</a> from Andrej Karpathy. Andrej does an amazing job in building from scratch a transformer model piece by piece (read layer by layer) and use that to train a dummy GPT2 model. This article provides a graphical complementary to the tutorial, which mainly focuses on the python code. More specifically, I start from the Transformer architecture figure from the seminal <em>Attention Is All You Need</em> <a href="https://arxiv.org/pdf/1706.03762">paper</a> and enanche it with an interactive view of the matematical artifcats (vectors or matrices) for:
-- input/output of each layer which can be viewed by clicking on the arrows between layers
-- parameters stored inside each layer which can be viewed by clicking over the quadrant of each layer</p>
-<p>The remaining sections are dedicated to a more detailed description of the matematical operations done at each layer and to the difference between training and inference phase with respect to the transformer architecture.</p>
-<p>The architecture described in this article refers to the one deployed up to 01:37:49 in the youtube tutorial. For the sake of simplicity we don't consider the input of the transformer to come in batch (<code>batch_size = 1</code>). Furthermore, the self-attention layer to be single-headed (<code>n_head=1</code>). In other words, we disregard the optimization performed by Andrej at 01:21:59. </p>
+<p>This week, I went through the <em>Let's build GPT2</em> <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">tutorial</a> from Andrej Karpathy. Andrej does an amazing job in building from scratch a transformer model piece by piece (read layer by layer) and uses that to train a dummy GPT2 model. This article provides a graphical complementary to the tutorial, which mainly focuses on the python code. More specifically, I start from the Transformer architecture figure from the seminal <em>Attention Is All You Need</em> <a href="https://arxiv.org/pdf/1706.03762">paper</a> and enanche it with an interactive view of the matematical artifcats (vectors or matrices) for:</p>
+<ul>
+<li>input/output of each layer which can be viewed by clicking on the arrows between layers</li>
+<li>parameters stored inside each layer which can be viewed by clicking over the quadrant of each layer</li>
+</ul>
+<p>The remaining sections are dedicated to a more detailed description of the mathematical operations performed at each layer and to the differences between the training and inference phases with respect to the transformer architecture.</p>
+<p>The architecture described in this article refers to the one deployed up to <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY&t=5869s">01:37:49</a>. For simplicity, we assume the transformer input is not batched (<code>batch_size = 1</code>). Furthermore, the self-attention layer is single-headed (<code>n_head=1</code>).</p>
 <h2>Interactive transformer architecture</h2>
-<p>The interactive figure below describes a forward pass of a decoder transformer-based model. To map it to Karpathy's code, this refers to the <code>BigramLanguageModel.forward</code> function in the case in which no <code>targets</code> input is provided. The input to the token embedding is a vector of token <code>idx = token_id_0, token_id_1, ... token_id_block_size-1</code>, while the input to the position embedding is a vector of positions <code>pos = 0, 1, ..., block_size-1</code>. The output is a <code>logits</code> matrix, which maps each input token to a <code>(1 x vocab_size)</code> vector that associates an unnormalized score for next token prediction.</p>
+<p>The interactive figure below describes a forward pass of a decoder transformer-based model. To map it to Karpathy's code, this refers to the <code>BigramLanguageModel.forward</code> function in the case in which no <code>targets</code> input is provided. The input to the token embedding is a vector of tokens <code>idx = [token_id_0, token_id_1, ... token_id_block_size-1]</code>, while the input to the position embedding is a vector of positions <code>pos = [0, 1, ..., block_size-1]</code>. The output of the transformer is a <code>logits</code> matrix, which maps each input token to a <code>(1 x vocab_size)</code> vector that associates an unnormalized score for next token prediction.</p>
 <div id="diagram-container">
 <div class="breadcrumb" id="breadcrumb"></div>
 <div id="stage"></div>
@@ -552,7 +554,7 @@
   }
 })();
 </script>
-<p>By setting <code>vocab_size=65</code>, <code>n_embd=32</code>, <code>block_size=8</code> and <code>N=3</code>, the architecture described in the figure results in the following total parameters count</p>
+<p>By setting <code>vocab_size=65</code>, <code>n_embd=32</code>, <code>block_size=8</code> and <code>N=3</code>, the architecture described in the figure results in the following total parameters count:</p>
 <table>
 <thead>
 <tr>
@@ -657,24 +659,27 @@
 </tr>
 </tbody>
 </table>
-<p>An equivalent model instance can be access from this [repository](https://github.com/enricobottazzi/gpt2-graphically-spelled-out). Running <code>python model.py</code> logs the total number of parameters of the model matching the total calculated above.</p>
+<p>An equivalent model instance can be access from this <a href="https://github.com/enricobottazzi/gpt2-graphically-spelled-out">repository</a>. Running <code>python model.py</code> logs the total number of parameters of the model which should match the total calculated above.</p>
 <h2>Layers</h2>
-<p>This section describes in more detail the operation performed inside each layer with focus on the ones that were overlooked in Karpaty's tutorial. </p>
-<h3>Embedding layers</h3>
-<p>Both embedding layers (<code>token_embedding_table</code> and <code>position_embedding_table</code>) are <strong>lookup tables</strong>. The former maps each token id (for a total of <code>vocab_size</code>) to a vector of size <code>n_embd</code>. The latter maps each position id (for a total of <code>block_size</code>) to a vector of size <code>n_embd</code>. They don't perform any matrix multiplication. Given an input vector of shape <code>(block_size x 1)</code>, it replaces each integer with the corresponsing row producing a matrix of shape <code>(block_size x n_embd)</code></p>
-<h3>Addition layer</h3>
+<p>This section describes in more detail the operations performed inside each layer with focus on the layers that were overlooked in Karpaty's tutorial. </p>
+<h4>Embedding layers</h4>
+<p>Both embedding layers (<code>token_embedding_table</code> and <code>position_embedding_table</code>) are lookup tables. The former maps each token id (for a total of <code>vocab_size</code>) to a vector of size <code>n_embd</code>. The latter maps each position id (for a total of <code>block_size</code>) to a vector of size <code>n_embd</code>. They don't perform any matrix multiplication. Given an input vector of shape <code>(block_size x 1)</code>, it replaces each integer with the corresponsing row producing a matrix of shape <code>(block_size x n_embd)</code></p>
+<h4>Addition layer</h4>
 <p>Simply element-wise addition between two input vectors. No parameters are stored there.</p>
-<h3>Layer norm</h3>
-<p>Described by Karpathy at 01:32:51.</p>
-<h3>Self-attention layer</h3>
-<p>Described by Karpathy at 01:02:00.</p>
-<h3>Feed-forward layer</h3>
-<p>The feed-forward layer is a small two-layer network applied independently to each row. It chains: a linear layer (see below) that expands from <code>n_embd</code> to <code>4 * n_embd</code>, a ReLU activation (which simply replaces negative values with zero — no learned parameters), and a linear layer that projects back from <code>4 * n_embd</code> to <code>n_embd</code>. Both linear layers here are instantiated with bias. The input and output shapes are both <code>(block_size, n_embd)</code>.</p>
-<h3>Linear layer</h3>
-<p>A linear layer takes an input matrix <code>X</code> of shape <code>(block_size, in_features)</code> and projects it to shape <code>(block_size, out_features)</code>: the number of rows stays the same, while each row is independently transformed from size <code>in_features</code> to size <code>out_features</code>. It stores a weight matrix <code>W</code> of shape <code>(in_features, out_features)</code> and, optionally, a bias vector <code>b</code> of size <code>out_features</code>. The output is computed as <code>output = X @ W + b</code> (or just <code>X @ W</code> when there is no bias). Some linear layers in this architecture are instantiated without bias (e.g. the <code>key</code>, <code>query</code>, <code>value</code> projections inside the self-attention layer).</p>
+<h4>Layer norm</h4>
+<p>Described by Karpathy at <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY&t=5571s">01:32:51</a>.</p>
+<h4>Self-attention layer</h4>
+<p>Described by Karpathy at <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY&t=3720s">01:02:00</a>.</p>
+<h4>Feed-forward layer</h4>
+<p>The feed-forward layer is a small two-layer network applied independently to each row. It chains: a linear layer (see below) that expands from <code>n_embd</code> to <code>4 * n_embd</code>, a ReLU activation (which simply replaces negative values with zero with no learned parameters), and a second linear layer that projects back from <code>4 * n_embd</code> to <code>n_embd</code>. Both linear layers here are instantiated with bias. The input and output shapes are both <code>(block_size, n_embd)</code>.</p>
+<h4>Linear layer</h4>
+<p>A linear layer takes an input matrix <code>X</code> of shape <code>(block_size, in_features)</code> and projects it to shape <code>(block_size, out_features)</code>: the number of rows stays the same, while each row is independently transformed from size <code>in_features</code> to size <code>out_features</code>. It stores a weight matrix <code>W</code> of shape <code>(in_features, out_features)</code> and, optionally, a bias vector <code>b</code> of size <code>out_features</code>. The output is computed as <code>output = X @ W + b</code> where <code>@</code> denotes the matrix multiplication (or just <code>X @ W</code> when there is no bias). Some linear layers in this architecture are instantiated without bias (e.g. the <code>key</code>, <code>query</code>, <code>value</code> projections inside the self-attention layer).</p>
 <h2>Training vs inference</h2>
-<p>Both the training and inference phase start with a forward pass through the transformer architecture. One difference involves the input vector of the forward pass. During training, the <code>idx</code> input vector is sampled from the training data set. During inference, the <code>idx</code> vector is composed of tokens either provided by the user or previously generated by the transformer itself. The second, more fundamental, difference involves what to do after the forward pass is complete and the <code>logits</code> are obtained. </p>
-<p>During training phase, the logits for each token are compared with the expected next token (from <code>targets</code>) to compute the loss. The overall loss is calculated as mean of each token's loss and backpropagated through the transformer architecture to update the parameters to reduce the loss. Note that all <code>block_size</code> predictions are produced in a single forward pass: this is possible because the self-attention layer applies a <strong>causal mask</strong>: when computing the representation at position <code>t</code>, the mask zeroes out any contribution from positions <code>t+1, ..., block_size-1</code>. Without it, the model could "cheat" by simply reading the next token from its own input and learn nothing useful.</p>
+<p>Both the training and inference phase start with a forward pass through the transformer architecture. One difference involves the input vector of the forward pass.</p>
+<p>During training, the <code>idx</code> input vector is sampled from the training data set.</p>
+<p>During inference, the <code>idx</code> vector is composed of tokens either provided by the user or previously generated by the transformer itself.</p>
+<p>The second, more fundamental, difference involves what to do after the forward pass is complete and the <code>logits</code> are obtained.</p>
+<p>During training phase, the logits for each token are compared with the expected next token (from <code>targets</code>) to compute the loss. The overall loss is calculated as mean of each token's loss and backpropagated through the transformer architecture to update the parameters to reduce the loss. Note that all <code>block_size</code> predictions are produced in a single forward pass: this is possible because the self-attention layer applies a causal mask: when computing the representation at position <code>t</code>, the mask zeroes out any contribution from positions <code>t+1, ..., block_size-1</code>. Without it, the model could "cheat" by simply reading the next token from its own input and learn nothing useful.</p>
 <p>During inference phase, only the logits for the last token are extracted. These scores are then normalized via Softmax to produce a probability distrution which is eventually used to sample the next token, which is further appended to the <code>idx</code> vector.</p>
 </section>
 </article>
