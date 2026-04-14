@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Leku - GPT2, graphically spelled out</title>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
+    // Apply saved colors before first paint to avoid flash
+    (function() {
+      try {
+        var bg = localStorage.getItem('customBgColor');
+        var fg = localStorage.getItem('customFontColor');
+        var css = '';
+        if (bg) css += 'body{background-color:' + bg + ' !important;}';
+        if (fg) {
+          css += 'body{color:' + fg + ' !important;}';
+          css += '.sidebar{border-right-color:' + fg + ' !important;}';
+          css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
+        }
+        if (css) {
+          var s = document.createElement('style');
+          s.id = 'early-theme';
+          s.textContent = css;
+          document.head.appendChild(s);
+        }
+      } catch (_) {}
+    })();
+  </script>
+<link href="../styles.css" rel="stylesheet"/>
+<!-- MathJax for LaTeX support -->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script>
+    // Configure MathJax (v3) before loading the script
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  /* Interactive transformer diagram (scoped) */
+  #diagram-container { display: flex; flex-direction: column; align-items: center; padding: 1rem 0; }
+  #diagram-container * { box-sizing: border-box; }
+  #diagram-container .breadcrumb { font-size: 0.85rem; margin-bottom: 1rem; user-select: none; align-self: flex-start; }
+  #diagram-container .breadcrumb span { cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  #diagram-container .breadcrumb span.current { cursor: default; text-decoration: none; opacity: 0.6; }
+  #diagram-container .breadcrumb .sep { cursor: default; text-decoration: none; opacity: 0.4; margin: 0 0.4rem; }
+  #diagram-container svg { display: block; overflow: visible; }
+  #diagram-container #stage { overflow: visible; }
+  #diagram-container .block rect { stroke: #111; stroke-width: 1.2; }
+  #diagram-container .block text {
+    font-family: ui-monospace, "JetBrains Mono", Menlo, monospace;
+    font-size: 13px; text-anchor: middle; dominant-baseline: middle; pointer-events: none;
+  }
+  #diagram-container .block.clickable { cursor: zoom-in; }
+  #diagram-container .block.clickable:hover rect { filter: brightness(0.93); }
+  #diagram-container .block.inspectable { cursor: help; }
+  #diagram-container .block.inspectable:hover rect { filter: brightness(0.93); }
+  #diagram-container .param-annotation {
+    font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; font-size: 11px; fill: #111;
+  }
+  #diagram-container .param-annotation rect { fill: #fffbe6; stroke: #111; stroke-width: 0.8; }
+  #diagram-container .edge { stroke: #111; stroke-width: 1.2; fill: none; }
+  #diagram-container .arrow-hit { stroke: transparent; stroke-width: 14; fill: none; cursor: help; }
+  #diagram-container .arrow-group:hover .edge { stroke-width: 2.6; }
+  #diagram-container .edge-label {
+    font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; font-size: 11px; fill: #111; text-anchor: middle;
+  }
+  #diagram-container .bracket { stroke: #111; stroke-width: 1.2; fill: none; }
+  #diagram-container .bracket-label {
+    font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; font-size: 13px; fill: #111;
+  }
+  #diagram-container .io-label {
+    font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; font-size: 13px; fill: #111; text-anchor: middle; font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li><a href="../index.html">index</a></li>
+<li><a href="../index.html#about">about</a></li>
+</ul>
+</nav>
+<main class="content">
+<article class="post">
+<header>
+<h1 class="post-title">GPT2, graphically spelled out</h1>
+<div class="post-date">2026-04-15</div>
+</header>
+<section class="post-content">
+<p>This week I went through the <em>Let's build GPT2</em> <a href="https://www.youtube.com/watch?v=kCc8FmEb1nY">tutorial</a> from Andrej Karpathy. Andrej does an amazing job in building from scratch a transformer model piece by piece (read layer by layer) and use that to train a dummy GPT2 model. This article provides a graphical complementary to the tutorial, which mainly focuses on the python code. More specifically, I start from the Transformer architecture figure from the seminal <em>Attention Is All You Need</em> <a href="https://arxiv.org/pdf/1706.03762">paper</a> and enanche it with an interactive view of the matematical artifcats (vectors or matrices) for:
+- input/output of each layer which can be viewed by clicking on the arrows between layers
+- parameters stored inside each layer which can be viewed by clicking over the quadrant of each layer</p>
+<p>The remaining sections are dedicated to a more detailed description of the matematical operations done at each layer and to the difference between training and inference phase with respect to the transformer architecture.</p>
+<p>The architecture described in this article refers to the one deployed up to 01:37:49 in the youtube tutorial. For the sake of simplicity we don't consider the input of the transformer to come in batch (<code>batch_size = 1</code>). Furthermore, the self-attention layer to be single-headed (<code>n_head=1</code>). In other words, we disregard the optimization performed by Andrej at 01:21:59. </p>
+<h2>Interactive transformer architecture</h2>
+<p>The interactive figure below describes a forward pass of a decoder transformer-based model. To map it to Karpathy's code, this refers to the <code>BigramLanguageModel.forward</code> function in the case in which no <code>targets</code> input is provided. The input to the token embedding is a vector of token <code>idx = token_id_0, token_id_1, ... token_id_block_size-1</code>, while the input to the position embedding is a vector of positions <code>pos = 0, 1, ..., block_size-1</code>. The output is a <code>logits</code> matrix, which maps each input token to a <code>(1 x vocab_size)</code> vector that associates an unnormalized score for next token prediction.</p>
+<div id="diagram-container">
+<div class="breadcrumb" id="breadcrumb"></div>
+<div id="stage"></div>
+</div>
+<script>
+(function () {
+  const COLORS = {
+    embed:   '#9dc3e6',
+    attn:    '#f4b183',
+    addnorm: '#ffe699',
+    ffwd:    '#a9d18e',
+    linear:  '#d5a6e8',
+    softmax: '#f4b6c2',
+    neutral: '#dddddd'
+  };
+
+  const LAYOUT = {
+    boxW: 220, boxH: 42, gap: 30, sideGap: 30, sideBoxW: 180,
+    plusR: 14, padT: 70, padB: 70, svgW: 560
+  };
+
+  let root = null;
+  let path = [];
+  const stage = document.getElementById('stage');
+  const breadcrumb = document.getElementById('breadcrumb');
+
+  fetch('model.json')
+    .then(r => r.json())
+    .then(m => { root = m; path = [root]; render(); })
+    .catch(err => { stage.textContent = 'failed to load model.json: ' + err.message; });
+
+  const LAYOUTS = { stack: renderStack, attention: renderAttention };
+
+  function render() {
+    renderBreadcrumb();
+    const node = path[path.length - 1];
+    const fn = LAYOUTS[node.layout] || LAYOUTS.stack;
+    stage.innerHTML = fn(node);
+    wireClicks();
+  }
+
+  function renderBreadcrumb() {
+    breadcrumb.innerHTML = '';
+    path.forEach((node, i) => {
+      const span = document.createElement('span');
+      span.textContent = node.label || node.id;
+      if (i === path.length - 1) {
+        span.className = 'current';
+      } else {
+        span.onclick = () => { path = path.slice(0, i + 1); render(); };
+      }
+      breadcrumb.appendChild(span);
+      if (i < path.length - 1) {
+        const sep = document.createElement('span');
+        sep.className = 'sep';
+        sep.textContent = '/';
+        breadcrumb.appendChild(sep);
+      }
+    });
+  }
+
+  function wireClicks() {
+    stage.querySelectorAll('[data-zoom-idx]').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.getAttribute('data-zoom-idx'), 10);
+        path.push(ZOOM_TARGETS[idx]);
+        render();
+      });
+    });
+    stage.querySelectorAll('[data-params]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleParamAnnotation(el);
+      });
+    });
+    stage.querySelectorAll('svg').forEach(svg => {
+      svg.addEventListener('click', () => clearAnnotations());
+    });
+  }
+
+  function clearAnnotations() {
+    stage.querySelectorAll('.param-annotation').forEach(a => a.remove());
+  }
+
+  function toggleParamAnnotation(blockEl) {
+    const blockId = blockEl.getAttribute('data-block-id');
+    const existing = stage.querySelector('.param-annotation[data-for="' + blockId + '"]');
+    if (existing) { existing.remove(); return; }
+    clearAnnotations();
+
+    const text = blockEl.getAttribute('data-params');
+    let side = blockEl.getAttribute('data-param-side') || 'right';
+    const rect = blockEl.querySelector('rect');
+    let bx, by, bw, bh;
+    if (rect) {
+      bx = parseFloat(rect.getAttribute('x'));
+      by = parseFloat(rect.getAttribute('y'));
+      bw = parseFloat(rect.getAttribute('width'));
+      bh = parseFloat(rect.getAttribute('height'));
+    } else {
+      const bbox = blockEl.getBBox();
+      bx = bbox.x; by = bbox.y; bw = bbox.width; bh = bbox.height;
+    }
+
+    const padX = 10, padY = 6;
+    const tw = text.length * 6.6 + padX * 2;
+    const th = 11 + padY * 2;
+
+    const svg = blockEl.closest('svg');
+    const vb = svg.viewBox.baseVal;
+    const svgRight = (vb && vb.width) ? vb.width : parseFloat(svg.getAttribute('width')) || Infinity;
+    if (side === 'right' && (bx + bw + 12 + tw) > svgRight) side = 'left';
+    if (side === 'top'   && (by - th - 12) < 0) side = 'bottom';
+
+    let ax, ay;
+    if (side === 'left')        { ax = bx - tw - 12;       ay = by + bh / 2 - th / 2; }
+    else if (side === 'top')    { ax = bx + bw / 2 - tw/2; ay = by - th - 12; }
+    else if (side === 'bottom') { ax = bx + bw / 2 - tw/2; ay = by + bh + 12; }
+    else                        { ax = bx + bw + 12;       ay = by + bh / 2 - th / 2; }
+
+    const ns = 'http://www.w3.org/2000/svg';
+    const g = document.createElementNS(ns, 'g');
+    g.setAttribute('class', 'param-annotation');
+    g.setAttribute('data-for', blockId);
+
+    const line = document.createElementNS(ns, 'line');
+    if (side === 'left') {
+      line.setAttribute('x1', bx);       line.setAttribute('y1', by + bh / 2);
+      line.setAttribute('x2', ax + tw);  line.setAttribute('y2', by + bh / 2);
+    } else if (side === 'top') {
+      line.setAttribute('x1', bx + bw/2); line.setAttribute('y1', by);
+      line.setAttribute('x2', bx + bw/2); line.setAttribute('y2', ay + th);
+    } else if (side === 'bottom') {
+      line.setAttribute('x1', bx + bw/2); line.setAttribute('y1', by + bh);
+      line.setAttribute('x2', bx + bw/2); line.setAttribute('y2', ay);
+    } else {
+      line.setAttribute('x1', bx + bw);  line.setAttribute('y1', by + bh / 2);
+      line.setAttribute('x2', ax);       line.setAttribute('y2', by + bh / 2);
+    }
+    line.setAttribute('stroke', '#111');
+    line.setAttribute('stroke-width', '0.8');
+    g.appendChild(line);
+
+    const r = document.createElementNS(ns, 'rect');
+    r.setAttribute('x', ax); r.setAttribute('y', ay);
+    r.setAttribute('width', tw); r.setAttribute('height', th);
+    r.setAttribute('rx', 4); r.setAttribute('ry', 4);
+    g.appendChild(r);
+
+    const t = document.createElementNS(ns, 'text');
+    t.setAttribute('x', ax + padX);
+    t.setAttribute('y', ay + th / 2 + 4);
+    t.textContent = text;
+    g.appendChild(t);
+
+    svg.appendChild(g);
+  }
+
+  let blockSeq = 0;
+  let ZOOM_TARGETS = [];
+
+  function block({x, y, w, h, fill, label, zoomTarget, params, paramSide}) {
+    const id = 'blk-' + (++blockSeq);
+    const classes = ['block'];
+    const attrs = ['id="' + id + '"'];
+    if (zoomTarget) {
+      ZOOM_TARGETS.push(zoomTarget);
+      const idx = ZOOM_TARGETS.length - 1;
+      classes.push('clickable');
+      attrs.push('data-zoom-idx="' + idx + '"');
+    }
+    if (params) {
+      classes.push('inspectable');
+      attrs.push('data-params="' + escAttr(params) + '"');
+      attrs.push('data-param-side="' + (paramSide || 'right') + '"');
+      attrs.push('data-block-id="' + id + '"');
+    }
+    return '<g class="' + classes.join(' ') + '" ' + attrs.join(' ') + '>'
+      + '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="6" ry="6" fill="' + fill + '"/>'
+      + '<text x="' + (x + w / 2) + '" y="' + (y + h / 2) + '">' + escText(label || '') + '</text>'
+      + '</g>';
+  }
+
+  function arrow(x1, y1, x2, y2) {
+    return '<path class="edge" d="M ' + x1 + ' ' + y1 + ' L ' + x2 + ' ' + y2 + '" marker-end="url(#arrowhead)"/>';
+  }
+
+  function inspectableArrow({x1, y1, x2, y2, params, paramSide}) {
+    const id = 'blk-' + (++blockSeq);
+    return '<g class="block inspectable arrow-group" id="' + id + '" '
+      + 'data-params="' + escAttr(params) + '" '
+      + 'data-param-side="' + (paramSide || 'right') + '" '
+      + 'data-block-id="' + id + '">'
+      + '<path class="edge" d="M ' + x1 + ' ' + y1 + ' L ' + x2 + ' ' + y2 + '" marker-end="url(#arrowhead)"/>'
+      + '<path class="arrow-hit" d="M ' + x1 + ' ' + y1 + ' L ' + x2 + ' ' + y2 + '"/>'
+      + '</g>';
+  }
+
+  function inspectablePath({d, params, paramSide}) {
+    const id = 'blk-' + (++blockSeq);
+    return '<g class="block inspectable arrow-group" id="' + id + '" '
+      + 'data-params="' + escAttr(params) + '" '
+      + 'data-param-side="' + (paramSide || 'right') + '" '
+      + 'data-block-id="' + id + '">'
+      + '<path class="edge" d="' + d + '" marker-end="url(#arrowhead)"/>'
+      + '<path class="arrow-hit" d="' + d + '"/>'
+      + '</g>';
+  }
+
+  function defs() {
+    return '<defs><marker id="arrowhead" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>';
+  }
+
+  function escText(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function escAttr(s) { return escText(s).replace(/"/g, '&quot;'); }
+
+  function renderStack(node) {
+    ZOOM_TARGETS = [];
+    blockSeq = 0;
+
+    const { boxW, boxH, gap, sideGap, sideBoxW, plusR, padT, padB, svgW } = LAYOUT;
+    const cx = svgW / 2;
+    const bx = cx - boxW / 2;
+
+    const rows = [];
+    const groups = [];
+    function walk(children, groupIdx) {
+      children.forEach(c => {
+        if (c.type === 'group') {
+          const g = { label: c.repeat || '', start: rows.length };
+          groups.push(g);
+          walk(c.children || [], groups.length - 1);
+          g.end = rows.length - 1;
+        } else {
+          rows.push({ node: c, groupIdx });
+        }
+      });
+    }
+    walk(node.children || []);
+
+    const N = rows.length;
+    rows.forEach(r => { r.slotH = r.node.type === 'sum' ? 2 * plusR : boxH; });
+    const contentH = rows.reduce((s, r) => s + r.slotH, 0) + (N - 1) * gap;
+    const svgH = padT + contentH + padB;
+
+    let cursor = svgH - padB;
+    rows.forEach(r => {
+      cursor -= r.slotH;
+      r.y = cursor;
+      r.yMid = r.y + r.slotH / 2;
+      cursor -= gap;
+    });
+
+    const byId = {};
+    rows.forEach(r => { if (r.node.id) byId[r.node.id] = r; });
+
+    let out = '';
+    out += defs();
+
+    const io = node.io || {};
+    const normalize = v => (v && typeof v === 'object') ? v : (v ? { label: v } : null);
+    const ioInput  = normalize(io.input);
+    const ioOutput = normalize(io.output);
+
+    if (ioInput) {
+      const ax1 = svgH - padB / 2 - 10;
+      const ax2 = rows[0].y + rows[0].slotH + 1;
+      if (ioInput.description) {
+        out += inspectableArrow({ x1: cx, y1: ax1, x2: cx, y2: ax2, params: ioInput.description });
+      } else {
+        out += arrow(cx, ax1, cx, ax2);
+      }
+      if (ioInput.label) {
+        out += '<text class="io-label" x="' + cx + '" y="' + (svgH - padB / 2 + 6) + '">' + escText(ioInput.label) + '</text>';
+      }
+    }
+    if (ioOutput) {
+      const ox1 = rows[N - 1].y;
+      const ox2 = padT / 2 + 14;
+      const outDesc = ioOutput.description || rows[N - 1].node.output;
+      if (outDesc) {
+        out += inspectableArrow({ x1: cx, y1: ox1, x2: cx, y2: ox2, params: outDesc });
+      } else {
+        out += arrow(cx, ox1, cx, ox2);
+      }
+      if (ioOutput.label) {
+        out += '<text class="io-label" x="' + cx + '" y="' + (padT / 2 + 4) + '">' + escText(ioOutput.label) + '</text>';
+      }
+    }
+
+    for (let i = 0; i < N - 1; i++) {
+      const from = rows[i], to = rows[i + 1];
+      if (from.node.output) {
+        out += inspectableArrow({
+          x1: cx, y1: from.y,
+          x2: cx, y2: to.y + to.slotH,
+          params: from.node.output,
+          paramSide: 'right'
+        });
+      } else {
+        out += arrow(cx, from.y, cx, to.y + to.slotH);
+      }
+    }
+
+    groups.forEach(g => {
+      if (g.start > g.end) return;
+      const top = rows[g.end].y - 10;
+      const bot = rows[g.start].y + rows[g.start].slotH + 10;
+      const brX = bx - 36;
+      out += '<path class="bracket" d="M ' + brX + ' ' + bot + ' L ' + (brX - 8) + ' ' + bot + ' L ' + (brX - 8) + ' ' + top + ' L ' + brX + ' ' + top + '"/>';
+      out += '<text class="bracket-label" text-anchor="end" x="' + (brX - 14) + '" y="' + ((top + bot) / 2 + 4) + '">' + escText(g.label) + '</text>';
+    });
+
+    rows.forEach(row => {
+      const n = row.node;
+      const fill = COLORS[n.type] || COLORS.neutral;
+
+      if (n.type === 'sum') {
+        out += '<circle cx="' + cx + '" cy="' + row.yMid + '" r="' + plusR + '" fill="#fff" stroke="#111" stroke-width="1.2"/>';
+        out += '<text class="block" x="' + cx + '" y="' + (row.yMid + 1) + '" text-anchor="middle" dominant-baseline="middle" font-size="14">+</text>';
+        if (n.side) {
+          const side = n.side;
+          const sx = bx + boxW + sideGap;
+          const sy = row.yMid - boxH / 2;
+          out += block({
+            x: sx, y: sy, w: sideBoxW, h: boxH,
+            fill: COLORS[side.type] || COLORS.neutral,
+            label: side.label,
+            params: side.params,
+            zoomTarget: side.children ? side.children : null,
+            paramSide: 'top'
+          });
+          if (side.output) {
+            out += inspectableArrow({
+              x1: sx, y1: row.yMid,
+              x2: cx + plusR, y2: row.yMid,
+              params: side.output,
+              paramSide: 'top'
+            });
+          } else {
+            out += '<path class="edge" d="M ' + sx + ' ' + row.yMid + ' L ' + (cx + plusR) + ' ' + row.yMid + '" marker-end="url(#arrowhead)"/>';
+          }
+          if (side.input) {
+            const inEnd = sx + sideBoxW + 1;
+            const inStart = inEnd + 40;
+            out += inspectableArrow({
+              x1: inStart, y1: row.yMid,
+              x2: inEnd, y2: row.yMid,
+              params: side.input,
+              paramSide: 'top'
+            });
+          }
+        }
+        if (n.residualFrom && byId[n.residualFrom]) {
+          const src = byId[n.residualFrom];
+          const xBranch = bx - 20;
+          const d = 'M ' + bx + ' ' + src.yMid + ' L ' + xBranch + ' ' + src.yMid + ' L ' + xBranch + ' ' + row.yMid + ' L ' + (cx - plusR - 1) + ' ' + row.yMid;
+          if (src.node.output) {
+            out += inspectablePath({ d, params: src.node.output, paramSide: 'left' });
+          } else {
+            out += '<path class="edge" d="' + d + '" marker-end="url(#arrowhead)"/>';
+          }
+        }
+        return;
+      }
+
+      out += block({
+        x: bx, y: row.y, w: boxW, h: boxH,
+        fill,
+        label: n.label,
+        params: n.params,
+        zoomTarget: n.children ? n.children : null,
+        paramSide: 'right'
+      });
+
+      if (n.residualFrom && byId[n.residualFrom]) {
+        const src = byId[n.residualFrom];
+        const xBranch = bx - 20;
+        const d = 'M ' + bx + ' ' + src.yMid + ' L ' + xBranch + ' ' + src.yMid + ' L ' + xBranch + ' ' + row.yMid + ' L ' + (bx - 1) + ' ' + row.yMid;
+        if (src.node.output) {
+          out += inspectablePath({ d, params: src.node.output, paramSide: 'left' });
+        } else {
+          out += '<path class="edge" d="' + d + '" marker-end="url(#arrowhead)"/>';
+        }
+      }
+    });
+
+    return '<svg width="' + svgW + '" height="' + svgH + '" viewBox="0 0 ' + svgW + ' ' + svgH + '">' + out + '</svg>';
+  }
+
+  function renderAttention(node) {
+    ZOOM_TARGETS = [];
+    blockSeq = 0;
+
+    const W = 620;
+    const cx = W / 2;
+    const bw = 120, bh = 40;
+    const opW = 200;
+
+    const heads = node.heads || [];
+    const ops = node.ops || [];
+    const io = node.io || {};
+
+    const topPad = 40;
+    const gap = 40;
+    const opGap = bh + gap;
+    const headsY = topPad + ops.length * opGap + 40;
+    const inputY = headsY + bh + 50;
+    const H = inputY + 30;
+
+    let out = defs();
+
+    if (io.output) out += '<text class="io-label" x="' + cx + '" y="' + (topPad - 10) + '">' + escText(io.output) + '</text>';
+
+    ops.forEach((op, i) => {
+      const y = topPad + i * opGap;
+      const fill = COLORS[op.type] || COLORS.neutral;
+      out += block({ x: cx - opW / 2, y, w: opW, h: bh, fill, label: op.label });
+      if (i < ops.length - 1) out += arrow(cx, y + bh, cx, y + opGap);
+      if (i === 0)            out += arrow(cx, y, cx, topPad - 5);
+    });
+
+    const bottomOpY = topPad + (ops.length - 1) * opGap;
+    const spreadHalf = 160;
+    heads.forEach((h, i) => {
+      const hx = cx - bw / 2 + (i - (heads.length - 1) / 2) * spreadHalf;
+      out += block({ x: hx, y: headsY, w: bw, h: bh, fill: COLORS[h.type] || COLORS.neutral, label: h.label });
+      out += arrow(hx + bw / 2, headsY, cx + (i - (heads.length - 1) / 2) * 60, bottomOpY + bh);
+    });
+
+    if (io.input) {
+      out += '<text class="io-label" x="' + cx + '" y="' + (inputY + 16) + '">' + escText(io.input) + '</text>';
+      heads.forEach((_, i) => {
+        const hx = cx + (i - (heads.length - 1) / 2) * spreadHalf;
+        out += arrow(cx, inputY, hx, headsY + bh);
+      });
+    }
+
+    if (node.note) {
+      out += '<text class="edge-label" x="' + (cx + opW / 2 + 80) + '" y="' + (topPad + (ops.length * opGap) / 2) + '">' + escText(node.note) + '</text>';
+    }
+
+    return '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '">' + out + '</svg>';
+  }
+})();
+</script>
+<p>By setting <code>vocab_size=65</code>, <code>n_embd=32</code>, <code>block_size=8</code> and <code>N=3</code>, the architecture described in the figure results in the following total parameters count</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Layer</th>
+<th>Parameter</th>
+<th>Shape</th>
+<th style="text-align: right;">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Embeddings</strong></td>
+<td>Token embedding</td>
+<td>weight</td>
+<td>65×32</td>
+<td style="text-align: right;">2,080</td>
+</tr>
+<tr>
+<td></td>
+<td>Position embedding</td>
+<td>weight</td>
+<td>8×32</td>
+<td style="text-align: right;">256</td>
+</tr>
+<tr>
+<td><strong>Block ×3</strong></td>
+<td>LayerNorm 1</td>
+<td>weight + bias</td>
+<td>2×(1×32)</td>
+<td style="text-align: right;">64</td>
+</tr>
+<tr>
+<td></td>
+<td>Self-Attention (K, Q, V)</td>
+<td>weights</td>
+<td>3×(32×32)</td>
+<td style="text-align: right;">3,072</td>
+</tr>
+<tr>
+<td></td>
+<td>LayerNorm 2</td>
+<td>weight + bias</td>
+<td>2×(1×32)</td>
+<td style="text-align: right;">64</td>
+</tr>
+<tr>
+<td></td>
+<td>FeedForward Linear 1</td>
+<td>weight + bias</td>
+<td>(32×128)+(1×128)</td>
+<td style="text-align: right;">4,224</td>
+</tr>
+<tr>
+<td></td>
+<td>FeedForward Linear 2</td>
+<td>weight + bias</td>
+<td>(128×32)+(1×32)</td>
+<td style="text-align: right;">4,128</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Block subtotal</strong></td>
+<td></td>
+<td style="text-align: right;"><strong>11,552</strong></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>×3 blocks</strong></td>
+<td></td>
+<td style="text-align: right;"><strong>34,656</strong></td>
+</tr>
+<tr>
+<td><strong>Output</strong></td>
+<td>Final LayerNorm</td>
+<td>weight + bias</td>
+<td>2×(1×32)</td>
+<td style="text-align: right;">64</td>
+</tr>
+<tr>
+<td></td>
+<td>LM Head</td>
+<td>weight</td>
+<td>32×65</td>
+<td style="text-align: right;">2,080</td>
+</tr>
+<tr>
+<td></td>
+<td>LM Head</td>
+<td>bias</td>
+<td>1×65</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><strong>Total</strong></td>
+<td></td>
+<td style="text-align: right;"><strong>39,201</strong></td>
+</tr>
+</tbody>
+</table>
+<p>An equivalent model instance can be access from this repositiory (TO ADD). Running <code>python model.py</code> logs the total number of parameters of the model matching the total calculated above.</p>
+<h2>Layers</h2>
+<p>This section describes in more detail the operation performed inside each layer with focus on the ones that were overlooked in Karpaty's tutorial. </p>
+<ul>
+<li>Feed forward layer </li>
+</ul>
+<h3>Embedding layers</h3>
+<p>Both embedding layers (<code>token_embedding_table</code> and <code>position_embedding_table</code>) are <strong>lookup tables</strong>. The former maps each token id (for a total of <code>vocab_size</code>) to a vector of size <code>n_embd</code>. The latter maps each position id (for a total of <code>block_size</code>) to a vector of size <code>n_embd</code>. They don't perform any matrix multiplication. Given an input vector of shape <code>(block_size x 1)</code>, it replaces each integer with the corresponsing row producing a matrix of shape <code>(block_size x n_embd)</code></p>
+<h3>Addition layer</h3>
+<p>Simply element-wise addition between two input vectors. No parameters are stored there.</p>
+<h3>Layer norm</h3>
+<p>Described by Karpathy at 01:32:51.</p>
+<h3>Self-attention layer</h3>
+<p>Described by Karpathy at 01:02:00.</p>
+<h3>Feed-forward layer</h3>
+<p>The feed-forward layer is a small two-layer network applied independently to each row. It chains: a linear layer (see below) that expands from <code>n_embd</code> to <code>4 * n_embd</code>, a ReLU activation (which simply replaces negative values with zero — no learned parameters), and a linear layer that projects back from <code>4 * n_embd</code> to <code>n_embd</code>. Both linear layers here are instantiated with bias. The input and output shapes are both <code>(block_size, n_embd)</code>.</p>
+<h3>Linear layer</h3>
+<p>A linear layer takes an input matrix <code>X</code> of shape <code>(block_size, in_features)</code> and projects it to shape <code>(block_size, out_features)</code>: the number of rows stays the same, while each row is independently transformed from size <code>in_features</code> to size <code>out_features</code>. It stores a weight matrix <code>W</code> of shape <code>(in_features, out_features)</code> and, optionally, a bias vector <code>b</code> of size <code>out_features</code>. The output is computed as <code>output = X @ W + b</code> (or just <code>X @ W</code> when there is no bias). Some linear layers in this architecture are instantiated without bias (e.g. the <code>key</code>, <code>query</code>, <code>value</code> projections inside the self-attention layer).</p>
+<h2>Training vs inference</h2>
+<p>Both the training and inference phase start with a forward pass through the transformer architecture. One difference involves the input vector of the forward pass. During training, the <code>idx</code> input vector is sampled from the training data set. During inference, the <code>idx</code> vector is composed of tokens either provided by the user or previously generated by the transformer itself. The second, more fundamental, difference involves what to do after the forward pass is complete and the <code>logits</code> are obtained. </p>
+<p>During training phase, the logits for each token are compared with the expected next token (from <code>targets</code>) to compute the loss. The overall loss is calculated as mean of each token's loss and backpropagated through the transformer architecture to update the parameters to reduce the loss. Note that all <code>block_size</code> predictions are produced in a single forward pass: this is possible because the self-attention layer applies a <strong>causal mask</strong>: when computing the representation at position <code>t</code>, the mask zeroes out any contribution from positions <code>t+1, ..., block_size-1</code>. Without it, the model could "cheat" by simply reading the next token from its own input and learn nothing useful.</p>
+<p>During inference phase, only the logits for the last token are extracted. These scores are then normalized via Softmax to produce a probability distrution which is eventually used to sample the next token, which is further appended to the <code>idx</code> vector.</p>
+</section>
+</article>
+</main>
+</div>
+</body>
+</html>

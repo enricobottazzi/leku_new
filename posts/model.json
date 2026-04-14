@@ -1,0 +1,58 @@
+{
+  "id": "bigram",
+  "label": "BigramLanguageModel",
+  "layout": "stack",
+  "io": {
+    "input":  { "description": "idx = (block_size × 1)" },
+    "output": {}
+  },
+  "children": [
+    {
+      "id": "tok_embd",
+      "type": "embed",
+      "label": "Token Embedding",
+      "params": "token_embedding_table = (vocab_size × n_embd)",
+      "output": "tok_embd = (block_size × n_embd)"
+    },
+    {
+      "id": "pos_sum",
+      "type": "sum",
+      "output": "x = (block_size × n_embd)",
+      "side": {
+        "id": "pos_embd",
+        "type": "embed",
+        "label": "Position Embedding",
+        "params": "position_embedding_table = (block_size × n_embd)",
+        "input": "pos = (block_size × 1)",
+        "output": "pos_embd = (block_size × n_embd)"
+      }
+    },
+    {
+      "id": "blocks",
+      "type": "group",
+      "repeat": "Nx",
+      "children": [
+        { "id": "ln1", "type": "addnorm", "label": "LayerNorm 1", "params": "γ_1, β_1 = (1 × n_embd)", "output": "(block_size × n_embd)" },
+        {
+          "id": "sa",
+          "type": "attn",
+          "label": "Self-Attention",
+          "params": "W_K, W_Q, W_V = (n_embd × n_embd)",
+          "output": "(block_size × n_embd)"
+        },
+        { "id": "add1", "type": "sum", "residualFrom": "ln1", "output": "(block_size × n_embd)" },
+        { "id": "ln2", "type": "addnorm", "label": "LayerNorm 2", "params": "γ_2, β_2 = (1 × n_embd)", "output": "(block_size × n_embd)" },
+        {
+          "id": "ffwd",
+          "type": "ffwd",
+          "label": "Feed Forward",
+          "params": "W_1 = (n_embd × 4·n_embd), b_1 = (1 × 4·n_embd), W_2 = (4·n_embd × n_embd), b_2 = (1 × n_embd)",
+          "output": "(block_size × n_embd)"
+        },
+        { "id": "add2", "type": "sum", "residualFrom": "ln2", "output": "(block_size × n_embd)" }
+      ]
+    },
+    { "id": "ln_f",    "type": "addnorm", "label": "Final LayerNorm", "params": "γ_final, β_final = (1 × n_embd)", "output": "(block_size × n_embd)" },
+    { "id": "lm_head", "type": "linear",  "label": "Linear (LM Head)", "params": "W = (n_embd × vocab_size), b = (1 × vocab_size)", "output": "logits = (block_size × vocab_size)" }
+  ]
+}
