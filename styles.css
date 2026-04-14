@@ -472,13 +472,9 @@ h3 {
   }
 
   .content {
-    padding-left: 0;        /* Remove left padding to align with sidebar */
+    padding-left: 0;
     min-width: 0;
-    max-width: 100%;
-  }
-
-  .post .post-content {
-    overflow-x: auto;
+    align-self: stretch;
   }
 
   .post-item {
