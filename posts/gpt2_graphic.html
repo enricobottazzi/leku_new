@@ -220,8 +220,10 @@
 
     const svg = blockEl.closest('svg');
     const vb = svg.viewBox.baseVal;
-    const svgRight = (vb && vb.width) ? vb.width : parseFloat(svg.getAttribute('width')) || Infinity;
-    if (side === 'right' && (bx + bw + 12 + tw) > svgRight) side = 'left';
+    const svgW = (vb && vb.width) ? vb.width : parseFloat(svg.getAttribute('width')) || Infinity;
+    const svgH = (vb && vb.height) ? vb.height : parseFloat(svg.getAttribute('height')) || Infinity;
+    if (side === 'right' && (bx + bw + 12 + tw) > svgW) side = 'left';
+    if (side === 'left'  && (bx - tw - 12) < 0) side = 'bottom';
     if (side === 'top'   && (by - th - 12) < 0) side = 'bottom';
 
     let ax, ay;
@@ -229,6 +231,8 @@
     else if (side === 'top')    { ax = bx + bw / 2 - tw/2; ay = by - th - 12; }
     else if (side === 'bottom') { ax = bx + bw / 2 - tw/2; ay = by + bh + 12; }
     else                        { ax = bx + bw + 12;       ay = by + bh / 2 - th / 2; }
+    ax = Math.max(4, Math.min(ax, svgW - tw - 4));
+    ay = Math.max(4, Math.min(ay, svgH - th - 4));
 
     const ns = 'http://www.w3.org/2000/svg';
     const g = document.createElementNS(ns, 'g');
