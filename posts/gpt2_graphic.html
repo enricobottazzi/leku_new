@@ -215,13 +215,34 @@
     }
 
     const padX = 10, padY = 6;
-    const tw = text.length * 6.6 + padX * 2;
-    const th = 11 + padY * 2;
-
+    const charW = 6.6, lineH = 15;
     const svg = blockEl.closest('svg');
     const vb = svg.viewBox.baseVal;
     const svgW = (vb && vb.width) ? vb.width : parseFloat(svg.getAttribute('width')) || Infinity;
     const svgH = (vb && vb.height) ? vb.height : parseFloat(svg.getAttribute('height')) || Infinity;
+
+    var maxTw = svgW * 0.55;
+    var rawTw = text.length * charW + padX * 2;
+    var lines = [text];
+    if (rawTw > maxTw) {
+      lines = [];
+      var maxChars = Math.max(10, Math.floor((maxTw - padX * 2) / charW));
+      var parts = text.split(', ');
+      var cur = parts[0];
+      for (var pi = 1; pi < parts.length; pi++) {
+        if ((cur + ', ' + parts[pi]).length > maxChars) {
+          lines.push(cur);
+          cur = parts[pi];
+        } else {
+          cur += ', ' + parts[pi];
+        }
+      }
+      lines.push(cur);
+    }
+
+    var tw = Math.max.apply(null, lines.map(function(l){ return l.length * charW; })) + padX * 2;
+    var th = lines.length * lineH + padY * 2;
+
     if (side === 'right' && (bx + bw + 12 + tw) > svgW) side = 'left';
     if (side === 'left'  && (bx - tw - 12) < 0) side = 'bottom';
     if (side === 'top'   && (by - th - 12) < 0) side = 'bottom';
@@ -263,11 +284,13 @@
     r.setAttribute('rx', 4); r.setAttribute('ry', 4);
     g.appendChild(r);
 
-    const t = document.createElementNS(ns, 'text');
-    t.setAttribute('x', ax + padX);
-    t.setAttribute('y', ay + th / 2 + 4);
-    t.textContent = text;
-    g.appendChild(t);
+    for (var li = 0; li < lines.length; li++) {
+      const t = document.createElementNS(ns, 'text');
+      t.setAttribute('x', ax + padX);
+      t.setAttribute('y', ay + padY + lineH * li + lineH * 0.75);
+      t.textContent = lines[li];
+      g.appendChild(t);
+    }
 
     svg.appendChild(g);
   }
