@@ -332,16 +332,16 @@
           }
         }
         
-        // Preload logo to ensure it's ready
+        const logoSrc = Math.random() < 0.5 ? 'assets/logo/Logo.png' : 'assets/logo/neky.svg';
+        logo.src = logoSrc;
         const img = new Image();
         img.onload = function() {
           loader.classList.add('active');
         };
         img.onerror = function() {
-          // If logo doesn't exist, still show loader (will be empty but functional)
           loader.classList.add('active');
         };
-        img.src = 'assets/logo/Logo.png';
+        img.src = logoSrc;
       }
     }
 
