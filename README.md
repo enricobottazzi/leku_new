@@ -4,7 +4,7 @@
 
 ### How to add a blogpost
 
-1. Write the blogpost in markdown format and add it inside the `md` folder. For example, `md/example.md`. Make sure that all your LaTeX is inside `$` or `$$` for inline and block math respectively. The title is extracted from the first `# heading` in the file.
+1. Write the blogpost in markdown format and add it inside the `md` folder. For example, `md/example.md`. Make sure that all your LaTeX is inside `$` or `$$` for inline and block math respectively. The title is extracted from the first `# heading` in the file. Any image file should be added to the `assets` folder.
 
 2. Run the generator:
 
@@ -14,9 +14,7 @@
 
    Omit `--date` to use today's date. 
 
-3. If the markdown contains HackMD image URLs, run `python3 download_images.py` to download them into `assets/` and rewrite the paths. Not sure if this works.
-
-4. Double check the result by running `open index.html` and verifying in the browser:
+3. Double check the result by running `open index.html` and verifying in the browser:
    - Title, date are correct both in the index.html and the post.html files
    - Links are correct
    - Images render correctly
