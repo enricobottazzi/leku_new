@@ -76,20 +76,33 @@ def convert_markdown_to_html(markdown_content: str) -> str:
     content = re.sub(r"\{\{<rawhtml>\}\}", "", content)
     content = re.sub(r"\{\{</rawhtml>\}\}", "", content)
 
+    # Ensure a blank line before lists that follow a paragraph
+    # (Python-Markdown requires it; many sources omit it.)
+    content = re.sub(
+        r"(?m)^(?P<prev>(?!\s*$)(?!\s*(?:[-*+]|\d+\.)\s).+)\n(?=[ \t]*(?:[-*+]|\d+\.)[ \t]+)",
+        lambda m: m.group("prev") + "\n\n",
+        content,
+    )
+
+    # Escape currency dollars ($ followed by a digit) so they aren't swallowed
+    # by inline-math matching. MathJax's processEscapes turns \$ back into $.
+    content = re.sub(r"(?<!\\)\$(?=\d)", r"\\$", content)
+
     # Protect display math ($$...$$)
     display_blocks: list[str] = []
     def _save_display(m):
         display_blocks.append(m.group(1))
         return f"DISPLAYMATH{len(display_blocks)-1}PLACEHOLDER"
 
-    # Protect inline math ($...$)
+    # Protect inline math ($...$) — boundaries cannot be whitespace,
+    # and the math body cannot span newlines (avoids matching across paragraphs).
     inline_blocks: list[str] = []
     def _save_inline(m):
         inline_blocks.append(m.group(1))
         return f"INLINEMATH{len(inline_blocks)-1}PLACEHOLDER"
 
     content = re.sub(r"\$\$(.*?)\$\$", _save_display, content, flags=re.DOTALL)
-    content = re.sub(r"\$([^\$]+?)\$", _save_inline, content)
+    content = re.sub(r"(?<!\\)\$(?!\s)([^\$\n]+?)(?<!\s)\$", _save_inline, content)
 
     # Convert with Python-Markdown
     md = markdown.Markdown(extensions=["extra", "fenced_code", "codehilite"])
