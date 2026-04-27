@@ -20,4 +20,5 @@
    - Images render correctly
    - LaTeX formatting
    - Code blocks and blockquotes
+   - Numbered and bulleted lists
    - It doesn't overflow on mobile 
