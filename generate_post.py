@@ -199,6 +199,7 @@ POST_TEMPLATE = """\
 </article>
 </main>
 </div>
+<script src="../theme.js" defer></script>
 </body>
 </html>"""
 
