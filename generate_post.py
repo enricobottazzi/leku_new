@@ -120,6 +120,12 @@ def convert_markdown_to_html(markdown_content: str) -> str:
         r'src="../assets/\1"',
         html,
     )
+    # HackMD width suffix (e.g. " =400x") — not valid in src
+    html = re.sub(
+        r'src="([^"]+?) =(\d+)x"',
+        r'src="\1" width="\2"',
+        html,
+    )
 
     return html
 
