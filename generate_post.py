@@ -190,7 +190,6 @@ POST_TEMPLATE = """\
 <ul>
 <li><a href="../index.html">index</a></li>
 <li><a href="../index.html#about">about</a></li>
-<li><a href="../index.html#subscribe">subscribe</a></li>
 </ul>
 </nav>
 <main class="content">

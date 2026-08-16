@@ -138,6 +138,53 @@
     document.body.prepend(btn);
   }
 
+  const EMAIL_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkUimNkCcWbEhnHWo2zjU1Mq6iqVqiiVzy1bHCma2fX1j3a4_eLYZ_HmN0nWG0ILBy/exec';
+
+  async function submitEmail(e) {
+    e.preventDefault();
+    const input = e.target.querySelector('.email-signup-input');
+    const btn = e.target.querySelector('button[type="submit"]');
+    const email = input.value.trim();
+    if (!email) return;
+    const original = btn.textContent;
+    btn.textContent = 'Subscribing…';
+    btn.disabled = true;
+    try {
+      await fetch(EMAIL_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'email=' + encodeURIComponent(email),
+        mode: 'no-cors',
+      });
+      btn.textContent = 'Subscribed ✓';
+      input.value = '';
+    } catch (_) {
+      btn.textContent = original;
+      btn.disabled = false;
+    }
+  }
+
+  function injectSubscribe() {
+    const article = document.querySelector('article.post');
+    if (!article || article.querySelector('.email-signup-form')) return;
+
+    const box = document.createElement('div');
+    box.className = 'post-subscribe';
+    box.innerHTML = `
+      <p>Get notified when I publish new posts.</p>
+      <div class="email-signup">
+        <form class="email-signup-form" novalidate>
+          <div class="email-signup-input-wrap">
+            <input type="email" name="email" class="email-signup-input" placeholder="you@example.com" required/>
+          </div>
+          <button type="submit" class="email-signup-btn">Subscribe</button>
+        </form>
+      </div>
+    `;
+    box.querySelector('form').addEventListener('submit', submitEmail);
+    article.appendChild(box);
+  }
+
   // Expose for inline handlers in index.html (keeps existing behaviour intact)
   Object.assign(window, {
     toggleColorGame, updateBackgroundColor, updateFontColor,
@@ -147,6 +194,7 @@
 
   function init() {
     injectUI();
+    injectSubscribe();
     refreshRandomColors();
     loadSavedColors();
   }

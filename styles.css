@@ -181,11 +181,18 @@ a { text-decoration: none; color: inherit; }
 
 .color-game.hidden { display: none; }
 
-/* Subscribe section description */
-.subscribe-section p {
-  text-align: justify;
-  text-justify: inter-word;
-  hyphens: auto;
+/* Subscribe block appended at the end of each post */
+.post-subscribe {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px dotted currentColor;
+}
+
+.post-subscribe p {
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  line-height: 1.6;
+  margin: 0 0 1.25rem 0;
 }
 
 /* Email signup form (dotted style) */
