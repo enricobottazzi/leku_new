@@ -192,6 +192,7 @@ a { text-decoration: none; color: inherit; }
   font-family: 'JetBrains Mono', monospace;
   text-transform: uppercase;
   line-height: 1.6;
+  font-size: 0.9rem;
   margin: 0 0 1.25rem 0;
 }
 
