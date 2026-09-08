@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Leku - Verifiable AI watermarking detection with zero-knowledge proof</title>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
+    // Apply saved colors before first paint to avoid flash
+    (function() {
+      try {
+        var bg = localStorage.getItem('customBgColor');
+        var fg = localStorage.getItem('customFontColor');
+        var css = '';
+        if (bg) css += 'body{background-color:' + bg + ' !important;}';
+        if (fg) {
+          css += 'body{color:' + fg + ' !important;}';
+          css += '.sidebar{border-right-color:' + fg + ' !important;}';
+          css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
+        }
+        if (css) {
+          var s = document.createElement('style');
+          s.id = 'early-theme';
+          s.textContent = css;
+          document.head.appendChild(s);
+        }
+      } catch (_) {}
+    })();
+  </script>
+<link href="../styles.css" rel="stylesheet"/>
+<!-- MathJax for LaTeX support -->
+<script>
+    // Configure MathJax (v3) before loading the script
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li><a href="../index.html">index</a></li>
+<li><a href="../index.html#about">about</a></li>
+</ul>
+</nav>
+<main class="content">
+<article class="post">
+<header>
+<h1 class="post-title">Verifiable AI watermarking detection with zero-knowledge proof</h1>
+<div class="post-date">2026-09-08</div>
+</header>
+<section class="post-content">
+<p>When a text spreads online, a platform, journalist, researcher, or regulator may ask: did a particular AI provider's model generate this text?</p>
+<p>AI watermarking is one possible solution.</p>
+<p>A watermarking algorithm proceeds in two steps, both executed by the AI model provider:</p>
+<pre class="codehilite"><code>Generate(secret_key, prompt) -&gt; generated_text
+Detect(secret_key, text) -&gt; confidence
+</code></pre>
+
+<p>During generation, the provider receives the <code>prompt</code> from a user and returns a <code>generated_text</code>. This differs slightly from standard token generation because the token choice is subtly steered by a <code>secret_key</code>.</p>
+<p>The <code>generated_text</code> should look like ordinary text. If the watermarking algorithm steers tokens too far from the "standard" distribution, an external observer can quickly reverse-engineer the algorithm and remove the watermark. Another risk is that the model's performance might suffer in the process.</p>
+<p>After that, any user (requester) who sees online <code>text</code> might wonder whether it was AI-generated. To verify that, they share the <code>text</code> with the AI model provider, who runs <code>Detect</code> and returns a confidence level. The confidence level, expressed as a percentage, reveals how strongly the text matches that provider's watermark. </p>
+<p>Computerphile recently published a video on LLM watermarking that details a specific algorithm. In this article, I don't want to focus on the details of a specific algorithm, but on a broader problem that affects any state-of-the-art watermarking algorithm. </p>
+<p>Once a requester obtains a confidence level from the AI provider, they cannot independently verify how that number was obtained. Did the provider run the detector it promised to run, or did it simply return an answer that was convenient in that case?</p>
+<p>A provider may face commercial, reputational, legal, or political pressure in a contested case. But it may also just be operationally lazy and prefer not to run a computationally expensive check. </p>
+<p>A system that matters for regulation, research, journalism, or disputes should not depend only on: "Trust us, we checked." Ideally, any requester should verify that the returned confidence level was computed honestly. </p>
+<p>A dummy solution would be to let the requester run <code>Detect</code> themselves. But this would force the AI provider to reveal their <code>secret_key</code>, which would make the <code>Generate</code> step fully reverse-engineerable.</p>
+<p>This looks like an impossible problem to solve. This is where <a href="https://www.leku.ink/posts/cryptography_cheatsheet.html">zero-knowledge proofs</a> enter. A zero-knowledge proof lets someone prove that a statement is true without revealing the secret information behind it. Simple intuition: prove you know a password without showing anyone the password.</p>
+<p>In this case, the statement that the AI provider has to prove is:</p>
+<blockquote>
+<p>For this <code>text</code>, our <code>Detect(text, secret_key)</code> algorithm produced this <code>confidence</code> score</p>
+</blockquote>
+<p>Without revealing <code>secret_key</code>.</p>
+<p>So we can imagine the AI provider running a modified version of the <code>Detect</code> algorithm:</p>
+<pre class="codehilite"><code>DetectWithProof(secret_key, text) -&gt; confidence, proof
+</code></pre>
+
+<p>Crucially, the proof does not reveal any detail about the <code>secret_key</code> </p>
+<p>The requester can then locally verify the provider's honesty by running:</p>
+<pre class="codehilite"><code>Verify(text, confidence, proof) -&gt; accept / reject
+</code></pre>
+
+<p>But there's a caveat here: nothing binds the provider to use the same <code>secret_key</code> for both generation and detection. One other ingredient is needed first: a cryptographic commitment.</p>
+<p>Before any generation runs, the provider must publish a commitment to its secret_key.</p>
+<p>A commitment has two useful properties:</p>
+<ul>
+<li>Hiding: people cannot learn the secret key just by looking at the commitment.</li>
+<li>Binding: the provider cannot change its mind later. Once it has committed to a watermark key, it cannot credibly claim that the same public commitment corresponds to a different key.</li>
+</ul>
+<p>To achieve verifiable AI watermarking detection, the flow is the following:</p>
+<pre class="codehilite"><code>Commit(secret_key) -&gt; commitment
+Generate(secret_key, prompt) -&gt; generated_text
+DetectWithProof(secret_key, commitment, text) -&gt; confidence, proof
+Verify(text, confidence, proof, commitment) -&gt; accept / reject
+</code></pre>
+
+<p>After the key is committed, the AI provider has to prove is:</p>
+<blockquote>
+<p>For this <code>text</code> and this <code>commitment</code> such that <code>Commit(secret_key) -&gt; commitment</code>, our <code>Detect(text, secret_key)</code> algorithm produced this <code>confidence</code> score</p>
+</blockquote>
+<p>The verification algorithm lets the requester verify this statement given a <code>proof</code> without revealing the <code>secret_key</code>.</p>
+<p>The EU AI Act already establishes requirements around AI watermarking, while leaving technical implementation open.</p>
+<p>A future guidance principle could also require that, when secret-key watermark detection is used to verify the provenance of a given text, providers can produce verifiable evidence for their detection results. </p>
+<p>Zero-knowledge proofs offer a neat way to do that: they do not make watermarking perfect, but they turn a provider's uncheckable assertion into a checkable cryptographic claim.</p>
+</section>
+</article>
+</main>
+</div>
+<script src="../theme.js" defer></script>
+</body>
+</html>
