@@ -92,7 +92,7 @@ Detect(secret_key, text) -&gt; confidence
 </code></pre>
 
 <p>But there's a caveat here: nothing binds the provider to use the same <code>secret_key</code> for both generation and detection. One other ingredient is needed first: a cryptographic commitment.</p>
-<p>Before any generation runs, the provider must publish a commitment to its secret_key.</p>
+<p>Before any generation runs, the provider must publish a commitment to its secret key.</p>
 <p>A commitment has two useful properties:</p>
 <ul>
 <li>Hiding: people cannot learn the secret key just by looking at the commitment.</li>
