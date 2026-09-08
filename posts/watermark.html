@@ -102,7 +102,7 @@ Detect(secret_key, text) -&gt; confidence
 <pre class="codehilite"><code>Commit(secret_key) -&gt; commitment
 Generate(secret_key, prompt) -&gt; generated_text
 DetectWithProof(secret_key, commitment, text) -&gt; confidence, proof
-Verify(text, confidence, proof, commitment) -&gt; accept / reject
+Verify(commitment, text, confidence, proof) -&gt; accept / reject
 </code></pre>
 
 <p>After the key is committed, the AI provider has to prove is:</p>
