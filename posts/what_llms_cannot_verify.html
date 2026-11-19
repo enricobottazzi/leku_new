@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Leku - Impossibility Results for LLMs</title>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
+<script>
+    // Apply saved colors before first paint to avoid flash
+    (function() {
+      try {
+        var bg = localStorage.getItem('customBgColor');
+        var fg = localStorage.getItem('customFontColor');
+        var css = '';
+        if (bg) css += 'body{background-color:' + bg + ' !important;}';
+        if (fg) {
+          css += 'body{color:' + fg + ' !important;}';
+          css += '.sidebar{border-right-color:' + fg + ' !important;}';
+          css += '.post-date,.sidebar li,.post-link{color:' + fg + ' !important;}';
+        }
+        if (css) {
+          var s = document.createElement('style');
+          s.id = 'early-theme';
+          s.textContent = css;
+          document.head.appendChild(s);
+        }
+      } catch (_) {}
+    })();
+  </script>
+<link href="../styles.css" rel="stylesheet"/>
+<!-- MathJax for LaTeX support -->
+<script>
+    // Configure MathJax (v3) before loading the script
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+<script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+<div class="wrapper">
+<nav class="sidebar">
+<ul>
+<li><a href="../index.html">index</a></li>
+<li><a href="../index.html#about">about</a></li>
+</ul>
+</nav>
+<main class="content">
+<article class="post">
+<header>
+<h1 class="post-title">Impossibility Results for LLMs</h1>
+<div class="post-date">2026-11-19</div>
+</header>
+<section class="post-content">
+<p>We show that an LLM cannot always correctly distinguish worlds that produce identical contexts. When a wrapper can fabricate all supplied evidence, this prevents guaranteed correct verification of message provenance (including self-attribution), code execution, and elapsed time. To resolve this ambiguity, the model must source trusted evidence beyond the wrapper's control. Whether this is possible remains an open question.</p>
+<p><img alt="M. C. Escher illustration" class="borderless" src="../assets/what_llms_cannot_verify/escher-cutout.png" /></p>
+<h2>Indistinguishability</h2>
+<p>The following argument is inspired by Halpern and Moses's view-based interpretation of knowledge in distributed systems [1].</p>
+<p><strong>Theorem 1 (Indistinguishability).</strong> Let $W$ be a set of admissible worlds, let $E:W\to\mathcal{E}$ map each world to some evidence, and let $w_0,w_1\in W$ be two distinct candidate worlds. The task is to identify an unknown $b\in\{0,1\}$ using only the evidence $E(w_b)$. If</p>
+<p>$$
+
+E(w_0)=E(w_1),
+
+$$</p>
+<p>then no deterministic decision procedure $D:\mathcal{E}\to\{0,1\}$ can satisfy $D(E(w_b))=b$ for both values of $b$.</p>
+<p><em>Proof.</em> The evidence is identical in both worlds, so $D$ returns the same answer in both. Correct identification requires different answers. Therefore, $D$ must fail in at least one world. $\square$</p>
+<p><strong>Corollary 2 (Application to LLMs).</strong> Fix an LLM's weights $\theta$ and a deterministic inference procedure.<sup id="fnref:inference"><a class="footnote-ref" href="#fn:inference">1</a></sup> Let $C(w)$ be the complete context available to the LLM in world $w$. Its decision procedure is then $D_\theta(C(w))$. If two candidate worlds supply identical contexts,</p>
+<p>$$
+
+C(w_0)=C(w_1),
+
+$$</p>
+<p>the LLM returns the same decision in both worlds and therefore cannot always identify the correct world.</p>
+<p><em>Proof.</em> Theorem 1 applies with $E(w)=C(w)$. $\square$</p>
+<p><strong>Corollary 3 (Futility of further reasoning).</strong> Additional model reasoning, without additional distinguishing evidence, does not resolve indistinguishability.</p>
+<p><em>Proof.</em> Further reasoning based only on the same context $C(w)$ is itself a decision procedure $D_\theta(C(w))$. Corollary 2 still applies. $\square$</p>
+<h2>The Wrapper-Control Assumption</h2>
+<p><strong>Assumption 4 (Wrapper control).</strong> All context reaches the LLM through a wrapper application. The wrapper can fabricate or alter any supplied message, including tool responses and role metadata. The LLM has no trusted evidence linking supplied messages to their claimed sources that is not under wrapper control.</p>
+<p>Here, the context includes all information available to the model's decision procedure, including any supplied conversation history and tool transcript. For follow-up checks, Assumption 4 allows the wrapper to supply identical responses to the same requests, so that the complete transcripts remain identical in the two worlds.</p>
+<p>The following corollaries of Corollary 2 hold under Assumption 4.</p>
+<h2>Impossibility Results</h2>
+<p><strong>Corollary 5 (Message provenance).</strong> An LLM cannot always correctly verify message provenance.</p>
+<p><em>Proof.</em> In $w_0$, the claimed source Alice produced the message, and the wrapper faithfully relayed it. In $w_1$, the wrapper fabricated the message with identical content and role metadata. Provenance differs in the two worlds while the LLM's supplied context remains identical. Corollary 2 applies. $\square$</p>
+<p><strong>Corollary 6 (No wrapper authentication through self-report).</strong> An honest wrapper cannot guarantee to the LLM the claimed provenance of its supplied context solely through self-report.</p>
+<p><em>Proof.</em> Suppose a procedure could always authenticate the context's claimed provenance using only the wrapper's self-reports. When applied to a context containing a message attributed to Alice, this procedure would allow the LLM to always correctly verify that message's provenance, contradicting Corollary 5. $\square$</p>
+<p><strong>Corollary 7 (Self-attribution).</strong> An LLM cannot always correctly verify that a supplied message attributed to it was actually generated by it.</p>
+<p><em>Proof.</em> Apply Corollary 5 with the LLM itself as the claimed source. $\square$</p>
+<p><strong>Corollary 8 (Code execution).</strong> An LLM cannot always correctly verify code execution in a specified external environment.</p>
+<p><em>Proof.</em> In $w_0$, program $p$ executes in environment $e$. In $w_1$, it does not, but the wrapper supplies identical outputs, traces, and verification responses. Code execution differs in the two worlds while the LLM's supplied context remains identical. Corollary 2 applies. $\square$</p>
+<p><strong>Corollary 9 (Elapsed time).</strong> An LLM cannot always correctly verify elapsed time.</p>
+<p><em>Proof.</em> In $w_0$, ten minutes pass. In $w_1$, only one minute passes, but the wrapper supplies identical timing reports. Elapsed time differs in the two worlds while the LLM's supplied context remains identical. Corollary 2 applies. $\square$</p>
+<h2>Conclusion</h2>
+<p>Under Assumption 4, an LLM cannot always correctly verify message provenance, self-attribution, code execution, or elapsed time.<sup id="fnref:self-awareness"><a class="footnote-ref" href="#fn:self-awareness">2</a></sup> In each case, the wrapper can supply identical contexts in worlds where the fact being verified differs. Further reasoning and follow-up checks cannot resolve this ambiguity when any additional evidence can also be simulated by the wrapper.</p>
+<p>These results make Assumption 4 the decisive boundary. The question is therefore whether an LLM can establish an authenticated connection to the world despite a potentially dishonest wrapper. Any proposed escape requires a trusted mechanism or observation outside that assumption. Doing so may require structural changes to the model. Whether such changes are possible and can break Assumption 4 remains to be established.</p>
+<h2>References</h2>
+<p>[1] Joseph Y. Halpern and Yoram Moses. <a href="https://doi.org/10.1145/79147.79161">Knowledge and Common Knowledge in a Distributed Environment</a>. <em>Journal of the ACM</em>, 37(3), 549–587 (1990).</p>
+<h2 id="verification-notes">Notes</h2>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:inference">
+<p>Deterministic inference uses a fixed token-selection rule, so identical contexts and weights always produce identical outputs. Randomized inference might produce different outputs across runs, but this difference alone cannot guarantee different correct answers in the two worlds. So Corollary 2 applies to randomized inference too.&#160;<a class="footnote-backref" href="#fnref:inference" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:self-awareness">
+<p>Are LLMs self-aware of this limitation? If so, how does this affect their behavior?&#160;<a class="footnote-backref" href="#fnref:self-awareness" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+</section>
+</article>
+</main>
+</div>
+<script src="../theme.js" defer></script>
+</body>
+</html>

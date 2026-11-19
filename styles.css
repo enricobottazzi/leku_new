@@ -268,6 +268,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
   font-synthesis: none;
   font-weight: 700;
+  text-transform: uppercase;
   line-height: 1.2;
   margin: 1.5rem 0 0.75rem 0;
 }
@@ -325,6 +326,14 @@ h3 {
   border-radius: 4px;
 }
 
+.post .post-content img.borderless {
+  border: 0;
+}
+
+.post .post-content #verification-notes + .footnote > hr {
+  display: none;
+}
+
 /* Figure and figcaption styling */
 .post .post-content figure {
   margin: 2rem 0;
@@ -337,10 +346,10 @@ h3 {
 }
 
 .post .post-content figcaption {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: inherit;
   font-size: 0.75rem;
   line-height: 1.4;
-  color: #888;
+  color: inherit;
   text-align: center;
   margin: 0 auto;
   max-width: 80%;
@@ -348,8 +357,8 @@ h3 {
 
 /* Code blocks */
 .post .post-content pre {
-  background-color: rgba(0, 0, 0, 0.07);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: color-mix(in srgb, currentColor 7%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 12%, transparent);
   border-radius: 3px;
   padding: 0.5rem;
   margin: 0.75rem 0;
@@ -374,10 +383,10 @@ h3 {
 .post .post-content h4 code,
 .post .post-content h5 code,
 .post .post-content h6 code {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: color-mix(in srgb, currentColor 5%, transparent);
   padding: 0.15rem 0.3rem;
   border-radius: 2px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid color-mix(in srgb, currentColor 10%, transparent);
   font-size: 0.8em;
 }
 
@@ -436,30 +445,6 @@ h3 {
   
   .post .post-content table tr:hover {
     background-color: rgba(255, 255, 255, 0.05);
-  }
-}
-
-/* Dark mode adjustments for code blocks */
-@media (prefers-color-scheme: dark) {
-  .post .post-content pre {
-    background-color: rgba(255, 255, 255, 0.07);
-    border-color: rgba(255, 255, 255, 0.12);
-  }
-  
-  .post .post-content p code,
-  .post .post-content li code,
-  .post .post-content h1 code,
-  .post .post-content h2 code,
-  .post .post-content h3 code,
-  .post .post-content h4 code,
-  .post .post-content h5 code,
-  .post .post-content h6 code {
-    background-color: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .post .post-content figcaption {
-    color: #999;
   }
 }
 
