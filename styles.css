@@ -539,8 +539,8 @@ h3 {
   margin: 1.5rem 0;
   padding: 0.75rem 1.5rem;
   font-style: italic;
-  background-color: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: color-mix(in srgb, currentColor 3%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 8%, transparent);
   border-radius: 3px;
 }
 
@@ -550,14 +550,6 @@ h3 {
 
 .post .post-content blockquote p:last-child {
   margin-bottom: 0;
-}
-
-/* Dark mode adjustments for blockquotes */
-@media (prefers-color-scheme: dark) {
-  .post .post-content blockquote {
-    background-color: rgba(255, 255, 255, 0.03);
-    border-color: rgba(255, 255, 255, 0.08);
-  }
 }
 
 /* Make wide tables scroll horizontally on small screens — no JS */
