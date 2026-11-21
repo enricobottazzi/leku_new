@@ -1,7 +1,5 @@
 ---
 description: When a wrapper can fabricate all the evidence an LLM sees, the model cannot reliably verify who sent a message, whether code ran, or how much time passed.
-image: /assets/what_llms_cannot_verify/escher-cutout.png
-image_alt: M. C. Escher illustration
 ---
 
 # Impossibility Results for LLMs

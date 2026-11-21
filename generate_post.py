@@ -138,19 +138,18 @@ def convert_markdown_to_html(markdown_content: str) -> str:
 # ---------------------------------------------------------------------------
 
 def preview_tags(title, post_url, front_matter):
-    image = front_matter.get("image")
+    logo_url = urljoin(post_url, "/assets/logo/Logo.png")
     tags = [
         ("property", "og:type", "article"),
         ("property", "og:url", post_url),
         ("property", "og:title", title),
-        ("name", "twitter:card", "summary_large_image" if image else "summary"),
+        ("property", "og:image", logo_url),
+        ("property", "og:image:alt", "Red Leku logo"),
+        ("name", "twitter:card", "summary_large_image"),
+        ("name", "twitter:image", logo_url),
     ]
     if description := front_matter.get("description"):
         tags.append(("property", "og:description", description))
-    if image:
-        tags.append(("property", "og:image", urljoin(post_url, image)))
-        if alt := front_matter.get("image_alt"):
-            tags.append(("property", "og:image:alt", alt))
 
     return "\n".join(
         f'<meta {attribute}="{key}" content="{escape(value)}"/>'
