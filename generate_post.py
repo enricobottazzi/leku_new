@@ -20,8 +20,10 @@ import sys
 import re
 import argparse
 import markdown
+from html import escape
 from pathlib import Path
 from datetime import date
+from urllib.parse import quote, urljoin
 
 
 # ---------------------------------------------------------------------------
@@ -29,7 +31,7 @@ from datetime import date
 # ---------------------------------------------------------------------------
 
 def parse_markdown(path: str):
-    """Return (title, body_md) from a markdown file.
+    """Return the title, body, and front matter from a markdown file.
 
     The title is taken from the first '# ...' heading.  If the file has YAML
     front-matter (---…---) a 'title' key there takes precedence.
@@ -40,6 +42,7 @@ def parse_markdown(path: str):
     fm_match = re.match(r"^---\s*\n(.*?)\n---\s*\n(.*)$", text, flags=re.S)
     title = None
     body_md = text
+    fm = {}
 
     if fm_match:
         import yaml
@@ -61,7 +64,7 @@ def parse_markdown(path: str):
     # Remove the first heading from the body (it goes into the <h1> tag)
     body_md = re.sub(r"^#\s+.+\n*", "", body_md, count=1).strip()
 
-    return title, body_md
+    return title, body_md, fm
 
 
 # ---------------------------------------------------------------------------
@@ -134,6 +137,27 @@ def convert_markdown_to_html(markdown_content: str) -> str:
 # HTML template
 # ---------------------------------------------------------------------------
 
+def preview_tags(title, post_url, front_matter):
+    image = front_matter.get("image")
+    tags = [
+        ("property", "og:type", "article"),
+        ("property", "og:url", post_url),
+        ("property", "og:title", title),
+        ("name", "twitter:card", "summary_large_image" if image else "summary"),
+    ]
+    if description := front_matter.get("description"):
+        tags.append(("property", "og:description", description))
+    if image:
+        tags.append(("property", "og:image", urljoin(post_url, image)))
+        if alt := front_matter.get("image_alt"):
+            tags.append(("property", "og:image:alt", alt))
+
+    return "\n".join(
+        f'<meta {attribute}="{key}" content="{escape(value)}"/>'
+        for attribute, key, value in tags
+    )
+
+
 POST_TEMPLATE = """\
 <!DOCTYPE html>
 
@@ -142,6 +166,7 @@ POST_TEMPLATE = """\
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Leku - {title}</title>
+{preview_tags}
 <link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Regular.woff2" rel="preload" type="font/woff2"/>
 <link as="font" crossorigin="" href="../JetBrainsMono-2.304/fonts/webfonts/JetBrainsMono-Bold.woff2" rel="preload" type="font/woff2"/>
 <script>
@@ -305,7 +330,7 @@ def main():
     index_path = project_root / "index.html"
 
     # 1. Parse markdown
-    title, body_md = parse_markdown(str(md_path))
+    title, body_md, front_matter = parse_markdown(str(md_path))
     print(f"Title:  {title}")
     print(f"Date:   {post_date}")
     print(f"Slug:   {slug}")
@@ -314,8 +339,11 @@ def main():
     html_content = convert_markdown_to_html(body_md)
 
     # 3. Render full post page
+    domain = (project_root / "CNAME").read_text().strip()
+    post_url = f"https://{domain}/posts/{quote(slug)}.html"
     full_html = POST_TEMPLATE.format(
-        title=title,
+        title=escape(title),
+        preview_tags=preview_tags(title, post_url, front_matter),
         date=post_date,
         content=html_content,
     )

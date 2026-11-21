@@ -1,3 +1,9 @@
+---
+description: When a wrapper can fabricate all the evidence an LLM sees, the model cannot reliably verify who sent a message, whether code ran, or how much time passed.
+image: /assets/what_llms_cannot_verify/escher-cutout.png
+image_alt: M. C. Escher illustration
+---
+
 # Impossibility Results for LLMs
 
 We show that an LLM cannot always correctly distinguish worlds that produce identical contexts. When a wrapper can fabricate all supplied evidence, this prevents guaranteed correct verification of message provenance (including self-attribution), code execution, and elapsed time. To resolve this ambiguity, the model must source trusted evidence beyond the wrapper's control. Whether this is possible remains an open question.
